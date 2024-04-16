@@ -1,0 +1,3 @@
+curl localhost:8000/auth/register -d '{"email": "test@test.com", "first_name": "test", "last_name": "test", "password": "pw"}' -H 'Content-Type: application/json' -v
+curl localhost:8000/auth/login -d '{"email": "test@test.com", "password": "pw"}' -H 'Content-Type: application/json' -v
+curl localhost:8000/auth/login -d '{"email": "test@test.com", "password": "bad_pw"}' -H 'Content-Type: application/json' -v
