@@ -16,7 +16,6 @@ class MongoDBConnection(Singleton):
             print("Unable to connect to mongodb")
             exit(1)
 
-
     @property
     def client(self) -> MongoClient:
         return self._client

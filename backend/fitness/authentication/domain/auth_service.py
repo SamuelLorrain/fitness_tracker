@@ -5,7 +5,7 @@ from hashlib import scrypt
 from pydantic import EmailStr, SecretStr
 
 from fitness.authentication.domain.user_repository import UserRepository
-from fitness.authentication.domain.value_objects import AuthPassKey
+from fitness.authentication.domain.entities import AuthPassKey
 from fitness.authentication.exceptions import BadPasswordException, UnknownUserException
 from fitness.commons.settings import Settings
 

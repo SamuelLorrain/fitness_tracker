@@ -1,11 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field, SecretStr
 
 
-class LoginRequest(BaseModel):
-    email: EmailStr
-    password: SecretStr
-
-
 class RegisterRequest(BaseModel):
     first_name: str = Field(min_length=1)
     last_name: str = Field(min_length=1)
@@ -14,5 +9,5 @@ class RegisterRequest(BaseModel):
 
 
 class AuthenticationResponse(BaseModel):
-    email: EmailStr
-    token: str
+    token_type: str = Field(default="bearer")
+    access_token: str
