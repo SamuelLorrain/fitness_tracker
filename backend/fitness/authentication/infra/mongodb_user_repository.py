@@ -33,5 +33,5 @@ class MongoDBUserRepository(UserRepository):
             email=email,
             hashed_password=hashed_password,
         )
-        self.user_collection.insert_one(user.dict())
+        self.user_collection.insert_one(user.model_dump())
         return user
