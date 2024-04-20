@@ -23,16 +23,16 @@ class AuthService:
         if user.hashed_password != hashed_password:
             raise BadPasswordException
         return AuthPassKey(
-            email=user.email, expiration=datetime.now(UTC) + self.expiration_timedelta
+            uuid=user.uuid, email=user.email, expiration=datetime.now(UTC) + self.expiration_timedelta
         )
 
     def register(
         self, first_name: str, last_name: str, email: EmailStr, password: SecretStr
     ) -> AuthPassKey:
         hash = self._hash_password(password)
-        self.user_repository.store_user(first_name, last_name, email, hash)
+        user = self.user_repository.store_user(first_name, last_name, email, hash)
         return AuthPassKey(
-            email=email, expiration=datetime.now(UTC) + self.expiration_timedelta
+            uuid=user.uuid, email=email, expiration=datetime.now(UTC) + self.expiration_timedelta
         )
 
     @staticmethod

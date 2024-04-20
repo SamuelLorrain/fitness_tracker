@@ -37,4 +37,4 @@ def register(register_request: RegisterRequest) -> AuthenticationResponse:
     )
     token = jwt_formatter.serialize(pass_key)
 
-    return AuthenticationResponse(email=pass_key.email, token=token)
+    return AuthenticationResponse(email=pass_key.email, access_token=token)

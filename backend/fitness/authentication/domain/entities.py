@@ -12,5 +12,6 @@ class User(BaseModel):
 
 
 class AuthPassKey(BaseModel):
+    uuid: UUID
     email: EmailStr
     expiration: datetime
