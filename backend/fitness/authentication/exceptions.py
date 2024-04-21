@@ -1,11 +1,11 @@
-from fitness.commons.exceptions import CustomException
+from fitness.commons.exceptions import CustomException, EntityDoesNotExistsException
 
 
 class UserAlreadyExistsException(CustomException):
     """Raise when a user already exist"""
 
 
-class UnknownUserException(CustomException):
+class UnknownUserException(EntityDoesNotExistsException):
     """Raise when a user does not exists"""
 
 
