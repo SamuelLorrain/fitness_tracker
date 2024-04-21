@@ -12,6 +12,7 @@ from datetime import datetime
 class Claims:
     sub: str
     name: str
+    uid: str
     exp: int
 
 
@@ -20,6 +21,7 @@ class JwtAuthFormatter(AuthFormatter):
     def serialize(self, auth_pass_key: AuthPassKey) -> str:
         claim = Claims(
             sub="auth_token",
+            uid=str(auth_pass_key.uuid),
             name=auth_pass_key.email,
             exp=int(auth_pass_key.expiration.timestamp()),
         )
@@ -30,8 +32,11 @@ class JwtAuthFormatter(AuthFormatter):
 
     def deserialize(self, token: str) -> AuthPassKey:
         # TODO same as above
+        # TODO if the token can't be decoded as claims,
+        # we should have a proper error and not a 500
         claims: Claims = Claims(**jwt.decode(token, Settings().JWT_SECRET, algorithms=["HS512"]))
         return AuthPassKey(
+            uuid=claims.uid,
             email=claims.name,
             expiration=datetime.fromtimestamp(claims.exp)
         )

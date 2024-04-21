@@ -1,7 +1,9 @@
+from typing import Any
 from fitness.commons.settings import Settings
 from fitness.commons.singleton import Singleton
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from pymongo.database import Database
 
 
 class MongoDBConnection(Singleton):
@@ -21,5 +23,5 @@ class MongoDBConnection(Singleton):
         return self._client
 
     @property
-    def db(self) -> MongoClient:
+    def db(self) -> Database[Any]:
         return self._db
