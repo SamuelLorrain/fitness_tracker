@@ -18,7 +18,7 @@ auth_dep = AuthenticationConfiguration().authorisation_dependency
 def list_food(
     auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
     filter_food_query: FilterFoodQuery = Depends(),
-) -> Response:
+) -> ListFoodResponse:
     configuration = FoodConfiguration()
     food_service = configuration.food_crud_service
     list_food = food_service.list_food(auth_pass_key, filter_food_query.name_filter)
@@ -44,7 +44,7 @@ def create_food(
     auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
     request: Request,
     response: Response
-) -> Response:
+) -> None:
     configuration = FoodConfiguration()
     food_service = configuration.food_crud_service
     food_va = FoodVA.parse_obj(food_request.model_dump())
@@ -71,7 +71,7 @@ def create_food(
 def delete_food(
     food_uuid: UUID,
     pass_key: Annotated[AuthPassKey, Depends(auth_dep)]
-) -> Response:
+) -> None:
     configuration = FoodConfiguration()
     food_service = configuration.food_crud_service
     food_service.delete_food(pass_key, food_uuid)
