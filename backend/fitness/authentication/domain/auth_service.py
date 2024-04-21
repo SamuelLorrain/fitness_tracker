@@ -6,7 +6,7 @@ from pydantic import EmailStr, SecretStr
 
 from fitness.authentication.domain.user_repository import UserRepository
 from fitness.authentication.domain.entities import AuthPassKey
-from fitness.authentication.exceptions import BadPasswordException, UnknownUserException
+from fitness.authentication.exceptions import BadPasswordException, UnableToLoginException, UnknownUserException
 from fitness.commons.settings import Settings
 
 
@@ -18,10 +18,10 @@ class AuthService:
     def login(self, email: EmailStr, password: SecretStr) -> AuthPassKey:
         user = self.user_repository.get_user_by_email(email)
         if user is None:
-            raise UnknownUserException
+            raise UnableToLoginException
         hashed_password = self._hash_password(password)
         if user.hashed_password != hashed_password:
-            raise BadPasswordException
+            raise UnableToLoginException
         return AuthPassKey(
             uuid=user.uuid, email=user.email, expiration=datetime.now(UTC) + self.expiration_timedelta
         )
