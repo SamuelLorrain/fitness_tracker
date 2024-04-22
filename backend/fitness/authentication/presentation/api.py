@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from .contracts import AuthenticationResponse, RegisterRequest
 from pydantic import SecretStr
 
-auth_router = APIRouter(prefix="/auth")
+auth_router = APIRouter(prefix="/auth", tags=["authentication"])
 
 @auth_router.post("/login")
 def login(login_request: Annotated[OAuth2PasswordRequestForm, Depends()]) -> AuthenticationResponse:

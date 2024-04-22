@@ -8,7 +8,7 @@ from fitness.food.presentation.contracts import FilterFoodQuery, FoodRequest, Fo
 from fitness.authentication.configuration import AuthenticationConfiguration
 
 
-food_router = APIRouter(prefix="/food")
+food_router = APIRouter(prefix="/food", tags=["food"])
 auth_dep = AuthenticationConfiguration().authorisation_dependency
 
 
