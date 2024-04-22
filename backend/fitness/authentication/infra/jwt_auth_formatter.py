@@ -1,5 +1,4 @@
 from dataclasses import asdict, dataclass
-
 import jwt
 
 from fitness.authentication.domain.auth_formatter import AuthFormatter
