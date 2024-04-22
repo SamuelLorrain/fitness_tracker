@@ -35,6 +35,12 @@ class AuthService:
             uuid=user.uuid, email=email, expiration=datetime.now(UTC) + self.expiration_timedelta
         )
 
+    def verify(self, auth_pass_key: AuthPassKey) -> bool:
+        if auth_pass_key.expiration < datetime.now():
+            return False
+        user = self.user_repository.get_user_by_email(auth_pass_key.email)
+        return user is not None
+
     @staticmethod
     def _hash_password(password: SecretStr) -> bytes:
         hash = scrypt(

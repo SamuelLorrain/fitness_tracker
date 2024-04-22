@@ -30,4 +30,4 @@ class AuthenticationConfiguration(Singleton):
 
     @property
     def authorisation_dependency(self) -> AuthorisationDependency:
-        return AuthorisationDependency(self.auth_formatter)
+        return AuthorisationDependency(self.auth_formatter, self.auth_service)
