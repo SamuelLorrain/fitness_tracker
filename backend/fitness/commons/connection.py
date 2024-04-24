@@ -8,9 +8,11 @@ from pymongo.database import Database
 
 class MongoDBConnection(Singleton):
     def __init__(self) -> None:
-        self._uri = Settings().MONGODB_CONNECTION_STRING
+        # TODO add url validation
+        self._uri: str = Settings().MONGODB_CONNECTION_STRING
+        self._uri += "?uuidRepresentation=standard" # Needed for uuid
         self._client: MongoClient = MongoClient(self._uri, server_api=ServerApi("1"))
-        self._db = self.client.fitness_tracker
+        self._db: Database[Any] = self.client.fitness_tracker
 
         try:
             self.client.admin.command("ping")
