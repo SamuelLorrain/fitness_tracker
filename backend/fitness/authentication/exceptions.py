@@ -7,6 +7,7 @@ from fitness.commons.exceptions import CustomException, EntityDoesNotExistsExcep
 class UserAlreadyExistsException(CustomException):
     """Raise when a user already exist"""
     status_code: int = 409
+    message: Optional[str] = "The user already exists"
 
 
 @dataclass
