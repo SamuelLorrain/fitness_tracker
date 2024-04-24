@@ -7,8 +7,7 @@ from pytest import fixture
 from fitness.authentication.domain.auth_service import AuthService
 from fitness.authentication.domain.user_repository import UserRepository
 from fitness.authentication.exceptions import (
-    BadPasswordException,
-    UnknownUserException,
+    UnableToLoginException,
     UserAlreadyExistsException,
 )
 from fitness.authentication.infra.in_memory_user_repository import (
@@ -36,9 +35,9 @@ def test_login_with_good_credential(auth_service: AuthService) -> None:
 def test_login_with_bad_credential(auth_service: AuthService) -> None:
     email = "email@email.com"
     auth_service.register("f", "l", email, SecretStr("password"))
-    with pytest.raises(BadPasswordException):
+    with pytest.raises(UnableToLoginException):
         auth_service.login(email, SecretStr("bad_password"))
-    with pytest.raises(UnknownUserException):
+    with pytest.raises(UnableToLoginException):
         auth_service.login("bad@email.com", SecretStr("password"))
 
 
