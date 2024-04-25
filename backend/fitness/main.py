@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 
 from fitness.authentication.presentation.api import auth_router
 from fitness.food.presentation.api import food_router
+from fitness.entry.presentation.api import entry_router
 
 from fitness.commons.exceptions import CustomException
 
@@ -23,3 +24,4 @@ async def custom_exception_handler(_: Request, exc: CustomException) -> JSONResp
 
 app.include_router(auth_router)
 app.include_router(food_router)
+app.include_router(entry_router)
