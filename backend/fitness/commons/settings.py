@@ -7,4 +7,5 @@ class Settings(BaseSettings):
     ENVIRONMENT: str
     PW_SECRET: bytes
     JWT_SECRET: str
+    FRONTEND_DOMAIN: str
     MONGODB_CONNECTION_STRING: str
