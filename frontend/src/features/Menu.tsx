@@ -4,6 +4,7 @@ import { IonRouterOutlet } from '@ionic/react';
 import { addCircle, home, settings } from 'ionicons/icons';
 import { Redirect, Route } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
+import Add from "./food/Add";
 
 function Menu() {
   return (
@@ -11,12 +12,9 @@ function Menu() {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Route exact path="/home">
-            </Route>
-            <Route exact path="/add">
-            </Route>
-            <Route path="/settings">
-            </Route>
+            <Route exact path="/home"/>
+            <Route exact path="/add" component={Add}/>
+            <Route path="/settings"/>
             <Route exact path="/">
               <Redirect to="/home"/>
             </Route>
@@ -26,7 +24,7 @@ function Menu() {
               <IonIcon icon={home}/>
               <IonLabel>Home</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="b">
+            <IonTabButton tab="add" href="/add">
               <IonIcon icon={addCircle}/>
               <IonLabel>Add</IonLabel>
             </IonTabButton>
