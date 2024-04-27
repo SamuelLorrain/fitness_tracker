@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "frontend",
   "integrations": {
     "capacitor": {}
   },
