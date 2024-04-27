@@ -11,8 +11,8 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle, images } from 'ionicons/icons';
-import { CredentialPage } from './features/user/pages/CredentialPage';
-import Menu from "./features/Menu";
+import LoggingChooser from "./features/user/pages/LoggingChooser";
+import GlobalSpinner from "./features/common/GlobalSpinner";
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -43,16 +43,22 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import { useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
+import store from './app/store';
 
 setupIonicReact({ mode: 'ios' });
 
 const App: React.FC = () => {
-  const isLogged = useSelector((state) => state.user.isLogged);
-
   return (
     <IonApp>
-      {isLogged ? <Menu/> : <CredentialPage/>}
+      <>
+        {
+          true ? <GlobalSpinner/> :
+            <Provider store={store}>
+              <LoggingChooser/>
+            </Provider>
+        }
+      </>
     </IonApp>
   );
 };
