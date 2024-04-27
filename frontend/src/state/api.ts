@@ -28,9 +28,16 @@ export const api = createApi({
     }),
     searchFood: builder.query({
       query: (search) => `/food/?name_filter=${search}`
+    }),
+    createFood: builder.mutation({
+      query: (data) => ({
+        url: '/food',
+        method: 'POST',
+        body: data
+      })
     })
   }),
 })
 
-export const { useLoginMutation, useProtectedMutation, useSearchFoodQuery } = api
+export const { useLoginMutation, useProtectedMutation, useSearchFoodQuery, useCreateFoodMutation } = api
 
