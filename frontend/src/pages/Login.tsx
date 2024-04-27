@@ -10,11 +10,11 @@ import { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '../state/api';
 import { initUser } from "../state/userSlice";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-
   const dispatch = useDispatch();
   const [mutateLogin, { isLoading }] = useLoginMutation();
 
@@ -36,6 +36,7 @@ const Login = () => {
           <IonButton expand="full" disabled={isLoading} onClick={async () => {
             const user = await mutateLogin({username: email, password }).unwrap();
             dispatch(initUser(user));
+            window.history.replaceState(null, null, '/');
           }}>
             Login
           </IonButton>
