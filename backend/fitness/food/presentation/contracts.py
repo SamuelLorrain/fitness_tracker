@@ -1,7 +1,7 @@
 from typing import Optional
 from uuid import UUID
 from fitness.food.domain.value_objects import FoodGroup, NutritionComposition, OptionalNutritionComposition, ServingSize
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class FilterFoodQuery(BaseModel):
@@ -9,6 +9,10 @@ class FilterFoodQuery(BaseModel):
 
 
 class FoodRequest(BaseModel):
+    model_config: ConfigDict = ConfigDict({
+        "extra": 'forbid'
+    })
+
     name: str = Field(min_length=1)
     group: FoodGroup = Field(default=FoodGroup.unknown)
     nutrition: NutritionComposition = Field(default_factory=lambda:NutritionComposition())
