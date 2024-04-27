@@ -1,18 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
-import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-  setupIonicReact
-} from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle, images } from 'ionicons/icons';
-import LoggingChooser from "./features/user/pages/LoggingChooser";
-import GlobalSpinner from "./features/common/GlobalSpinner";
+import { IonApp, setupIonicReact } from '@ionic/react';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -43,24 +29,32 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import { Provider } from 'react-redux';
-import store from './app/store';
 
-setupIonicReact({ mode: 'ios' });
+import Menu from "./components/Menu";
+import CredentialPage from "./pages/CredentialPage"
+import { store } from './state/store';
+import { Provider, useSelector } from 'react-redux';
 
-const App: React.FC = () => {
+setupIonicReact();
+
+const TryLogin: React.FC = () => {
+  const isLogged = useSelector((state) => state.user.isLogged);
+
   return (
-    <IonApp>
-      <>
-        {
-          true ? <GlobalSpinner/> :
-            <Provider store={store}>
-              <LoggingChooser/>
-            </Provider>
-        }
-      </>
-    </IonApp>
+    <>
+      {
+        isLogged ? <Menu/> : <CredentialPage/>
+      }
+    </>
   );
-};
+}
+
+const App: React.FC = () => (
+  <Provider store={store}>
+    <IonApp>
+      <TryLogin/>
+    </IonApp>
+  </Provider>
+);
 
 export default App;
