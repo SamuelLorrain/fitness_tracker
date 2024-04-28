@@ -33,5 +33,12 @@ class FoodResponse(BaseModel):
     additional_serving_sizes: list[ServingSize]
     ingredient_list: list[str]
 
+
+class ListFoodResponseItem(BaseModel):
+    uuid: UUID
+    name: str
+    group: FoodGroup
+
+
 class ListFoodResponse(BaseModel):
-    foods: list[FoodResponse]
+    foods: list[ListFoodResponseItem]

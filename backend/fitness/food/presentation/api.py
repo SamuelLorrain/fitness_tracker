@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status, Response, Request
 from fitness.authentication.domain.entities import AuthPassKey
 from fitness.food.configuration import FoodConfiguration
 from fitness.food.domain.value_objects import FoodVA
-from fitness.food.presentation.contracts import FilterFoodQuery, FoodRequest, FoodResponse, ListFoodResponse, PatchFoodRequest
+from fitness.food.presentation.contracts import FilterFoodQuery, FoodRequest, FoodResponse, ListFoodResponse, PatchFoodRequest, ListFoodResponseItem
 from fitness.authentication.configuration import AuthenticationConfiguration
 
 
@@ -22,7 +22,7 @@ def list_food(
     configuration = FoodConfiguration()
     food_service = configuration.food_crud_service
     list_food = food_service.list_food(auth_pass_key, filter_food_query.name_filter)
-    food_response_list = [FoodResponse(**food.model_dump()) for food in list_food]
+    food_response_list = [ListFoodResponseItem(**food.model_dump()) for food in list_food]
     return ListFoodResponse(foods=food_response_list)
 
 
