@@ -26,10 +26,12 @@ export const api = createApi({
       }),
     }),
     verify: builder.mutation({
-      query: (access_token) => ({
+      query: (payload) => ({
         url: '/auth/verify',
-        method: 'POST',
-        body: access_token
+        method: 'GET',
+        headers: {
+          'authorization': `Bearer ${payload.access_token}`
+        }
       }),
     }),
     searchFood: builder.query({
