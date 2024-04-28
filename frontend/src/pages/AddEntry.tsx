@@ -7,6 +7,7 @@ import { IonInput, IonButton, IonButtons } from "@ionic/react";
 import { IonHeader, IonToolbar, IonTitle, IonContent } from "@ionic/react";
 import { IonCard, IonCardHeader, IonCardTitle } from "@ionic/react";
 import { IonIcon } from '@ionic/react';
+import { IonRippleEffect } from '@ionic/react';
 import { add } from 'ionicons/icons';
 
 const isSearchValid = (search: String): boolean => {
@@ -14,12 +15,18 @@ const isSearchValid = (search: String): boolean => {
 }
 
 const FoodCard: React.FC = ({ food }) => {
+
+  const clickOnFood = () => true;
+
   return (
-    <IonCard>
-      <IonCardHeader>
-        <IonCardTitle>{food.name}</IonCardTitle>
-      </IonCardHeader>
-    </IonCard>
+      <div>
+        <IonCard onClick={clickOnFood} className="clickable ion-activatable ripple-parent">
+          <IonRippleEffect></IonRippleEffect>
+          <IonCardHeader>
+            <IonCardTitle>{food.name}</IonCardTitle>
+          </IonCardHeader>
+        </IonCard>
+      </div>
   );
 }
 
