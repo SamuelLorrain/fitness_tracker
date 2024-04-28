@@ -1,4 +1,4 @@
-import { IonApp, setupIonicReact } from '@ionic/react';
+import { IonApp, IonSpinner, setupIonicReact } from '@ionic/react';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -34,6 +34,11 @@ import Menu from "./components/Menu";
 import CredentialPage from "./pages/CredentialPage"
 import { store } from './state/store';
 import { Provider, useSelector } from 'react-redux';
+import { useState, useEffect } from "react";
+import { PersistenceSingleton } from "./state/persistence";
+import { useDispatch } from 'react-redux';
+import { initUser } from "./state/userSlice";
+import { useVerifyMutation } from "./state/api";
 
 setupIonicReact();
 
@@ -49,12 +54,46 @@ const TryLogin: React.FC = () => {
   );
 }
 
-const App: React.FC = () => (
-  <Provider store={store}>
-    <IonApp>
-      <TryLogin/>
-    </IonApp>
-  </Provider>
-);
+const Initialization: React.FC = ({children}) => {
+  const [isInitialized, setIsInitialized] = useState(true);
+  const dispatch = useDispatch();
+  const [mutateVerify, { isLoading }] = useVerifyMutation();
+
+  useEffect(() => {
+    (async function() {
+      await PersistenceSingleton().create();
+      const token = await PersistenceSingleton().get('user_token');
+      const response = await mutateVerify({
+        access_token: token
+      }).unwrap();
+      dispatch(initUser({
+        access_token: token
+      }))
+      setIsInitialized(true);
+    })()
+  }, [setIsInitialized]);
+
+
+  if (isInitialized) {
+    return <>
+      {children}
+    </>;
+  } else {
+    return <IonSpinner/>
+  }
+}
+
+
+const App: React.FC = () => {
+  return (
+    <Provider store={store}>
+      <IonApp>
+        <Initialization>
+          <TryLogin/>
+        </Initialization>
+      </IonApp>
+    </Provider>
+  );
+};
 
 export default App;
