@@ -1,7 +1,7 @@
 import { useHistory } from "react-router";
 import { useState } from "react";
 import Basis from "../components/Basis";
-import { useSearchFoodQuery } from "../state/api";
+import { useSearchFoodMutation } from "../state/api";
 
 import { IonInput, IonButton, IonButtons } from "@ionic/react";
 import { IonHeader, IonToolbar, IonTitle, IonContent } from "@ionic/react";
@@ -25,19 +25,20 @@ const FoodCard: React.FC = ({ food }) => {
 
 const FoodList: React.FC = ({search}) => {
   const [skip, setSkip] = useState(true);
-  const {data = [], isFetching, refetch} = useSearchFoodQuery(search, {skip: skip});
+  const [data, setData] = useState([]);
+  const [mutateSearchFood, { isLoading }] = useSearchFoodMutation();
 
-  const onSearch = () => {
-    if (skip == true) {
-      setSkip(false);
-    } else {
-      refetch()
+  const onSearch = async () => {
+    if (!isSearchValid(search)) {
+      return;
     }
+    const response = await mutateSearchFood(search).unwrap();
+    setData(response);
   }
 
   return (
     <>
-      <IonButton expand="full" onClick={onSearch} disabled={isFetching || !isSearchValid(search) }>
+      <IonButton expand="full" onClick={onSearch} disabled={isLoading || !isSearchValid(search) }>
         Search
       </IonButton>
       <>
@@ -69,7 +70,7 @@ const AddEntry: React.FC = () => {
       <IonContent className="ion-padding">
         <IonInput label="search food"
                   value={search}
-                  onIonChange={(e) => setSearch(e.target.value)}>
+                  onIonInput={(e) => setSearch(e.target.value)}>
         </IonInput>
         <FoodList search={search}/>
       </IonContent>
