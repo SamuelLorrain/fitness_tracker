@@ -3,7 +3,6 @@ import { RootState } from './store';
 
 const prepareHeaders = (headers, { getState }) => {
   const token = (getState() as RootState)?.user?.token;
-  console.log("header", token);
   if (token != null) {
     headers.set('authorization', `Bearer ${token}`)
   }
@@ -26,6 +25,13 @@ export const api = createApi({
         body: new URLSearchParams(Object.entries(credentials)).toString()
       }),
     }),
+    verify: builder.mutation({
+      query: (access_token) => ({
+        url: '/auth/verify',
+        method: 'POST',
+        body: access_token
+      }),
+    }),
     searchFood: builder.query({
       query: (search) => `/food/?name_filter=${search}`
     }),
@@ -37,7 +43,12 @@ export const api = createApi({
       })
     })
   }),
-})
+});
 
-export const { useLoginMutation, useProtectedMutation, useSearchFoodQuery, useCreateFoodMutation } = api
+export const {
+  useLoginMutation,
+  useVerifyMutation,
+  useSearchFoodQuery,
+  useCreateFoodMutation
+} = api;
 
