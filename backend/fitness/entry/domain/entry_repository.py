@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Optional, Protocol
+from typing import Generator, Optional, Protocol
 from uuid import UUID
 
 from fitness.entry.domain.entity import Entry
@@ -9,10 +9,10 @@ from fitness.food.domain.entities import Food
 
 
 class EntryRepository(Protocol):
-    def create_entry(
+    def store_entry(
         self,
         user_uuid: UUID,
-        datetime: datetime,
+        date_time: datetime,
         entry_type: EntryTypeEnum,
         payload: SavablePayload
     ) -> UUID:
@@ -26,11 +26,11 @@ class EntryRepository(Protocol):
     ) -> Entry:
         ... # pragma: no cover
 
-    def get_entry_list(
+    def iter_entry(
         self,
         user_uuid: UUID,
         date: date
-    ) -> list[Entry]:
+    ) -> Generator[Entry, None, None]:
         ... # pragma: no cover
 
     def get_food(self, user_uuid: UUID, food_uuid: UUID) -> Optional[Food]:

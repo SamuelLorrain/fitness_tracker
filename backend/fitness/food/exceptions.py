@@ -4,6 +4,7 @@ from fitness.commons.exceptions import CustomException, EntityDoesNotExistsExcep
 
 @dataclass
 class FoodDoesNotExistsException(EntityDoesNotExistsException):
+    message = "food entity doesn't exists"
     """Raised when a fetched food doesn't exist"""
 
 
