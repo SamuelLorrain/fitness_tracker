@@ -11,6 +11,7 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 
 import AddEntry from "../pages/AddEntry";
+import AddEntryForm from "../pages/AddEntryForm";
 import AddFood from "../pages/AddFood";
 import Report from "../pages/Report";
 import Settings from "../pages/Settings";
@@ -26,6 +27,7 @@ const Menu = () => {
           <Route exact path="/add-entry" component={AddEntry}/>
           <Route exact path="/add-food" component={AddFood}/>
           <Route exact path="/settings" component={Settings}/>
+          <Route exact path="/entry-form/:uuid" component={AddEntryForm}/>
           <Route exact path="/">
             <Redirect to="/report"/>
           </Route>
