@@ -36,13 +36,13 @@ export const api = createApi({
     }),
     searchFood: builder.mutation({
       query: (search) => ({
-        url: `/food/?name_filter=${search}`,
+        url: `/food?name_filter=${search}`,
         method: 'GET'
       })
     }),
     createFood: builder.mutation({
       query: (data) => ({
-        url: '/food/',
+        url: '/food',
         method: 'POST',
         body: data
       })
@@ -55,7 +55,7 @@ export const api = createApi({
     }),
     createEntry: builder.mutation({
       query: (data) => ({
-        url: '/entry/',
+        url: '/entry',
         method: 'POST',
         body: data
       })
