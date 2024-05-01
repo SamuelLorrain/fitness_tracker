@@ -1,5 +1,5 @@
 from uuid import UUID
-from fitness.food.domain.value_objects import Grams, KCal, ServingSize
+from fitness.food.domain.value_objects import Grams, KCal, NutritionComposition
 from pydantic import BaseModel
 
 
@@ -12,8 +12,8 @@ class KcalPayload(BaseModel):
 
 
 class FoodPayload(BaseModel):
-    food_uuid: UUID
-    serving_size: ServingSize
+    base_food_uuid: UUID
+    nutrition: NutritionComposition
 
 
 EntryPayload = WaterPayload | KcalPayload | FoodPayload
