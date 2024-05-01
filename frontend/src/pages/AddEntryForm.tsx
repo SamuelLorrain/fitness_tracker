@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IonInput, IonButton, IonButtons, IonSelect, IonSelectOption } from "@ionic/react";
-import { useGetFoodQuery } from "../state/api";
+import { useGetFoodQuery, useCreateEntryMutation } from "../state/api";
 
 type ServingSize = {
   name: String;
@@ -35,10 +35,20 @@ class BaseNutrition {
       (this.proteins * otherServingSize.grams) / this.servingSize.grams
     );
   }
+
+  toValidEntryForm() {
+    return {
+      calories: this.calories,
+      carbohydrates: this.carbohydrates,
+      lipids: this.lipids,
+      proteins: this.proteins
+    }
+  }
 }
 
 const useAddEntryForm = (uuid) => {
   const {data, error, isFetching} = useGetFoodQuery(uuid);
+  const [entryMutation] = useCreateEntryMutation();
   const [fetchedNutrition, setFetchedNutrition] = useState<BaseNutrition|null>(null);
   const [currentNutrition, setCurrentNutrition] = useState<BaseNutrition|null>(null);
   const [currentServingSize, setCurrentServingSize] = useState<ServingSize|null>(null);
@@ -69,7 +79,8 @@ const useAddEntryForm = (uuid) => {
     setCurrentServingSize,
     data,
     error,
-    isFetching
+    isFetching,
+    entryMutation
   }
 }
 
@@ -82,11 +93,16 @@ const AddEntryForm: React.FC = () => {
     setCurrentServingSize,
     data,
     error,
-    isFetching
+    isFetching,
+    entryMutation
   } = useAddEntryForm(uuid);
 
   const updateServingSize = (e) => {
     setCurrentServingSize({name: "g", grams: e.target.value} as ServingSize)
+  }
+
+  const submitEntry = () => {
+    entryMutation(currentNutrition.toValidEntryForm());
   }
 
   if (isFetching || currentNutrition == null) {
@@ -115,7 +131,7 @@ const AddEntryForm: React.FC = () => {
         <div>proteins : {currentNutrition.proteins}</div>
         <div>carbohydrates : {currentNutrition.carbohydrates}</div>
       </div>
-      <IonButton expand="full">Submit</IonButton>
+      <IonButton expand="full" onClick={submitEntry}>Submit</IonButton>
     </Basis>
   );
 }
