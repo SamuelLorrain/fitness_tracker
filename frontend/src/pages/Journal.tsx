@@ -60,9 +60,18 @@ const Journal: React.FC = () => {
       {date?.toString()}
       {
         (journalPayload == null || journalPayload?.entries?.length === 0) ?
-        <div>no entries for today !</div>
-        :
-        <div>TODO: display list of entries for the day</div>
+          <div>no entries for today !</div>
+        : (
+            journalPayload.entries.map(entry => {
+              return (
+                <div>
+                  <div>{entry?.payload?.name}
+                    -
+                  {entry?.payload?.nutrition.serving_size.grams} g</div>
+                </div>
+              );
+          })
+        )
       }
       <IonButton expand="full" onClick={gotToAddEntryForm}>Add Entry</IonButton>
     </Basis>
