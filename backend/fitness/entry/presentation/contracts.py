@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from uuid import UUID
 from fitness.entry.domain.entity_payload import EntryPayload
 from fitness.entry.domain.entry_type_enum import EntryTypeEnum
@@ -18,5 +18,14 @@ class EntryResponse(BaseModel):
     entry_type: EntryTypeEnum
     payload: EntryPayload
 
+
+class EntryListItemResponse(BaseModel):
+    datetime: datetime
+    entry_type: EntryTypeEnum
+    payload: EntryPayload
+
+
 class EntryListResponse(BaseModel):
-    entries: list[EntryResponse]
+    user_uuid: UUID
+    date: date
+    entries: list[EntryListItemResponse]

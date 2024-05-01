@@ -5,7 +5,7 @@ from fitness.authentication.configuration import AuthenticationConfiguration
 from fitness.authentication.domain.entities import AuthPassKey
 from fitness.entry.exceptions import EntryDoesNotExistException
 from fitness.entry.configuration import EntryConfiguration
-from fitness.entry.presentation.contracts import CreateEntryRequest, EntryListResponse, EntryResponse
+from fitness.entry.presentation.contracts import CreateEntryRequest, EntryListItemResponse, EntryListResponse, EntryResponse
 from datetime import date
 
 entry_router = APIRouter(tags=["entry"])
@@ -55,4 +55,8 @@ def list_entry(
         auth_pass_key.uuid,
         date,
     )
-    return EntryListResponse(entries=[EntryResponse(**e.model_dump()) for e in entries])
+    return EntryListResponse(
+        user_uuid=auth_pass_key.uuid,
+        date=date,
+        entries=[EntryListItemResponse(**e.model_dump()) for e in entries]
+    )
