@@ -35,9 +35,9 @@ const createValidFoodRequest = (data) => ({
   }
 })
 
-const FoodForm: React.FC = () => {
+const AddFoodForm: React.FC = () => {
   const [mutateCreateFood, { isLoading }] = useCreateFoodMutation();
-  const { history } = useHistory();
+  const history = useHistory();
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -97,6 +97,7 @@ const FoodForm: React.FC = () => {
       <IonInput
         className={`${formik.errors.serving_weight && 'ion-invalid'} ${formik.touched.serving_weight && 'ion-touched'} `}
         label="Serving Weight"
+        step="0.01"
         value={formik.values.serving_weight}
         errorText={formik.errors.serving_weight}
         onIonChange={(e) => formik.setFieldValue('serving_weight', e.detail.value)}
@@ -106,6 +107,7 @@ const FoodForm: React.FC = () => {
       <IonInput
         label="Energy"
         className={`${formik.errors.energy && 'ion-invalid'} ${formik.touched.energy && 'ion-touched'} `}
+        step="0.01"
         value={formik.values.energy}
         errorText={formik.errors.energy}
         onIonChange={(e) => formik.setFieldValue('energy', e.detail.value)}
@@ -114,6 +116,7 @@ const FoodForm: React.FC = () => {
       />
       <IonInput
         label="Fat"
+        step="0.01"
         className={`${formik.errors.fat && 'ion-invalid'} ${formik.touched.fat && 'ion-touched'} `}
         value={formik.values.fat}
         errorText={formik.errors.fat}
@@ -123,6 +126,7 @@ const FoodForm: React.FC = () => {
       />
       <IonInput
         label="Carbs"
+        step="0.01"
         className={`${formik.errors.carbs && 'ion-invalid'} ${formik.touched.carbs && 'ion-touched'} `}
         value={formik.values.carbs}
         errorText={formik.errors.carbs}
@@ -132,6 +136,7 @@ const FoodForm: React.FC = () => {
       />
       <IonInput
         label="Proteins"
+        step="0.01"
         className={`${formik.errors.proteins && 'ion-invalid'} ${formik.touched.proteins && 'ion-touched'} `}
         value={formik.values.proteins}
         errorText={formik.errors.proteins}
@@ -162,7 +167,7 @@ const AddFood: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <FoodForm/>
+        <AddFoodForm/>
       </IonContent>
     </>
   );
