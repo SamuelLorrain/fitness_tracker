@@ -42,9 +42,14 @@ class MongoDBEntryRepository(EntryRepository):
     ) -> Generator[Entry, None, None]:
         db_journal_record = self.journal_collection.find_one({
             "user_uuid": user_uuid,
-            "date": date,
+            "date": datetime.combine(date, datetime.min.time()),
         })
-        return (Entry(**entry) for entry in db_journal_record.entries)
+        if db_journal_record is None:
+            def empty() -> Entry:
+                return
+                yield
+            return empty()
+        return (Entry(**entry) for entry in db_journal_record["entries"])
 
     def get_food(self, user_uuid: UUID, food_uuid: UUID) -> Optional[Food]:
         db_food = self.food_collection.find_one(
