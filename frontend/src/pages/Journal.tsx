@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import Basis from "../components/Basis";
 import { useListEntryQuery } from "../state/api";
-import { IonButton } from "@ionic/react";
+import { IonButton, IonHeader, IonContent, IonToolbar, IonTitle, IonButtons, IonIcon } from "@ionic/react";
 import { formatDay } from "../utils/date_utils";
+import { add, format, parse, getUnixTime } from "date-fns";
+import { chevronBack, chevronForward } from "ionicons/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { setTimestamp } from "../state/userSlice";
 
 /**
  * YYYY-MM-DD to Date, if the entry is invalid, return invalid date
@@ -15,70 +19,85 @@ const parseDayStringToDate = (formattedDay: string): Date  => {
   return new Date(year, month-1, day);
 }
 
-const moveDay = (dateString: Date, dayDelta: number): Date => {
-  // TODO
-}
-
 const useJournal = () => {
-  const { day: stringDay } = useParams();
-  const history = useHistory();
-  const [skip, setSkip] = useState(true);
-  const [date, setDate] = useState(stringDay ? parseDayStringToDate(stringDay) : null);
-  const { data, error, isLoading } = useListEntryQuery(date ? formatDay(date) : null, { skip });
+  const dispatch = useDispatch();
+  const timestamp = useSelector(state => state.user.currentTimestamp);
+  const date = parse(String(timestamp), 't', new Date());
+  const { data, error, isLoading } = useListEntryQuery(formatDay(date));
+  const [entries, setEntries] = useState(data?.entries); // used to trigger the rerender of the entries
+
+  const moveForward = () => {
+    dispatch(setTimestamp({timestamp: getUnixTime(add(date, {days: 1}))}));
+  }
+  const moveBackward = () => {
+    dispatch(setTimestamp({timestamp: getUnixTime(add(date, {days: -1}))}));
+  }
 
   useEffect(() => {
-    if (date == null) {
-      history.push(`/journal/${formatDay(new Date())}`)
-    } else {
-      setSkip(false);
+    if (data != null) {
+      setEntries(structuredClone(data?.entries))
     }
-  }, [date]);
+  }, [data, setEntries, data && data?.entries.length]);
 
   return {
+    moveForward,
+    moveBackward,
     date,
-    journalPayload: data,
-    isLoading
+    isLoading,
+    entries
   }
 }
 
 const Journal: React.FC = () => {
-  const { date, journalPayload, isLoading } = useJournal();
   const history = useHistory();
-  // used to trigger the rerender of the entries, weirdly...
-  const [entries, setEntries] = useState(journalPayload);
+  const { date, entries, isLoading, moveForward, moveBackward } = useJournal();
 
   const gotToAddEntryForm = () => {
     history.push('/add-entry');
   }
 
-  useEffect(() => {
-    if (journalPayload != null) {
-      setEntries(structuredClone(journalPayload?.entries))
-    }
-  }, [journalPayload, setEntries, journalPayload && journalPayload?.entries.length]);
+  console.log("entries", entries);
 
   return (
-    <Basis name="Journal" key={JSON.stringify(Date.now())}>
-      <div className="scrollable">
-      {date?.toString()}
-      {
-        (entries == null || entries.length == 0) ?
-          <div>no entries for today !</div>
-        : (
-            entries.map(entry => {
-              return (
-                <div key={entry.uuid}>
-                  <div>{entry?.payload?.food_name}
-                    -
-                  {entry?.payload?.nutrition.serving_size.grams} g</div>
-                </div>
-              );
-          })
-        )
-      }
-      <IonButton expand="full" onClick={gotToAddEntryForm}>Add Entry</IonButton>
-      </div>
-    </Basis>
+    <>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>
+            Journal
+          </IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={moveBackward}>
+              <IonIcon icon={chevronBack}></IonIcon>
+            </IonButton>
+            {date ? format(date, 'yyy MMM dd') : null}
+            <IonButton onClick={moveForward}>
+              <IonIcon icon={chevronForward}></IonIcon>
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
+        <div className="scrollable">
+        {
+          (entries == null || entries.length == 0) ?
+            <div>no entries for today !</div>
+          : (
+              entries?.map(entry => {
+                return (
+                  <div key={entry.uuid}>
+                    <div>{entry?.payload?.food_name}
+                      -
+                    {entry?.payload?.nutrition.serving_size.grams} g</div>
+                  </div>
+                );
+            })
+          )
+        }
+        <IonButton expand="full" onClick={gotToAddEntryForm}>Add Entry</IonButton>
+        </div>
+        <div className="blank-space"> </div>
+      </IonContent>
+    </>
   );
 }
 
