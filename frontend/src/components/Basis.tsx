@@ -10,6 +10,7 @@ const Basis: React.FC = ({name, children}) => {
       </IonHeader>
       <IonContent className="ion-padding">
         {children}
+        <div className="blank-space"></div>
       </IonContent>
     </>
   );

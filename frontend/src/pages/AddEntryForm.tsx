@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IonInput, IonButton, IonButtons, IonSelect, IonSelectOption } from "@ionic/react";
 import { useGetFoodQuery, useCreateEntryMutation } from "../state/api";
+import { formatDay } from "../utils/date_utils";
 
 type ServingSize = {
   name: String;
@@ -125,7 +126,7 @@ const AddEntryForm: React.FC = () => {
 
   const submitEntry = async () => {
     await entryMutation(currentNutrition.toValidEntryForm(new Date(), uuid)).unwrap();
-    history.push('/journal');
+    history.push(`/journal/${formatDay(new Date())}`);
   }
 
   if (isFetching || currentNutrition == null) {
