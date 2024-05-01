@@ -60,8 +60,6 @@ class InMemoryEntryRepository(EntryRepository):
         return self.data.get((user_uuid, date), [])
 
 
-    def get_food(self, user_uuid: UUID, food_uuid: UUID) -> Food:
+    def get_food(self, user_uuid: UUID, food_uuid: UUID) -> Optional[Food]:
         food = self.food_data.get(food_uuid)
-        if food is None:
-            raise FoodDoesNotExistsException
         return food
