@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import { IonInput, IonButton, IonButtons, IonSelect, IonSelectOption } from "@ionic/react";
 import { useGetFoodQuery, useCreateEntryMutation } from "../state/api";
 import { formatDay } from "../utils/date_utils";
+import { parse } from "date-fns";
+import { useSelector } from "react-redux";
 
 type ServingSize = {
   name: String;
@@ -88,6 +90,10 @@ const useAddEntryForm = (uuid) => {
     }
   }, [data]);
 
+  const updateServingSize = (e) => {
+    setCurrentServingSize({name: "g", grams: e.target.value} as ServingSize)
+  }
+
   useEffect(() => {
     if (fetchedNutrition != null && currentServingSize != null) {
       setCurrentNutrition(fetchedNutrition.newServingSize(currentServingSize));
@@ -98,7 +104,7 @@ const useAddEntryForm = (uuid) => {
     food: data,
     currentNutrition,
     currentServingSize,
-    setCurrentServingSize,
+    updateServingSize,
     data,
     error,
     isFetching,
@@ -113,20 +119,18 @@ const AddEntryForm: React.FC = () => {
     food,
     currentNutrition,
     currentServingSize,
-    setCurrentServingSize,
+    updateServingSize,
     data,
     error,
     isFetching,
     entryMutation
   } = useAddEntryForm(uuid);
-
-  const updateServingSize = (e) => {
-    setCurrentServingSize({name: "g", grams: e.target.value} as ServingSize)
-  }
+  const timestamp = useSelector(state => state.user.currentTimestamp);
+  const date = parse(String(timestamp), 't', new Date());
 
   const submitEntry = async () => {
-    await entryMutation(currentNutrition.toValidEntryForm(new Date(), uuid)).unwrap();
-    history.push(`/journal/${formatDay(new Date())}`);
+    await entryMutation(currentNutrition.toValidEntryForm(date, uuid)).unwrap();
+    history.push('/journal');
   }
 
   if (isFetching || currentNutrition == null) {

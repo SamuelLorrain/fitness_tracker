@@ -29,7 +29,7 @@ const Menu = () => {
           <Route exact path="/add-food" component={AddFood}/>
           <Route exact path="/settings" component={Settings}/>
           <Route exact path="/entry-form/:uuid" component={AddEntryForm}/>
-          <Route exact path="/journal/:day?" component={Journal}/>
+          <Route exact path="/journal" component={Journal}/>
           <Route exact path="/">
             <Redirect to="/report"/>
           </Route>
