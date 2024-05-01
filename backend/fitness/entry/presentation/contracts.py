@@ -20,6 +20,7 @@ class EntryResponse(BaseModel):
 
 
 class EntryListItemResponse(BaseModel):
+    uuid: UUID
     datetime: datetime
     entry_type: EntryTypeEnum
     payload: EntryPayload

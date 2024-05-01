@@ -64,8 +64,8 @@ const Journal: React.FC = () => {
         : (
             journalPayload.entries.map(entry => {
               return (
-                <div>
-                  <div>{entry?.payload?.name}
+                <div key={entry.uuid}>
+                  <div>{entry?.payload?.food_name}
                     -
                   {entry?.payload?.nutrition.serving_size.grams} g</div>
                 </div>

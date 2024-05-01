@@ -12,6 +12,7 @@ class KcalPayload(BaseModel):
 
 
 class FoodPayload(BaseModel):
+    food_name: str
     base_food_uuid: UUID
     nutrition: NutritionComposition
 

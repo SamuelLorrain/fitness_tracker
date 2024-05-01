@@ -32,6 +32,7 @@ class EntryService:
             if food is None:
                 raise FoodDoesNotExistsException
             savable = FoodSavablePayload(
+                food_name=payload.food_name,
                 base_food_uuid=payload.base_food_uuid,
                 nutrition=payload.nutrition.model_dump()
             )

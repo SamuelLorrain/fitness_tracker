@@ -75,6 +75,7 @@ class MongoDBEntryRepository(EntryRepository):
             datetime=date_time,
             entry_type=entry_type,
             payload=FoodPayload(
+                food_name=payload.food_name,
                 base_food_uuid=payload.base_food_uuid,
                 nutrition=payload.nutrition
             )

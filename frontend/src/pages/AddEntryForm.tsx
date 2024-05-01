@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Basis from "../components/Basis";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { IonInput, IonButton, IonButtons, IonSelect, IonSelectOption } from "@ionic/react";
@@ -18,7 +18,8 @@ class BaseNutrition {
   readonly lipids: number;
   readonly proteins: number;
 
-  constructor(servingSize: ServingSize, calories: number, carbohydrates: number, lipids: number, proteins: number) {
+  constructor(servingSize: ServingSize, calories: number, carbohydrates: number, lipids: number, proteins: number, name: string) {
+    this.name = name;
     this.servingSize = {name: servingSize.name, grams: servingSize.grams};
     this.calories = calories;
     this.carbohydrates = carbohydrates;
@@ -32,7 +33,8 @@ class BaseNutrition {
       (this.calories * otherServingSize.grams) / this.servingSize.grams,
       (this.carbohydrates * otherServingSize.grams) / this.servingSize.grams,
       (this.lipids * otherServingSize.grams) / this.servingSize.grams,
-      (this.proteins * otherServingSize.grams) / this.servingSize.grams
+      (this.proteins * otherServingSize.grams) / this.servingSize.grams,
+      this.name
     );
   }
 
@@ -42,7 +44,12 @@ class BaseNutrition {
       entry_type: "food",
       payload: {
         base_food_uuid: baseFoodUuid,
+        food_name: this.name,
         nutrition: {
+          serving_size: {
+            name: this.servingSize.name,
+            grams: this.servingSize.grams,
+          },
           calories: this.calories,
           carbohydrates: {
             carbs: this.carbohydrates
@@ -74,6 +81,7 @@ const useAddEntryForm = (uuid) => {
         data.nutrition.carbohydrates.carbs,
         data.nutrition.lipids.fat,
         data.nutrition.proteins.protein,
+        data.name
       ));
       setCurrentServingSize(data.nutrition.serving_size as ServingSize);
     }
@@ -99,6 +107,7 @@ const useAddEntryForm = (uuid) => {
 
 const AddEntryForm: React.FC = () => {
   const { uuid } = useParams();
+  const history = useHistory();
   const {
     food,
     currentNutrition,
@@ -114,8 +123,9 @@ const AddEntryForm: React.FC = () => {
     setCurrentServingSize({name: "g", grams: e.target.value} as ServingSize)
   }
 
-  const submitEntry = () => {
-    entryMutation(currentNutrition.toValidEntryForm(new Date(), uuid));
+  const submitEntry = async () => {
+    await entryMutation(currentNutrition.toValidEntryForm(new Date(), uuid)).unwrap();
+    history.push('/journal');
   }
 
   if (isFetching || currentNutrition == null) {
