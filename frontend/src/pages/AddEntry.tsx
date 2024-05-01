@@ -15,8 +15,11 @@ const isSearchValid = (search: String): boolean => {
 }
 
 const FoodCard: React.FC = ({ food }) => {
+  const history = useHistory();
 
-  const clickOnFood = () => true;
+  const clickOnFood = () => {
+    history.replace(`/entry-form/${food.uuid}`);
+  };
 
   return (
       <div>
