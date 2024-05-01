@@ -46,7 +46,13 @@ export const api = createApi({
         method: 'POST',
         body: data
       })
-    })
+    }),
+    getFood: builder.query({
+      query: (uuid) => ({
+        url: `/food/${uuid}`,
+        method: 'GET'
+      })
+    }),
   }),
 });
 
@@ -54,6 +60,7 @@ export const {
   useLoginMutation,
   useVerifyMutation,
   useSearchFoodMutation,
-  useCreateFoodMutation
+  useCreateFoodMutation,
+  useGetFoodQuery
 } = api;
 
