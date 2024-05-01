@@ -14,6 +14,7 @@ export const api = createApi({
     baseUrl: `${import.meta.env.VITE_BACKEND_DOMAIN}`,
     prepareHeaders
   }),
+  tagTypes: ["Entry"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
@@ -58,13 +59,17 @@ export const api = createApi({
         url: '/entry',
         method: 'POST',
         body: data
-      })
+      }),
+      invalidatesTags: ["Entry"]
     }),
     listEntry: builder.query({
-      query: (date) => ({
-        url: `/entry/${date}`,
-        method: 'GET'
-      })
+      query: (date) => {
+        return {
+          url: `/entry/${date}`,
+          method: 'GET'
+        }
+      },
+      providesTags: ["Entry"]
     })
   }),
 });
