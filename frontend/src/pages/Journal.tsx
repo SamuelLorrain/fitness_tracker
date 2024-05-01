@@ -9,16 +9,6 @@ import { chevronBack, chevronForward } from "ionicons/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { setTimestamp } from "../state/userSlice";
 
-/**
- * YYYY-MM-DD to Date, if the entry is invalid, return invalid date
- */
-const parseDayStringToDate = (formattedDay: string): Date  => {
-  const year = formattedDay.slice(0,4);
-  const month = formattedDay.slice(5,7);
-  const day = formattedDay.slice(8,10);
-  return new Date(year, month-1, day);
-}
-
 const useJournal = () => {
   const dispatch = useDispatch();
   const timestamp = useSelector(state => state.user.currentTimestamp);
@@ -55,8 +45,6 @@ const Journal: React.FC = () => {
   const gotToAddEntryForm = () => {
     history.push('/add-entry');
   }
-
-  console.log("entries", entries);
 
   return (
     <>
