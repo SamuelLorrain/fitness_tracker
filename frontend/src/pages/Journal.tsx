@@ -7,10 +7,10 @@ import { IonButton } from "@ionic/react";
 /**
  * YYYY-MM-DD to Date, if the entry is invalid, return invalid date
  */
-const parseDayStringToDate = (formatDay: string): Date  => {
-  const year = formatDay.slice(0,4);
-  const month = formatDay.slice(5,7);
-  const day = formatDay.slice(8,10);
+const parseDayStringToDate = (formattedDay: string): Date  => {
+  const year = formattedDay.slice(0,4);
+  const month = formattedDay.slice(5,7);
+  const day = formattedDay.slice(8,10);
   return new Date(year, month-1, day);
 }
 
@@ -29,8 +29,8 @@ const useJournal = () => {
   const { day: stringDay } = useParams();
   const history = useHistory();
   const [skip, setSkip] = useState(true);
-  const [date, setDate] = useState(parseDayStringToDate(stringDay));
-  const { data, error, isLoading } = useListEntryQuery(formatDay(date), { skip });
+  const [date, setDate] = useState(stringDay ? parseDayStringToDate(stringDay) : null);
+  const { data, error, isLoading } = useListEntryQuery(date ? formatDay(date) : null, { skip });
 
   useEffect(() => {
     if (date == null) {
@@ -57,7 +57,7 @@ const Journal: React.FC = () => {
 
   return (
     <Basis name="Journal">
-      {date.toString()}
+      {date?.toString()}
       {
         (journalPayload == null || journalPayload?.entries?.length === 0) ?
         <div>no entries for today !</div>
