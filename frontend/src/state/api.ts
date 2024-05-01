@@ -59,6 +59,12 @@ export const api = createApi({
         method: 'POST',
         body: data
       })
+    }),
+    listEntry: builder.query({
+      query: (date) => ({
+        url: `/entry/${date}`,
+        method: 'GET'
+      })
     })
   }),
 });
@@ -69,6 +75,7 @@ export const {
   useSearchFoodMutation,
   useCreateFoodMutation,
   useGetFoodQuery,
-  useCreateEntryMutation
+  useCreateEntryMutation,
+  useListEntryQuery
 } = api;
 

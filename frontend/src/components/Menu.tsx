@@ -15,6 +15,7 @@ import AddEntryForm from "../pages/AddEntryForm";
 import AddFood from "../pages/AddFood";
 import Report from "../pages/Report";
 import Settings from "../pages/Settings";
+import Journal from "../pages/Journal";
 
 import { ellipse, square, triangle } from 'ionicons/icons';
 
@@ -28,6 +29,7 @@ const Menu = () => {
           <Route exact path="/add-food" component={AddFood}/>
           <Route exact path="/settings" component={Settings}/>
           <Route exact path="/entry-form/:uuid" component={AddEntryForm}/>
+          <Route exact path="/journal/:day?" component={Journal}/>
           <Route exact path="/">
             <Redirect to="/report"/>
           </Route>
@@ -37,11 +39,15 @@ const Menu = () => {
             <IonIcon aria-hidden="true" icon={triangle} />
             <IonLabel>Report</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/add-entry">
+          <IonTabButton tab="tab2" href="/journal">
+            <IonIcon aria-hidden="true" icon={ellipse} />
+            <IonLabel>Journal</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="tab3" href="/add-entry">
             <IonIcon aria-hidden="true" icon={ellipse} />
             <IonLabel>Add</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab3" href="/settings">
+          <IonTabButton tab="tab4" href="/settings">
             <IonIcon aria-hidden="true" icon={square} />
             <IonLabel>Settings</IonLabel>
           </IonTabButton>
