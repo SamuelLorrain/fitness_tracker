@@ -8,10 +8,7 @@ from fitness.entry.domain.entity_payload import FoodPayload, KcalPayload, WaterP
 from fitness.entry.domain.entry_repository import EntryRepository
 from fitness.entry.domain.savable_payload import FoodSavablePayload, KCalSavablePayload, SavablePayload, WaterSavablePayload
 from fitness.entry.presentation.contracts import EntryPayload, EntryTypeEnum
-
-"""
-0b647c22-55dc-42f7-8663-01b403f3c3c4
-"""
+from fitness.food.exceptions import FoodDoesNotExistsException
 
 @dataclass
 class EntryService:
@@ -25,14 +22,17 @@ class EntryService:
         payload: EntryPayload
     ) -> UUID:
         # TODO verify that entry_type is compatible with payload
+        # TODO use some kind of dispatch
         savable: SavablePayload
         if isinstance(payload, FoodPayload):
             food = self.entry_repository.get_food(
                 user_uuid,
-                payload.food_uuid
+                payload.base_food_uuid
             )
+            if food is None:
+                raise FoodDoesNotExistsException
             savable = FoodSavablePayload(
-                **food.nutrition.model_dump()
+                **payload.nutrition.model_dump()
             )
         elif isinstance(payload, WaterPayload):
             savable = WaterSavablePayload(
