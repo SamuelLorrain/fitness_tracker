@@ -36,12 +36,25 @@ class BaseNutrition {
     );
   }
 
-  toValidEntryForm() {
+  toValidEntryForm(date: Date, baseFoodUuid) {
     return {
-      calories: this.calories,
-      carbohydrates: this.carbohydrates,
-      lipids: this.lipids,
-      proteins: this.proteins
+      datetime: date,
+      entry_type: "food",
+      payload: {
+        base_food_uuid: baseFoodUuid,
+        nutrition: {
+          calories: this.calories,
+          carbohydrates: {
+            carbs: this.carbohydrates
+          },
+          lipids: {
+            lipids: this.lipids
+          },
+          proteins: {
+            protein: this.proteins
+          }
+        }
+      }
     }
   }
 }
@@ -102,7 +115,7 @@ const AddEntryForm: React.FC = () => {
   }
 
   const submitEntry = () => {
-    entryMutation(currentNutrition.toValidEntryForm());
+    entryMutation(currentNutrition.toValidEntryForm(new Date(), uuid));
   }
 
   if (isFetching || currentNutrition == null) {
