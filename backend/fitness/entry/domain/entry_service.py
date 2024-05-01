@@ -32,7 +32,8 @@ class EntryService:
             if food is None:
                 raise FoodDoesNotExistsException
             savable = FoodSavablePayload(
-                **payload.nutrition.model_dump()
+                base_food_uuid=payload.base_food_uuid,
+                nutrition=payload.nutrition.model_dump()
             )
         elif isinstance(payload, WaterPayload):
             savable = WaterSavablePayload(
@@ -42,7 +43,7 @@ class EntryService:
             savable = KCalSavablePayload(
                 kcal=payload.kcal
             )
-        return self.entry_repository.create_entry(
+        return self.entry_repository.store_entry(
             user_uuid,
             datetime,
             entry_type,
@@ -66,10 +67,10 @@ class EntryService:
         user_uuid: UUID,
         date: date
     ) -> list[Entry]:
-        return self.entry_repository.get_entry_list(
+        return list(self.entry_repository.iter_entry(
             user_uuid,
             date,
-        )
+        ))
 
     # def delete_entry(self, user_uuid: UUID, entry_uuid: UUID, date: date):
     #     return self.entry_repository.delete_entry()

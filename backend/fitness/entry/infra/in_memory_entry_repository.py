@@ -1,13 +1,12 @@
 from dataclasses import dataclass, field
 from datetime import datetime, date
-from typing import Optional
+from typing import Generator, Optional
 from uuid import UUID, uuid4
 from fitness.entry.domain.entity import Entry
 from fitness.entry.domain.entry_repository import EntryRepository
 from fitness.entry.domain.savable_payload import SavablePayload
 from fitness.entry.presentation.contracts import EntryTypeEnum
 from fitness.food.domain.entities import Food
-from fitness.food.exceptions import FoodDoesNotExistsException
 from fitness.entry.exceptions import EntryDoesNotExistException
 
 
@@ -52,12 +51,12 @@ class InMemoryEntryRepository(EntryRepository):
         raise EntryDoesNotExistException
 
 
-    def get_entry_list(
+    def iter_entry(
         self,
         user_uuid: UUID,
         date: date
-    ) -> list[Entry]:
-        return self.data.get((user_uuid, date), [])
+    ) -> Generator[Entry, None, None]:
+        return (entry for entry in self.data.get((user_uuid, date), []))
 
 
     def get_food(self, user_uuid: UUID, food_uuid: UUID) -> Optional[Food]:
