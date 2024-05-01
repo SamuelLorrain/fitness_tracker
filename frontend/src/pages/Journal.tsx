@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import Basis from "../components/Basis";
 import { useListEntryQuery } from "../state/api";
+import { IonButton } from "@ionic/react";
 
 /**
  * YYYY-MM-DD to Date, if the entry is invalid, return invalid date
@@ -48,6 +49,11 @@ const useJournal = () => {
 
 const Journal: React.FC = () => {
   const { date, journalPayload, isLoading } = useJournal();
+  const history = useHistory();
+
+  const gotToAddEntryForm = () => {
+    history.push('/add-entry');
+  }
 
   return (
     <Basis name="Journal">
@@ -58,6 +64,7 @@ const Journal: React.FC = () => {
         :
         <div>TODO: display list of entries for the day</div>
       }
+      <IonButton expand="full" onClick={gotToAddEntryForm}>Add Entry</IonButton>
     </Basis>
   );
 }
