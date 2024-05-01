@@ -72,7 +72,7 @@ const AddFoodForm: React.FC = () => {
     onSubmit: async (data) => {
       const properData = createValidFoodRequest(data);
       await mutateCreateFood(properData).unwrap();
-      history.push('/add-entry');
+      history.push('/journal/add-entry');
     }
   });
 

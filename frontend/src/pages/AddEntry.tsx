@@ -18,7 +18,7 @@ const FoodCard: React.FC = ({ food }) => {
   const history = useHistory();
 
   const clickOnFood = () => {
-    history.replace(`/entry-form/${food.uuid}`);
+    history.push(`/journal/entry-form/${food.uuid}`);
   };
 
   return (
@@ -71,7 +71,7 @@ const AddEntry: React.FC = () => {
         <IonToolbar>
           <IonTitle>Add</IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={() => history.push('/add-food')}>
+            <IonButton onClick={() => history.push('/journal/add-food')}>
               <IonIcon icon={add}/>
             </IonButton>
           </IonButtons>

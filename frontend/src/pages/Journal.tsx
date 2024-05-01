@@ -43,7 +43,7 @@ const Journal: React.FC = () => {
   const { date, entries, isLoading, moveForward, moveBackward } = useJournal();
 
   const gotToAddEntryForm = () => {
-    history.push('/add-entry');
+    history.push('/journal/add-entry');
   }
 
   return (
