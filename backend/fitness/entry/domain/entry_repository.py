@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Protocol
+from typing import Optional, Protocol
 from uuid import UUID
 
 from fitness.entry.domain.entity import Entry
@@ -33,5 +33,5 @@ class EntryRepository(Protocol):
     ) -> list[Entry]:
         ... # pragma: no cover
 
-    def get_food(self, user_uuid: UUID, food_uuid: UUID) -> Food:
+    def get_food(self, user_uuid: UUID, food_uuid: UUID) -> Optional[Food]:
         ... # pragma: no cover
