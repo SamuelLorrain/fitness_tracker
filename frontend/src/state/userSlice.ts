@@ -10,7 +10,8 @@ export interface UserState {
   currentTimestamp: number; // Date is not serializable, so we store timestamp instead
   first_name: String | null;
   last_name: String | null;
-  nutrition_goals: Any;
+  // TODO real type
+  nutrition_goals_per_day: Any;
 }
 
 const initialState: UserState = {
@@ -31,9 +32,10 @@ export const userSlice = createSlice({
       state.isLogged = true;
     },
     setUserInfos: (state, action) => {
+      console.log(action.payload);
       state.first_name = action.payload.first_name;
       state.last_name = action.payload.last_name;
-      state.nutrition_goals = action.payload.nutrition_goals;
+      state.nutrition_goals_per_day = action.payload.nutrition_goals_per_day;
     },
     setTimestamp: (state, action) => {
       state.currentTimestamp = action.payload.timestamp;
