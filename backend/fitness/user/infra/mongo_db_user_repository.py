@@ -17,3 +17,9 @@ class MongoDBUserRepository(UserRepository):
         if db_user.get("nutrition_goals_per_day") is None:
             return User(**db_user, nutrition_goals_per_day=None)
         return User(**db_user)
+
+    def set_user(self, user_uuid: UUID, user_infos: User) -> None:
+        self.user_collection.update_one(
+            {"uuid": user_uuid},
+            {"$set": user_infos.model_dump()}
+        )

@@ -8,3 +8,13 @@ class UserResponse(BaseModel):
     last_name: str
     email: EmailStr
     nutrition_goals_per_day: Optional[NutritionComposition]
+
+
+class UserGoalsRequest(BaseModel):
+    nutrition_goals_per_day: Optional[NutritionComposition]
+
+
+class UserBasicInfosRequest(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
