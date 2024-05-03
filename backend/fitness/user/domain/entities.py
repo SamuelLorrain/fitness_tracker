@@ -8,4 +8,4 @@ class User(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
-    calories_goals_per_day: Optional[NutritionComposition]
+    nutrition_goals_per_day: Optional[NutritionComposition]

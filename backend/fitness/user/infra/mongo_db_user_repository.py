@@ -14,6 +14,6 @@ class MongoDBUserRepository(UserRepository):
         db_user = self.user_collection.find_one({"uuid": user_uuid})
         if db_user is None:
             return None
-        if db_user.get("calories_goals_per_day") is None:
-            return User(**db_user)
-        return User(**db_user, calories_goals_per_day=None)
+        if db_user.get("nutrition_goals_per_day") is None:
+            return User(**db_user, nutrition_goals_per_day=None)
+        return User(**db_user)

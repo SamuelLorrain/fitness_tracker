@@ -37,7 +37,7 @@ class InMemoryAuthenticationRepository(AuthenticationRepository):
             first_name=first_name,
             last_name=last_name,
             email=email,
-            calories_goals_per_day=None
+            nutrition_goals_per_day=None
         )
         auth = Auth(
             user_uuid=user.uuid,
