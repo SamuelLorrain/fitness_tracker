@@ -5,24 +5,24 @@ from pydantic import SecretStr
 from pytest import fixture
 
 from fitness.authentication.domain.auth_service import AuthService
-from fitness.authentication.domain.user_repository import UserRepository
+from fitness.authentication.domain.authentication_repository import AuthenticationRepository
 from fitness.authentication.exceptions import (
     UnableToLoginException,
     UserAlreadyExistsException,
 )
-from fitness.authentication.infra.in_memory_user_repository import (
-    InMemoryUserRepository,
+from fitness.authentication.infra.in_memory_authentication_repository import (
+    InMemoryAuthenticationRepository,
 )
 
 
 @fixture
-def user_repository() -> UserRepository:
-    return InMemoryUserRepository()
+def authentication_repository() -> AuthenticationRepository:
+    return InMemoryAuthenticationRepository()
 
 
 @fixture
-def auth_service(user_repository: UserRepository) -> AuthService:
-    return AuthService(user_repository, timedelta(hours=24))
+def auth_service(authentication_repository: AuthenticationRepository) -> AuthService:
+    return AuthService(authentication_repository, timedelta(hours=24))
 
 
 def test_login_with_good_credential(auth_service: AuthService) -> None:

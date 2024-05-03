@@ -4,19 +4,19 @@ from hashlib import scrypt
 
 from pydantic import EmailStr, SecretStr
 
-from fitness.authentication.domain.user_repository import UserRepository
+from fitness.authentication.domain.authentication_repository import AuthenticationRepository
 from fitness.authentication.domain.entities import AuthPassKey
-from fitness.authentication.exceptions import BadPasswordException, UnableToLoginException, UnknownUserException
+from fitness.authentication.exceptions import UnableToLoginException
 from fitness.commons.settings import Settings
 
 
 @dataclass
 class AuthService:
-    user_repository: UserRepository
+    authentication_repository: AuthenticationRepository
     expiration_timedelta: timedelta
 
     def login(self, email: EmailStr, password: SecretStr) -> AuthPassKey:
-        user = self.user_repository.get_user_by_email(email)
+        user = self.authentication_repository.get_user_by_email(email)
         if user is None:
             raise UnableToLoginException
         hashed_password = self._hash_password(password)
@@ -30,7 +30,7 @@ class AuthService:
         self, first_name: str, last_name: str, email: EmailStr, password: SecretStr
     ) -> AuthPassKey:
         hash = self._hash_password(password)
-        user = self.user_repository.store_user(first_name, last_name, email, hash)
+        user = self.authentication_repository.store_user(first_name, last_name, email, hash)
         return AuthPassKey(
             uuid=user.uuid, email=email, expiration=datetime.now(UTC) + self.expiration_timedelta
         )
@@ -38,7 +38,7 @@ class AuthService:
     def verify(self, auth_pass_key: AuthPassKey) -> bool:
         if auth_pass_key.expiration < datetime.now():
             return False
-        user = self.user_repository.get_user_by_email(auth_pass_key.email)
+        user = self.authentication_repository.get_user_by_email(auth_pass_key.email)
         return user is not None
 
     @staticmethod

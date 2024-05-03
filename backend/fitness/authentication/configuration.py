@@ -3,9 +3,9 @@ from datetime import timedelta
 
 from fitness.authentication.domain.auth_formatter import AuthFormatter
 from fitness.authentication.domain.auth_service import AuthService
-from fitness.authentication.domain.user_repository import UserRepository
+from fitness.authentication.domain.authentication_repository import AuthenticationRepository
 from fitness.authentication.infra.jwt_auth_formatter import JwtAuthFormatter
-from fitness.authentication.infra.mongodb_user_repository import MongoDBUserRepository
+from fitness.authentication.infra.mongodb_authentication_repository import MongoDBAuthenticationRepository
 from fitness.authentication.presentation.dependency import AuthorisationDependency
 from fitness.commons.singleton import Singleton
 
@@ -14,11 +14,11 @@ from fitness.commons.singleton import Singleton
 class AuthenticationConfiguration(Singleton):
     @property
     def auth_service(self) -> AuthService:
-        return AuthService(self.user_repository, self.expiration_timedelta)
+        return AuthService(self.authentication_repository, self.expiration_timedelta)
 
     @property
-    def user_repository(self) -> UserRepository:
-        return MongoDBUserRepository()
+    def authentication_repository(self) -> AuthenticationRepository:
+        return MongoDBAuthenticationRepository()
 
     @property
     def auth_formatter(self) -> AuthFormatter:

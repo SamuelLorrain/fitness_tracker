@@ -5,12 +5,12 @@ from uuid import uuid4
 from pydantic import EmailStr
 
 from fitness.authentication.domain.entities import User
-from fitness.authentication.domain.user_repository import UserRepository
+from fitness.authentication.domain.authentication_repository import AuthenticationRepository
 from fitness.authentication.exceptions import UserAlreadyExistsException
 
 
 @dataclass
-class InMemoryUserRepository(UserRepository):
+class InMemoryAuthenticationRepository(AuthenticationRepository):
     data: dict[EmailStr, User] = field(default_factory=dict)
 
     def get_user_by_email(self, email: EmailStr) -> Optional[User]:
