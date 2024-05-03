@@ -16,30 +16,30 @@ class AuthService:
     expiration_timedelta: timedelta
 
     def login(self, email: EmailStr, password: SecretStr) -> AuthPassKey:
-        user = self.authentication_repository.get_user_by_email(email)
-        if user is None:
+        auth = self.authentication_repository.get_auth_by_email(email)
+        if auth is None:
             raise UnableToLoginException
         hashed_password = self._hash_password(password)
-        if user.hashed_password != hashed_password:
+        if auth.hashed_password != hashed_password:
             raise UnableToLoginException
         return AuthPassKey(
-            uuid=user.uuid, email=user.email, expiration=datetime.now(UTC) + self.expiration_timedelta
+            uuid=auth.user_uuid, email=auth.email, expiration=datetime.now(UTC) + self.expiration_timedelta
         )
 
     def register(
         self, first_name: str, last_name: str, email: EmailStr, password: SecretStr
     ) -> AuthPassKey:
         hash = self._hash_password(password)
-        user = self.authentication_repository.store_user(first_name, last_name, email, hash)
+        auth = self.authentication_repository.store_auth_and_user(first_name, last_name, email, hash)
         return AuthPassKey(
-            uuid=user.uuid, email=email, expiration=datetime.now(UTC) + self.expiration_timedelta
+            uuid=auth.user_uuid, email=email, expiration=datetime.now(UTC) + self.expiration_timedelta
         )
 
     def verify(self, auth_pass_key: AuthPassKey) -> bool:
         if auth_pass_key.expiration < datetime.now():
             return False
-        user = self.authentication_repository.get_user_by_email(auth_pass_key.email)
-        return user is not None
+        auth = self.authentication_repository.get_auth_by_email(auth_pass_key.email)
+        return auth is not None
 
     @staticmethod
     def _hash_password(password: SecretStr) -> bytes:
