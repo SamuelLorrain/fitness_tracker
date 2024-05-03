@@ -41,6 +41,13 @@ export const api = createApi({
         method: 'GET'
       })
     }),
+    setUserInfo: builder.mutation({
+      query: (data) => ({
+        url: '/user/',
+        method: 'PUT',
+        body: data
+      })
+    }),
     searchFood: builder.mutation({
       query: (search) => ({
         url: `/food?name_filter=${search}`,
@@ -89,5 +96,6 @@ export const {
   useGetFoodQuery,
   useCreateEntryMutation,
   useListEntryQuery,
+  useSetUserInfoMutation
 } = api;
 

@@ -1,9 +1,11 @@
 import Basis from "../components/Basis";
 import { IonCard, IonCardTitle, IonCardHeader, IonCardContent, IonButton } from "@ionic/react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const Settings: React.FC = () => {
   const user = useSelector(state => state.user);
+  const history = useHistory();
 
   return (
     <Basis name="Settings">
@@ -16,7 +18,12 @@ const Settings: React.FC = () => {
           <div>{user.last_name}</div>
           <div>{user.email}</div>
         </IonCardContent>
-        <IonButton fill="clear" disabled="true">Change</IonButton>
+        <IonButton
+          fill="clear"
+          onClick={() => history.push('/settings/account')}
+          >
+          Change
+        </IonButton>
       </IonCard>
       <IonCard>
         <IonCardHeader>
