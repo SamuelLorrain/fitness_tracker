@@ -32,10 +32,11 @@ export const userSlice = createSlice({
       state.isLogged = true;
     },
     setUserInfos: (state, action) => {
-      console.log(action.payload);
       state.first_name = action.payload.first_name;
       state.last_name = action.payload.last_name;
-      state.nutrition_goals_per_day = action.payload.nutrition_goals_per_day;
+      if (action.payload.nutrition_goals_per_day) {
+        state.nutrition_goals_per_day = action.payload.nutrition_goals_per_day;
+      }
     },
     setTimestamp: (state, action) => {
       state.currentTimestamp = action.payload.timestamp;
