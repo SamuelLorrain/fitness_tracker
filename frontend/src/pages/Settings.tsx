@@ -23,7 +23,9 @@ const Settings: React.FC = () => {
           <IonCardTitle>Goals per days</IonCardTitle>
         </IonCardHeader>
         <IonCardContent>
-          <div>- {user.nutrition_goals_per_day.calories} kcal</div>
+          <ul>
+            <li>{user.nutrition_goals_per_day?.calories} kcal</li>
+          </ul>
         </IonCardContent>
         <IonButton fill="clear" disabled="true">Change</IonButton>
       </IonCard>
