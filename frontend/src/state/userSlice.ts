@@ -8,6 +8,9 @@ export interface UserState {
   token: String | null;
   isLogged: Boolean;
   currentTimestamp: number; // Date is not serializable, so we store timestamp instead
+  first_name: String | null;
+  last_name: String | null;
+  nutrition_goals: Any;
 }
 
 const initialState: UserState = {
@@ -27,11 +30,16 @@ export const userSlice = createSlice({
       state.token = action.payload.access_token;
       state.isLogged = true;
     },
+    setUserInfos: (state, action) => {
+      state.first_name = action.payload.first_name;
+      state.last_name = action.payload.last_name;
+      state.nutrition_goals = action.payload.nutrition_goals;
+    },
     setTimestamp: (state, action) => {
       state.currentTimestamp = action.payload.timestamp;
     }
   },
 })
 
-export const { initUser, setTimestamp } = userSlice.actions;
+export const { initUser, setUserInfos, setTimestamp } = userSlice.actions;
 export default userSlice.reducer;

@@ -35,6 +35,12 @@ export const api = createApi({
         }
       }),
     }),
+    userInfo: builder.mutation({
+      query: () => ({
+        url: '/user/',
+        method: 'GET'
+      })
+    }),
     searchFood: builder.mutation({
       query: (search) => ({
         url: `/food?name_filter=${search}`,
@@ -70,17 +76,18 @@ export const api = createApi({
         }
       },
       providesTags: ["Entry"]
-    })
+    }),
   }),
 });
 
 export const {
   useLoginMutation,
   useVerifyMutation,
+  useUserInfoMutation,
   useSearchFoodMutation,
   useCreateFoodMutation,
   useGetFoodQuery,
   useCreateEntryMutation,
-  useListEntryQuery
+  useListEntryQuery,
 } = api;
 

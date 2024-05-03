@@ -38,8 +38,8 @@ import { Provider, useSelector } from 'react-redux';
 import { useState, useEffect } from "react";
 import { PersistenceSingleton } from "./state/persistence";
 import { useDispatch } from 'react-redux';
-import { initUser } from "./state/userSlice";
-import { useVerifyMutation } from "./state/api";
+import { initUser, setUserInfos } from "./state/userSlice";
+import { useVerifyMutation, useUserInfoMutation } from "./state/api";
 
 setupIonicReact();
 
@@ -59,6 +59,7 @@ const Initialization: React.FC = ({children}) => {
   const [isInitialized, setIsInitialized] = useState(true);
   const dispatch = useDispatch();
   const [mutateVerify, { isLoading }] = useVerifyMutation();
+  const [mutateUserInfo] = useUserInfoMutation();
 
   useEffect(() => {
     (async function() {
@@ -70,9 +71,11 @@ const Initialization: React.FC = ({children}) => {
       dispatch(initUser({
         access_token: token
       }))
+      const userInfos = await mutateUserInfo().unwrap();
+      dispatch(setUserInfos(userInfos))
       setIsInitialized(true);
     })()
-  }, [setIsInitialized]);
+  }, [setIsInitialized, setUserInfos, mutateVerify, dispatch, initUser, mutateUserInfo]);
 
 
   if (isInitialized) {
