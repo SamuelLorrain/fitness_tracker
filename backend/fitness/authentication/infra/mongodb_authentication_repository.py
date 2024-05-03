@@ -5,11 +5,11 @@ from fitness.commons.connection import MongoDBConnection
 from pydantic import EmailStr
 
 from fitness.authentication.domain.entities import User
-from fitness.authentication.domain.user_repository import UserRepository
+from fitness.authentication.domain.authentication_repository import AuthenticationRepository
 from fitness.authentication.exceptions import UserAlreadyExistsException
 
 
-class MongoDBUserRepository(UserRepository):
+class MongoDBAuthenticationRepository(AuthenticationRepository):
     def __init__(self):
         self.db = MongoDBConnection().db
         self.user_collection = self.db.user_collection

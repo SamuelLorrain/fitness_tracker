@@ -1,11 +1,11 @@
 from typing import Optional, Protocol
 
-from pydantic import EmailStr, SecretStr
+from pydantic import EmailStr
 
 from fitness.authentication.domain.entities import User
 
 
-class UserRepository(Protocol):
+class AuthenticationRepository(Protocol):
     def get_user_by_email(
         self, email: EmailStr
     ) -> Optional[User]: ...  # pragma: no cover
