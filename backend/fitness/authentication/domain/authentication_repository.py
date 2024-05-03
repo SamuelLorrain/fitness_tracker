@@ -2,14 +2,14 @@ from typing import Optional, Protocol
 
 from pydantic import EmailStr
 
-from fitness.authentication.domain.entities import User
+from fitness.authentication.domain.entities import Auth
 
 
 class AuthenticationRepository(Protocol):
-    def get_user_by_email(
+    def get_auth_by_email(
         self, email: EmailStr
-    ) -> Optional[User]: ...  # pragma: no cover
+    ) -> Optional[Auth]: ...  # pragma: no cover
 
-    def store_user(
+    def store_auth_and_user(
         self, first_name: str, last_name: str, email: EmailStr, hashed_password: bytes
-    ) -> User: ...  # pragma: no cover
+    ) -> Auth: ...  # pragma: no cover
