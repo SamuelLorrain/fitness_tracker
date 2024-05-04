@@ -58,7 +58,7 @@ class BaseNutrition {
             carbs: this.carbohydrates
           },
           lipids: {
-            lipids: this.lipids
+            fat: this.lipids
           },
           proteins: {
             protein: this.proteins
