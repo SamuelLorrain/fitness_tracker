@@ -32,7 +32,25 @@ const useJournal = () => {
     }
   }, [data, setEntries, data && data?.entries.length]);
 
-  const sumTodayCalories = entries.reduce((acc, entry) => acc + entry.payload.nutrition.calories, 0);
+  let sumTodayCalories = 0;
+  if (entries != null) {
+    sumTodayCalories = entries.reduce((acc, entry) => acc + entry.payload.nutrition.calories, 0);
+  }
+
+  let sumTodayProteins = 0;
+  if (entries != null) {
+    sumTodayProteins = entries.reduce((acc, entry) => acc + entry.payload.nutrition.proteins.protein, 0);
+  }
+
+  let sumTodayLipids = 0;
+  if (entries != null) {
+    sumTodayLipids = entries.reduce((acc, entry) => acc + entry.payload.nutrition.lipids.fat, 0);
+  }
+
+  let sumTodayCarbs = 0;
+  if (entries != null) {
+    sumTodayCarbs = entries.reduce((acc, entry) => acc + entry.payload.nutrition.carbohydrates.carbs, 0);
+  }
 
   return {
     moveForward,
@@ -40,7 +58,10 @@ const useJournal = () => {
     date,
     isLoading,
     entries,
-    sumTodayCalories
+    sumTodayCalories,
+    sumTodayCarbs,
+    sumTodayProteins,
+    sumTodayLipids
   }
 }
 
@@ -104,7 +125,7 @@ const DailyProgress: React.FC = ({ todayCalories, todayProteins, todayLipids, to
           {
             hasCaloriesGoal ? (
               <IonRow>
-                  <div className="margin-left-auto">{todayCalories ?? 0} kcal / {caloriesGoal} kcal</div>
+                  <div className="margin-left-auto">{todayCalories.toFixed(1) ?? 0} kcal / {caloriesGoal} kcal</div>
                   <IonProgressBar value={caloriesRelation}/>
               </IonRow>
             )
@@ -113,7 +134,7 @@ const DailyProgress: React.FC = ({ todayCalories, todayProteins, todayLipids, to
           {
             hasProteinsGoal ? (
               <IonRow>
-                  <div className="margin-left-auto">{todayProteins ?? 0} g / {proteinsGoal} g</div>
+                  <div className="margin-left-auto">{todayProteins.toFixed(1) ?? 0} g / {proteinsGoal} g</div>
                   <IonProgressBar value={proteinsRelation}/>
               </IonRow>
             )
@@ -122,7 +143,7 @@ const DailyProgress: React.FC = ({ todayCalories, todayProteins, todayLipids, to
           {
             hasLipidsGoal ? (
               <IonRow>
-                  <div className="margin-left-auto">{todayLipids ?? 0} g / {lipidssGoal} g</div>
+                  <div className="margin-left-auto">{todayLipids.toFixed(1) ?? 0} g / {lipidsGoal} g</div>
                   <IonProgressBar value={lipidsRelation}/>
               </IonRow>
             )
@@ -131,7 +152,7 @@ const DailyProgress: React.FC = ({ todayCalories, todayProteins, todayLipids, to
           {
             hasCarbsGoal ? (
               <IonRow>
-                  <div className="margin-left-auto">{todayCarbs ?? 0} g / {carbsGoal} g</div>
+                  <div className="margin-left-auto">{todayCarbs.toFixed(1) ?? 0} g / {carbsGoal} g</div>
                   <IonProgressBar value={carbsRelation}/>
               </IonRow>
             )
@@ -145,7 +166,17 @@ const DailyProgress: React.FC = ({ todayCalories, todayProteins, todayLipids, to
 
 const Journal: React.FC = () => {
   const history = useHistory();
-  const { date, entries, isLoading, moveForward, moveBackward, sumTodayCalories } = useJournal();
+  const {
+    date,
+    entries,
+    isLoading,
+    moveForward,
+    moveBackward,
+    sumTodayCalories,
+    sumTodayLipids,
+    sumTodayProteins,
+    sumTodayCarbs,
+  } = useJournal();
 
   const gotToAddEntryForm = () => {
     history.push('/journal/add-entry');
@@ -171,7 +202,7 @@ const Journal: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         <div className="scrollable">
-        <DailyProgress todayCalories={sumTodayCalories}/>
+        <DailyProgress todayCalories={sumTodayCalories} todayProteins={sumTodayProteins} todayCarbs={sumTodayCarbs} todayLipids={sumTodayLipids}/>
         {
           (entries == null || entries.length == 0) ?
             <div>no entries for today !</div>
