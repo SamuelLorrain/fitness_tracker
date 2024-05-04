@@ -1,0 +1,129 @@
+#+begin_export latex
+  \renewcommand{\contentsname}{Table des matières}
+  \clearpage \tableofcontents \clearpage
+#+end_export
+
+* Introduction
+** Objectif
+   Aujourdhui, la pratique du bien-être et du sport suit un double mouvement.
+
+   D'abord, les nouveaux médias et réseaux sociaux, alimenté par les
+   "influenceurs" spécialisés dans divers domaines comme le bien-être,
+   le sport ou encore la spiritualité modifient le rapport au corps et à la santé des individus.
+   En effet, le corps y est idéalisé. Et le sport et la santé ne sont plus
+   seulement des aspects des loisirs ou de "l'hygiène de vie", mais des objets à
+   part entière et centraux.
+
+   Egalement, internet démultiplie les informations disponibles autour ce bien-être.
+   Celles-ci peuvent être de nature différentes (vulgarisation,
+   articles scientifiques, etc.)  mais ont généralement une apparence
+   de scientificité, où en tout cas, promettent de l'information
+   spécialisée (contrastant avec l'approche plus généraliste des
+   média traditionnels).
+
+   Il parait évident que ce contexte engendre une rationalisation
+   des pratiques du bien-être et du sport: nous voulons pratiquer du
+   sport et prendre soin de nous, mais de façon rationnelle, objective,
+   et dans un but précis.
+
+   Fort heureusement, la généralisation des smartphones et des objets connectés
+   permet d'assouvir en partie ce besoin, mais les outils disponibles sont propriétaires
+   et fonctionnent en vase clos.
+   Les principaux acteurs comme Apple, Garmin ou encore Withings possèdent chacun des
+   applications et sont capables d'afficher et de collecter des données. Mais le produit
+   qui collecte la donnée doit être disponible dans leur catalogue respectif pour
+   que celle-ci soit utilisables.
+
+   Le bien-être étant un sujet multi-factoriel cela n'est pas suffisant,
+   car la mesure dans un but de santé et bien-être comprend à la fois
+   des données biologiques, comportementales ou encore alimentaires.
+
+   Notons que le problème n'est pas reservé aux applications pour particuliers.
+   Le secteur de la santé dans son ensemble manque d'une solution généraliste
+   pour la gestion des données de santé : même si des normes existent comme HL7/FIHR
+   (Fast Healthcare Interoperability Resources), elles ne sont que peu utilisés,
+   au profit de solutions propriétaires et non interopérables (comme Orbis).
+
+   Nous voulons proposer une application de bien-être
+   intégrative : comprenant à la fois des aspects associés à la nourriture, mais aussi
+   au sport et à des données biologiques.
+
+# RAJOUTER DES SOURCES
+
+#+begin_export latex
+    \clearpage
+#+end_export
+
+** Utilisation et public cible
+   La solution est avant tout développée pour des utilisateurs
+   non professionnels sur les questions de santé.
+   Le produit est utilisable seul, sans supervision
+   medicale et n'est pas fait pour se substituer à des conseils médicaux.
+
+   Cela inclu principalement:
+
+   - Les personnes soucieuses de leur habitudes alimentaires;
+   - Les sportifs voulant optimiser leurs performances,
+     et souhaitant avoir accès à certaines informations;
+   - Les personnes suivant des diètes alimentaires strictes pour raisons
+     médicales et souhaitant utiliser des outils informatiques pour
+     les aider à poursuivre ce but;
+   - Les personnes curieuses à propos de leurs habitudes.
+
+   Même si le produit n'est pas développé dans le but de servir d'outil de suivi
+   pour les sportifs professionels, la quantité et la multiplicité des données connectées doit
+   être suffisante pour aider le suivi professionnel des athlètes.
+
+** Objectifs
+
+   Nous nous fixons les objectifs suivant:
+
+
+** Définitions
+
+# On verra après pour les définitions
+
+* Description générale
+# là on met les cas d'usage
+** Exigences de l'entreprise
+** Besoins des utilisateurs
+** Limites et contraintes du produit
+** Hypothèses et dépendances
+
+* Caractéristiques et exigences
+** Caractéristiques
+** Fonctionnelles
+** Interface externe
+** Non fonctionnel
+
+* Information complementaires ?
+
+** Description de la solution
+   - La diversité des outils de santé développés par différents fabricants crée un environnement fragmenté où les systèmes opèrent isolément, rendant difficile la centralisation et l'analyse globale des données de santé.
+   - Les standards tels que FHIR ont été introduits pour améliorer l'interopérabilité des données dans les milieux hospitaliers, mais ces efforts restent insuffisants pour surmonter tous les défis de l'interopérabilité, particulièrement hors des institutions médicales.
+   - Une solution envisageable est le développement d'un logiciel centralisé, facile à utiliser et répondant aux besoins des utilisateurs, qui centraliserait toutes les données de santé en un unique point de référence, améliorant la gestion personnelle et la communication avec les professionnels de santé.
+   - Pour réaliser cette vision, il est essentiel d'appliquer des normes strictes en matière de sécurité et de confidentialité, tout en assurant la compatibilité entre les différents appareils et systèmes, afin de créer une infrastructure ouverte et adaptable aux innovations et aux besoins évolutifs des utilisateurs.
+   - Offrir un outil de suivi de la nutrition facile d'accès
+   - Integration avec plusieurs outils dans le but de centraliser
+     les données et faciliter les intéractions entre celles-ci
+
+* Contraintes
+  - Multi-platforme => web, android et ios
+  - Web app (Saas)
+  - Intégration avec des outils, permettre de faire ça de façon plus
+    simple que ce qui existe
+  - environment de développement
+  - Authentification
+
+* Cas d'usages
+  - Création et Stocker de la nourriture manuellement, code-bar autre informations etc.
+  - Visualisation et rapport via des statistiques
+  - Sport et intégration du gps pour de la marche
+  - Notification pour boire de l'eau
+  - Personnalisation de l'interface
+  - Estimation du nombre de calories dans une photo par IA
+
+* Exigences fonctionnelles
+
+* Exigences non-fonctionnelles
+
