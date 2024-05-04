@@ -34,7 +34,7 @@ const Settings: React.FC = () => {
             <li>{user.nutrition_goals_per_day?.calories} kcal</li>
           </ul>
         </IonCardContent>
-        <IonButton fill="clear" disabled="true">Change</IonButton>
+        <IonButton fill="clear" onClick={() => history.push('/settings/goals')}>Change</IonButton>
       </IonCard>
     </Basis>
   );

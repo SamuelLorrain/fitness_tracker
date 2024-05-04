@@ -59,7 +59,7 @@ const AccountInformationForm: React.FC = () => {
           onBlur={(e) => formik.setFieldTouched('last_name', true)}
         />
         <IonInput
-          className={`${formik.errors.email && 'ion-invalid'} ${formik.touched.last_name && 'ion-touched'} `}
+          className={`${formik.errors.email && 'ion-invalid'} ${formik.touched.email && 'ion-touched'} `}
           label="Email"
           value={formik.values.email}
           errorText={formik.errors.email}

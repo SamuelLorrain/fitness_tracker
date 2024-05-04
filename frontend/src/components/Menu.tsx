@@ -17,6 +17,7 @@ import Report from "../pages/Report";
 import Settings from "../pages/Settings";
 import Journal from "../pages/Journal";
 import AccountInformationForm from "../pages/AccountInformationForm";
+import GoalsForm from "../pages/GoalsForm";
 
 import { ellipse, square, triangle } from 'ionicons/icons';
 
@@ -30,6 +31,7 @@ const Menu = () => {
           <Route exact path="/:tab(journal)/add-food" component={AddFood}/>
           <Route exact path="/:tab(settings)" component={Settings}/>
           <Route exact path="/:tab(settings)/account" component={AccountInformationForm}/>
+          <Route exact path="/:tab(settings)/goals" component={GoalsForm}/>
           <Route exact path="/:tab(journal)/entry-form/:uuid" component={AddEntryForm}/>
           <Route exact path="/:tab(journal)" component={Journal}/>
           <Route exact path="/">
