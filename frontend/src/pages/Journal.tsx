@@ -32,12 +32,15 @@ const useJournal = () => {
     }
   }, [data, setEntries, data && data?.entries.length]);
 
+  const sumTodayCalories = entries.reduce((acc, entry) => acc + entry.payload.nutrition.calories, 0);
+
   return {
     moveForward,
     moveBackward,
     date,
     isLoading,
-    entries
+    entries,
+    sumTodayCalories
   }
 }
 
@@ -142,7 +145,7 @@ const DailyProgress: React.FC = ({ todayCalories, todayProteins, todayLipids, to
 
 const Journal: React.FC = () => {
   const history = useHistory();
-  const { date, entries, isLoading, moveForward, moveBackward } = useJournal();
+  const { date, entries, isLoading, moveForward, moveBackward, sumTodayCalories } = useJournal();
 
   const gotToAddEntryForm = () => {
     history.push('/journal/add-entry');
@@ -168,7 +171,7 @@ const Journal: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         <div className="scrollable">
-        <DailyProgress/>
+        <DailyProgress todayCalories={sumTodayCalories}/>
         {
           (entries == null || entries.length == 0) ?
             <div>no entries for today !</div>
