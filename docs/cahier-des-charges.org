@@ -94,14 +94,43 @@
    disponibles pour améliorer le suivi des personnes. Par exemple, utiliser le GPS
    d'un téléphone pour estimer l'activité physique, sans avoir besoin d'utiliser
    du matériel spécifique. Ou encore, afficher les données de plusieurs fournisseurs
-   de façon indifférenciée.
+   de façon indifférencié.
+
+
+#+begin_export latex
+\clearpage
+#+end_export
 
 ** Définitions
 
-# On verra après pour les définitions
+| Terme   | Definition                                                             |
+|---------+------------------------------------------------------------------------|
+| HTTP    | Protocole de communication qui permet le transfert
+|         |  d'informations sur le web.               |
+|---------+------------------------------------------------------------------------|
+| JSON    | Format léger d'échange de données, facile à lire
+|         | pour les humains et simple à analyser pour les machines.
+|---------+------------------------------------------------------------------------|
+| OpenAPI | Spécification standardisée pour décrire les interfaces
+|         |  de programmation applicative (API) RESTful.
+|---------+------------------------------------------------------------------------|
+| AWS     | Collection de services de cloud computing offerts par Amazon,
+|         | incluant le stockage, le calcul et les bases de données.
+|---------+------------------------------------------------------------------------|
+| Android | Système d'exploitation open-source principalement
+|         | utilisé pour les appareils mobiles, développé par Google.
+|---------+------------------------------------------------------------------------|
+| iOS     | Système d'exploitation mobile développé par Apple,
+|         | utilisé exclusivement sur les appareils Apple comme l'iPhone et l'iPad.
+|---------+------------------------------------------------------------------------|
+| OAuth2  | Protocole de sécurité pour l'authentification
+|         | et l'autorisation, largement utilisé dans les applications web.
+|---------+------------------------------------------------------------------------|
+| Bluetooth | Technologie de communication sans fil à courte
+|         | portée pour échanger des données entre des appareils.
+|---------+------------------------------------------------------------------------|
 
 * Description générale
-# là on met les cas d'usage
 ** Contraintes
 
 *** Multi-platforme
@@ -128,7 +157,7 @@
        Celle-ci inclue à la fois d'avoir une interface standardisée à
        disposition des tiers. Mais aussi, nous permet de générer la documentation
        à partir de l'application, garantissant une adéquation entre ces élements.
-    2. L'application doit utiliser un système d'authentification et d'authorisation
+    2. L'application doit utiliser un système d'authentification et d'autorisation
        standard, permettant à des outils tiers de s'y connecter facilement.
        Notre choix se portera sur ~OAuth2~. Cette norme permet notamment
        de déléger à plus tard les choix en terme d'autorisation : Nous pouvons par exemple
@@ -137,11 +166,11 @@
        des formats usuels comme ~CSV~ ou ~Microsoft Excel~.
 
 *** Mode dégradé/hors-ligne
-    Dans la mesure ou certaines pratiques sportives peuvent se faire dans des "zones blanches"
+    Dans la mesure où certaines pratiques sportives peuvent se faire dans des "zones blanches"
     comme par exemple, des forêts. La solution doit proposer un mode dégradé ou hors-ligne,
     qui permet de stocker des informations même en l'absence de réseau.
     De même, la solution doit être capable de continuer à collecter des informations de
-    différents appareils via des normes de connection à proximité comme le bluetooth,
+    différents appareils via des normes de connection à proximité comme ~bluetooth~,
     même si internet n'est pas disponible.
 
 *** Normes alimentaires et données biologiques
@@ -154,8 +183,8 @@
     Les normes comprennent à la fois des types de composant dans les aliments, et les
     unités utilisées pour les mesurer (grammes, calories etc.)
 
-    De plus, les données biologiques comme l'age, la taille etc. sont aussi sujettes
-    à des normes d'unité. Les unitées seront affichées selon le système international (SI).
+    De plus, les données biologiques comme l'age, la taille etc. sont aussi assujetti
+    à des normes d'unité. Les unitées seront affichées selon le système international (~SI~).
 
 ** Environnement de développement
 
@@ -192,8 +221,8 @@
    | Redaction de documents    | ~Latex~ et ~vim~, en utilisant un plugin ~Orgmode~ et ~pandoc~     |
    |                           | pour la realisation du document final (pdf)                        |
    |---------------------------+--------------------------------------------------------------------|
-   | Redaction de diagrammes   | ~Whimsical~ un outil en ligne                                      |
-   | UML                       |                                                                    |
+   | Redaction de diagrammes   | ~Whimsical~ un outil en ligne de realisation de                    |
+   | UML                       | diagrammes                                                         |
    |---------------------------+--------------------------------------------------------------------|
 
 ** Cas d'usages
@@ -267,12 +296,61 @@
     Le système est responsable à la fois de l'envoie des notifications et de la validation des
     personnalisations souhaitées par l'utilisateur.
 
-* Caractéristiques et exigences
-** Caractéristiques
+* Exigences
 ** Fonctionnelles
-** Interface externe
-** Non fonctionnel
 
-* Information complementaires ?
-** Définitions
+    |Exigences | Description                                                                              |
+    |----------+------------------------------------------------------------------------------------------|
+    | E.1      | Il s'agit de réaliser une application qui permet de collecter les informations relatives |
+    |          | à la nutrition et aux entrainements sportifs.                                            |
+    |----------+------------------------------------------------------------------------------------------|
+    | E.2      | L'application doit comporter une partie de configuration pour que l'utilisateur          |
+    |          | puisse renseigner ses informations personnelles pertinentes pour l'application.          |
+    |----------+------------------------------------------------------------------------------------------|
+    | E.3      | L'application doit comporter une interface permettant de rentrer des                     |
+    |          | informations sur l'activité journalière concernant la nutrition et le sport ou           |
+    |          | encore d'autres données biologiques.                                                     |
+    |----------+------------------------------------------------------------------------------------------|
+    | E.4      | L'application doit proposer une API utilisable par une application tier pour rajouter    |
+    |          | des informations.                                                                        |
+    |----------+------------------------------------------------------------------------------------------|
+    | E.5      | L'application doit proposer une interface pour visualiser ou exporter les informations   |
+    |          | collectées sous forme de rapport. Ceux-ci ne seront pas seulement des données brutes.    |
+    |          | L'application doit en effet proposer des statistiques pertinentes.                       |
+    |----------+------------------------------------------------------------------------------------------|
+    | E.6      | L'application doit être capable d'utiliser des photographie, que ce soit des code-barres |
+    |          | pour obtenir la composition nutritionnelle d'un aliment                                  |
+    |          | ou encore de véritable photographies de nourriture pour estimer les calories présentes   |
+    |----------+------------------------------------------------------------------------------------------|
+    | E.7      | L'application doit être capable d'utiliser des équipements comme un GPS intégré au       |
+    |          | téléphone, ou le podomètre, pour estimer les efforts et calories dépensées par les       |
+    |          | utilisateurs                                                                             |
+    |----------+------------------------------------------------------------------------------------------|
 
+** Non fonctionnelle
+    Voici une revue des différentes exigences non fonctionnelles, et comment nous les traiterons
+
+   | Exigence             | Description                                                                 |
+   |----------------------+-----------------------------------------------------------------------------|
+   | Sécurité             | L'utilisation d'~OAuth2~ comme norme d'authentification et                  |
+   |                      | autorisation forme une base solide pour garantir la sécurité du             |
+   |                      | système. Egalement, l'hébergeur ~AWS~ garantit, dans la mesure du           |
+   |                      | possible la non-compromission du systeme.  Aussi, le système utilisant      |
+   |                      | une base de donnée commune entre tous les utilisateurs, il doit garantir    |
+   |                      | une isolation entre les utilisateurs (multi-tenant)                         |
+   |----------------------+-----------------------------------------------------------------------------|
+   | Maintenabilité       | L'utilisation de code suivant les principes ~SOLID~ et la                   |
+   |                      | ~Clean Architecture~ permet de garantir la maintenabilité du logiciel       |
+   |                      | dans le temps.                                                              |
+   |----------------------+-----------------------------------------------------------------------------|
+   | Compatibilité        | L'application étant fondée à partir des formats standard du web comme       |
+   |                      | ~HTTP~, ~JSON~ etc.  La compatibilité de l'application est garantie         |
+   |                      | dans la mesure où les applications tierces utilisent aussi ces standards    |
+   |----------------------+-----------------------------------------------------------------------------|
+   | Internationalisation | Pour s'adapter à l'internationale.                                          |
+   |                      | L'application peut utiliser des normes standard comme ~I18n~                |
+   |----------------------+-----------------------------------------------------------------------------|
+   |Coûts                 | Les coûts d'exploitations sont dépendant de la charge des serveurs          |
+   |                      | et dépendent de l'hébergeur, | Une approche ~Serverless~ permet de          |
+   |                      | réduire les coùts au minimum mais n'est pas envisagé.                       |
+   |----------------------+-----------------------------------------------------------------------------|
