@@ -18,6 +18,7 @@ import Settings from "../pages/Settings";
 import Journal from "../pages/Journal";
 import AccountInformationForm from "../pages/AccountInformationForm";
 import GoalsForm from "../pages/GoalsForm";
+import Barcode from "../pages/Barcode";
 
 import { ellipse, square, triangle } from 'ionicons/icons';
 
@@ -27,6 +28,7 @@ const Menu = () => {
       <IonTabs>
         <IonRouterOutlet>
           <Route exact path="/:tab(report)/" component={Report}/>
+          <Route exact path="/:tab(journal)/barcode" component={Barcode}/>
           <Route exact path="/:tab(journal)/add-entry" component={AddEntry}/>
           <Route exact path="/:tab(journal)/add-food" component={AddFood}/>
           <Route exact path="/:tab(settings)" component={Settings}/>
