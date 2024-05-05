@@ -4,7 +4,7 @@
 #+end_export
 
 * Introduction
-** Objectif
+
    Aujourdhui, la pratique du bien-être et du sport suit un double mouvement.
 
    D'abord, les nouveaux médias et réseaux sociaux, alimenté par les
@@ -21,7 +21,7 @@
    spécialisée (contrastant avec l'approche plus généraliste des
    média traditionnels).
 
-   Il parait évident que ce contexte engendre une rationalisation
+   Ce contexte engendre une rationalisation
    des pratiques du bien-être et du sport: nous voulons pratiquer du
    sport et prendre soin de nous, mais de façon rationnelle, objective,
    et dans un but précis.
@@ -50,10 +50,6 @@
 
 # RAJOUTER DES SOURCES
 
-#+begin_export latex
-    \clearpage
-#+end_export
-
 ** Utilisation et public cible
    La solution est avant tout développée pour des utilisateurs
    non professionnels sur les questions de santé.
@@ -78,6 +74,27 @@
 
    Nous nous fixons les objectifs suivant:
 
+*** Suivi des aliments
+    Proposer une solution de suivi des aliments adapté à chaque cas.
+    Par exemple, une personne, en fonction de son age, de son activité
+    physique et de son sexe ne va pas avoir les mêmes besoins, la solution
+    doit être capable de s'adapter à ces différents cas.
+
+    L'enregistrement de ces aliments peut se faire de plusieurs façons :
+    entrée manuelle, code-barre ou encore estimation des calories à partir d'une photo
+    à l'aide d'intelligence artificielle.
+
+*** Aggregation des données et statistiques
+   Proposer une solution capable d'aggréger les données disponibles et
+   de d'afficher des statistiques pertinentes et cohérentes par
+   rapport aux buts des utilisateurs.
+
+*** Integration à l'environnement actuel
+   Permettre l'intégration simple des différents objets connectés et des appareils
+   disponibles pour améliorer le suivi des personnes. Par exemple, utiliser le GPS
+   d'un téléphone pour estimer l'activité physique, sans avoir besoin d'utiliser
+   du matériel spécifique. Ou encore, afficher les données de plusieurs fournisseurs
+   de façon indifférenciée.
 
 ** Définitions
 
@@ -85,10 +102,96 @@
 
 * Description générale
 # là on met les cas d'usage
-** Exigences de l'entreprise
-** Besoins des utilisateurs
-** Limites et contraintes du produit
-** Hypothèses et dépendances
+** Contraintes
+
+*** Multi-platforme
+    La solution doit être compatible avec une multitude d'appareils.
+    Dans l'environnement actuel les plateformes mobiles courantes
+    utilisent deux systèmes d'exploitations: ~IOS~ et ~Android~.
+    La solution doit donc être compatible avec ces deux platformes.
+    De plus, certaines fonctionnalités comme l'exportation des données,
+    ou l'affichage de statistiques complexes imposent la possibilité
+    d'utiliser la solution sur un ordinateur de bureau pour des soucis
+    de lisibilté.
+
+*** Interopérabilité
+    Un des objectifs du produit est de pouvoir
+    s'intégrer facilement à tout type d'objets connectés et
+    systèmes mobiles à l'inverse des systèmes existants.
+    Dans cette perspective, nous pouvons faire émerger plusieurs
+    contraintes:
+
+    1. La solution doit proposer une api publique,
+       capable d'être utilisée par un tier. La documentation
+       de l'api est donc une contrainte forte. Celle-ci
+       devra être développée en suivant la norme ~OpenAPI 3.1.0~,
+       Celle-ci inclue à la fois d'avoir une interface standardisée à
+       disposition des tiers. Mais aussi, nous permet de générer la documentation
+       à partir de l'application, garantissant une adéquation entre ces élements.
+    2. L'application doit utiliser un système d'authentification et d'authorisation
+       standard, permettant à des outils tiers de s'y connecter facilement.
+       Notre choix se portera sur ~OAuth2~. Cette norme permet notamment
+       de déléger à plus tard les choix en terme d'autorisation : Nous pouvons par exemple
+       modifier "à la volée" les permissions requises pour accéder à tel point d'api.
+    3. Dans ce soucis d'opérabilité, le système doit permettre l'exportation et l'importation des données vers
+       des formats usuels comme ~CSV~ ou ~Microsoft Excel~.
+
+*** Mode dégradé/hors-ligne
+    Dans la mesure ou certaines pratiques sportives peuvent se faire dans des "zones blanches"
+    comme par exemple, des forêts. La solution doit proposer un mode dégradé ou hors-ligne,
+    qui permet de stocker des informations même en l'absence de réseau.
+    De même, la solution doit être capable de continuer à collecter des informations de
+    différents appareils via des normes de connection à proximité comme le bluetooth,
+    même si internet n'est pas disponible.
+
+*** Normes alimentaires et données biologiques
+    Une grande partie de l'application est dédiée au suivi alimentaires. Des
+    normes existent concernant l'étiquetage des produits alimentaires.
+    Celle-ci comprennent une définition plus ou moins précises des ingrédients
+    et qualités nutritionnelles d'un produit (voir le règlement ~(UE) n°1169/2011~).
+    La solution doit utiliser ces normes pour garantir un suivi cohérent des utilisateurs.
+
+    Les normes comprennent à la fois des types de composant dans les aliments, et les
+    unités utilisées pour les mesurer (grammes, calories etc.)
+
+    De plus, les données biologiques comme l'age, la taille etc. sont aussi sujettes
+    à des normes d'unité. Les unitées seront affichées selon le système international (SI).
+
+** Environnement de développement
+
+   | Réalisation               | Outils                                                             |
+   |---------------------------+--------------------------------------------------------------------|
+   | Application serveur       | ~Python 3.11~;                                                     |
+   |                           | ~FastAPI 0.110~, un caneva web specialisé dans la création d'API;  |
+   |                           | ~mypy 1.9~, un outil de typage statique pour Python;               |
+   |                           | ~uvicorn~, un serveur web et environnement d'execution asynchrone; |
+   |                           | ~MongoDB~, une application de gestion de base de données NoSQL;    |
+   |                           | ~AWS (Amazon web service)~ un hébergeur "cloud".                   |
+   |---------------------------+--------------------------------------------------------------------|
+   | Application mobile et web | ~Ionic/React~, un canvas de creation d'interface mobile utilisant  |
+   |                           | la bibliothèque ~React~ comme moteur d'interface graphique;        |
+   |                           | ~Capacitor~, un environnement d'execution permettant d'utiliser    |
+   |                           | les applications web comme des application mobiles natives,        |
+   |                           | ~Capacitor~ est un successeur de ~Cordova~ et ~PhoneGap~.;         |
+   |                           | Et inclu des plugins pour des applications natives comme           |
+   |                           | la lecture de code bar.                                            |
+   |                           | ~Redux~, ~Redux-Toolkit~ et ~RTK-Query~, des outils de             |
+   |                           | gestion d'état global de l'application.                            |
+   |---------------------------+--------------------------------------------------------------------|
+   | Applications natives      | ~Android Studio~ pour la partie ~Android~;                         |
+   |                           | ~XCode~ pour la partie ~Ios~;                                      |
+   |                           | De véritables Iphones et smartphones android vont être utilisés    |
+   |                           | durant le développement. Egalement, utilisation des émulateurs     |
+   |                           | présents dans les environnements de développements natifs.         |
+   |---------------------------+--------------------------------------------------------------------|
+   | Gestion de développement  | ~Git~ pour le developpement et ~Github~ pour l'hébergement du      |
+   |                           | code.                                                              |
+   |---------------------------+--------------------------------------------------------------------|
+   | Redaction de documents    | ~Latex~ et ~vim~, en utilisant un plugin ~Orgmode~ et ~pandoc~     |
+   |                           | pour la realisation du document final (pdf)                        |
+   |---------------------------+--------------------------------------------------------------------|
+
+** Cas d'usages
 
 * Caractéristiques et exigences
 ** Caractéristiques
@@ -97,15 +200,7 @@
 ** Non fonctionnel
 
 * Information complementaires ?
-
-** Description de la solution
-   - La diversité des outils de santé développés par différents fabricants crée un environnement fragmenté où les systèmes opèrent isolément, rendant difficile la centralisation et l'analyse globale des données de santé.
-   - Les standards tels que FHIR ont été introduits pour améliorer l'interopérabilité des données dans les milieux hospitaliers, mais ces efforts restent insuffisants pour surmonter tous les défis de l'interopérabilité, particulièrement hors des institutions médicales.
-   - Une solution envisageable est le développement d'un logiciel centralisé, facile à utiliser et répondant aux besoins des utilisateurs, qui centraliserait toutes les données de santé en un unique point de référence, améliorant la gestion personnelle et la communication avec les professionnels de santé.
-   - Pour réaliser cette vision, il est essentiel d'appliquer des normes strictes en matière de sécurité et de confidentialité, tout en assurant la compatibilité entre les différents appareils et systèmes, afin de créer une infrastructure ouverte et adaptable aux innovations et aux besoins évolutifs des utilisateurs.
-   - Offrir un outil de suivi de la nutrition facile d'accès
-   - Integration avec plusieurs outils dans le but de centraliser
-     les données et faciliter les intéractions entre celles-ci
+** Définitions
 
 * Contraintes
   - Multi-platforme => web, android et ios
