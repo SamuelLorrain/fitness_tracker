@@ -7,7 +7,7 @@
 
    Aujourdhui, la pratique du bien-être et du sport suit un double mouvement.
 
-   D'abord, les nouveaux médias et réseaux sociaux, alimenté par les
+   D'abord, les nouveaux médias et réseaux sociaux, alimentés par les
    "influenceurs" spécialisés dans divers domaines comme le bien-être,
    le sport ou encore la spiritualité modifient le rapport au corps et à la santé des individus.
    En effet, le corps y est idéalisé. Et le sport et la santé ne sont plus
@@ -15,11 +15,11 @@
    part entière et centraux.
 
    Egalement, internet démultiplie les informations disponibles autour ce bien-être.
-   Celles-ci peuvent être de nature différentes (vulgarisation,
+   Celles-ci peuvent être de natures différentes (vulgarisation,
    articles scientifiques, etc.)  mais ont généralement une apparence
    de scientificité, où en tout cas, promettent de l'information
    spécialisée (contrastant avec l'approche plus généraliste des
-   média traditionnels).
+   médias traditionnels).
 
    Ce contexte engendre une rationalisation
    des pratiques du bien-être et du sport: nous voulons pratiquer du
@@ -32,7 +32,7 @@
    Les principaux acteurs comme Apple, Garmin ou encore Withings possèdent chacun des
    applications et sont capables d'afficher et de collecter des données. Mais le produit
    qui collecte la donnée doit être disponible dans leur catalogue respectif pour
-   que celle-ci soit utilisables.
+   que celle-ci soit utilisable.
 
    Le bien-être étant un sujet multi-factoriel cela n'est pas suffisant,
    car la mesure dans un but de santé et bien-être comprend à la fois
@@ -40,8 +40,8 @@
 
    Notons que le problème n'est pas reservé aux applications pour particuliers.
    Le secteur de la santé dans son ensemble manque d'une solution généraliste
-   pour la gestion des données de santé : même si des normes existent comme HL7/FIHR
-   (Fast Healthcare Interoperability Resources), elles ne sont que peu utilisés,
+   pour la gestion des données de santé : même si des normes existent comme HL7/FHIR
+   (Fast Healthcare Interoperability Resources), elles ne sont que peu utilisé,
    au profit de solutions propriétaires et non interopérables (comme Orbis).
 
    Nous voulons proposer une application de bien-être
@@ -56,7 +56,7 @@
    Le produit est utilisable seul, sans supervision
    medicale et n'est pas fait pour se substituer à des conseils médicaux.
 
-   Cela inclu principalement:
+   Cela inclut principalement:
 
    - Les personnes soucieuses de leur habitudes alimentaires;
    - Les sportifs voulant optimiser leurs performances,
@@ -72,11 +72,11 @@
 
 ** Objectifs
 
-   Nous nous fixons les objectifs suivant:
+   Nous nous fixons les objectifs suivants:
 
 *** Suivi des aliments
-    Proposer une solution de suivi des aliments adapté à chaque cas.
-    Par exemple, une personne, en fonction de son age, de son activité
+    Proposer une solution de suivi des aliments adaptée à chaque cas.
+    Par exemple, une personne, en fonction de son âge, de son activité
     physique et de son sexe ne va pas avoir les mêmes besoins, la solution
     doit être capable de s'adapter à ces différents cas.
 
@@ -84,17 +84,17 @@
     entrée manuelle, code-barre ou encore estimation des calories à partir d'une photo
     à l'aide d'intelligence artificielle.
 
-*** Aggregation des données et statistiques
+*** Aggrégation des données et statistiques
    Proposer une solution capable d'aggréger les données disponibles et
-   de d'afficher des statistiques pertinentes et cohérentes par
+   d'afficher des statistiques pertinentes et cohérentes par
    rapport aux buts des utilisateurs.
 
-*** Integration à l'environnement actuel
+*** Intégration à l'environnement actuel
    Permettre l'intégration simple des différents objets connectés et des appareils
    disponibles pour améliorer le suivi des personnes. Par exemple, utiliser le GPS
    d'un téléphone pour estimer l'activité physique, sans avoir besoin d'utiliser
    du matériel spécifique. Ou encore, afficher les données de plusieurs fournisseurs
-   de façon indifférencié.
+   de façon indifférenciée.
 
 
 #+begin_export latex
@@ -133,15 +133,15 @@
 * Description générale
 ** Contraintes
 
-*** Multi-platforme
+*** Multi-plateforme
     La solution doit être compatible avec une multitude d'appareils.
     Dans l'environnement actuel les plateformes mobiles courantes
-    utilisent deux systèmes d'exploitations: ~IOS~ et ~Android~.
+    utilisent deux systèmes d'exploitation: ~IOS~ et ~Android~.
     La solution doit donc être compatible avec ces deux platformes.
     De plus, certaines fonctionnalités comme l'exportation des données,
     ou l'affichage de statistiques complexes imposent la possibilité
     d'utiliser la solution sur un ordinateur de bureau pour des soucis
-    de lisibilté.
+    de lisibilité.
 
 *** Interopérabilité
     Un des objectifs du produit est de pouvoir
@@ -151,39 +151,39 @@
     contraintes:
 
     1. La solution doit proposer une api publique,
-       capable d'être utilisée par un tier. La documentation
+       capable d'être utilisée par un tiers. La documentation
        de l'api est donc une contrainte forte. Celle-ci
        devra être développée en suivant la norme ~OpenAPI 3.1.0~,
-       Celle-ci inclue à la fois d'avoir une interface standardisée à
+       Celle-ci inclut à la fois d'avoir une interface standardisée à
        disposition des tiers. Mais aussi, nous permet de générer la documentation
        à partir de l'application, garantissant une adéquation entre ces élements.
     2. L'application doit utiliser un système d'authentification et d'autorisation
        standard, permettant à des outils tiers de s'y connecter facilement.
        Notre choix se portera sur ~OAuth2~. Cette norme permet notamment
-       de déléger à plus tard les choix en terme d'autorisation : Nous pouvons par exemple
+       de déléguer à plus tard les choix en terme d'autorisation : Nous pouvons par exemple
        modifier "à la volée" les permissions requises pour accéder à tel point d'api.
-    3. Dans ce soucis d'opérabilité, le système doit permettre l'exportation et l'importation des données vers
+    3. Dans ce souci d'opérabilité, le système doit permettre l'exportation et l'importation des données vers
        des formats usuels comme ~CSV~ ou ~Microsoft Excel~.
 
 *** Mode dégradé/hors-ligne
     Dans la mesure où certaines pratiques sportives peuvent se faire dans des "zones blanches"
-    comme par exemple, des forêts. La solution doit proposer un mode dégradé ou hors-ligne,
+    comme par exemple, des forêts, la solution doit proposer un mode dégradé ou hors-ligne,
     qui permet de stocker des informations même en l'absence de réseau.
     De même, la solution doit être capable de continuer à collecter des informations de
-    différents appareils via des normes de connection à proximité comme ~bluetooth~,
+    différents appareils via des normes de connexion à proximité comme ~bluetooth~,
     même si internet n'est pas disponible.
 
 *** Normes alimentaires et données biologiques
-    Une grande partie de l'application est dédiée au suivi alimentaires. Des
+    Une grande partie de l'application est dédiée au suivi alimentaire. Des
     normes existent concernant l'étiquetage des produits alimentaires.
     Celle-ci comprennent une définition plus ou moins précises des ingrédients
     et qualités nutritionnelles d'un produit (voir le règlement ~(UE) n°1169/2011~).
     La solution doit utiliser ces normes pour garantir un suivi cohérent des utilisateurs.
 
-    Les normes comprennent à la fois des types de composant dans les aliments, et les
+    Les normes comprennent à la fois des types de composants dans les aliments, et les
     unités utilisées pour les mesurer (grammes, calories etc.)
 
-    De plus, les données biologiques comme l'age, la taille etc. sont aussi assujetti
+    De plus, les données biologiques comme l'âge, la taille etc. sont aussi assujetties
     à des normes d'unité. Les unitées seront affichées selon le système international (~SI~).
 
 ** Environnement de développement
@@ -193,18 +193,18 @@
    | Application serveur       | ~Python 3.11~;                                                     |
    |                           | ~FastAPI 0.110~, un caneva web specialisé dans la création d'API;  |
    |                           | ~mypy 1.9~, un outil de typage statique pour Python;               |
-   |                           | ~uvicorn~, un serveur web et environnement d'execution asynchrone; |
+   |                           | ~uvicorn~, un serveur web et environnement d'exécution asynchrone; |
    |                           | ~MongoDB~, une application de gestion de base de données NoSQL;    |
    |                           | ~AWS (Amazon web service)~ un hébergeur "cloud". Notamment utile   |
-   |                           | pour la partie notification de l'application via des Queues, et    |
+   |                           | pour la partie notification de l'application via des ~Queues~, et  |
    |                           | fonction server "serverless" (~Lambda~)                            |
    |---------------------------+--------------------------------------------------------------------|
-   | Application mobile et web | ~Ionic/React~, un canvas de creation d'interface mobile utilisant  |
+   | Application mobile et web | ~Ionic/React~, un canvas de création d'interface mobile utilisant  |
    |                           | la bibliothèque ~React~ comme moteur d'interface graphique;        |
-   |                           | ~Capacitor~, un environnement d'execution permettant d'utiliser    |
-   |                           | les applications web comme des application mobiles natives,        |
+   |                           | ~Capacitor~, un environnement d'exécution permettant d'utiliser    |
+   |                           | les applications web comme des applications mobiles natives,       |
    |                           | ~Capacitor~ est un successeur de ~Cordova~ et ~PhoneGap~.;         |
-   |                           | Et inclu des plugins pour des applications natives comme           |
+   |                           | Et inclut des plugins pour des applications natives comme          |
    |                           | la lecture de code bar.                                            |
    |                           | ~Redux~, ~Redux-Toolkit~ et ~RTK-Query~, des outils de             |
    |                           | gestion d'état global de l'application.                            |
@@ -219,18 +219,18 @@
    |                           | code.                                                              |
    |---------------------------+--------------------------------------------------------------------|
    | Redaction de documents    | ~Latex~ et ~vim~, en utilisant un plugin ~Orgmode~ et ~pandoc~     |
-   |                           | pour la realisation du document final (pdf)                        |
+   |                           | pour la réalisation du document final (pdf)                        |
    |---------------------------+--------------------------------------------------------------------|
-   | Redaction de diagrammes   | ~Whimsical~ un outil en ligne de realisation de                    |
+   | Redaction de diagrammes   | ~Whimsical~ un outil en ligne de réalisation de                    |
    | UML                       | diagrammes                                                         |
    |---------------------------+--------------------------------------------------------------------|
 
 ** Cas d'usages
 *** Acteurs
     - *Utilisateur* : Celui qui interagit directement avec l'application
-    - *Systeme*: Représente l'application en tant d'acteur des cas d'utilisation
+    - *Systeme*: Représente l'application en tant qu'acteur des cas d'utilisation
 
-*** Création et Stocker de la nourriture manuellement via code barre ou autre
+*** Créer et Stocker de la nourriture manuellement via code barre ou autre
 
 [[./img/diagramme-1.png]]
 
@@ -242,7 +242,7 @@
       mais utilise un code-barre pour obtenir les informations.
 
 **** Cas d'utilisation principaux
-    - *Enregistre dans un journal* : C'est le cas d'utilisation central
+    - *Enregistre dans un journal* : C'est le cas d'utilisation centrale
       où l'utilisateur peut enregistrer diverses informations liées
       à son alimentation et à sa consommation d'eau et de calories.
     - *Enregistre les caractéristiques d'un aliment* : Ceci est une
@@ -250,10 +250,10 @@
       code-barre pour identifier les caractéristiques d'un aliment.
 
 **** Extensions
-    Le systeme permet de rentrer des informations génériques dans les journal.
-    Ainsi, l'utilisateur peut rentrer de façon indifférencié la prise d'*eau*,
+    Le systeme permet de rentrer des informations génériques dans les journaux.
+    Ainsi, l'utilisateur peut rentrer de façon indifférenciée la prise d'*eau*,
     d'*aliments* ou encore de *calories indifférenciées*. Il est également possible
-    d'étendre le cas d'utilisation à d'autres types d'entrées comme les entrainements.
+    d'étendre le cas d'utilisation à d'autres types d'entrées comme les entraînements.
     L'enregistrement peut se faire à partir de divers équipements comme un GPS ou une
     montre connectée.
 
@@ -284,16 +284,16 @@
 
 **** Utilisateur
     - *Personnalise* : L'utilisateur peut personnaliser différentes notifications, notamment
-      en terme de fréquence et de type. Ici, le cas d'usage défini plusieurs
-      type possibles de notifications: *eau*, *aliments* et *entrainements*;
+      en terme de fréquence et de type. Ici, le cas d'usage définit plusieurs
+      types possibles de notifications: *eau*, *aliments* et *entraînements*;
     - *Reçoit* : Il reçoit les notifications, en fonction de la personnalisation.
 
 **** Notification:
     Le système crée et gère les notifications basées sur les paramètres personnalisés par l'utilisateur.
-    Les canaux de notification (email, sms etc.) font également parti des personnalisations possibles pour l'utilisateur.
+    Les canaux de notification (email, sms etc.) font également partie des personnalisations possibles pour l'utilisateur.
 
 **** Application (Système)
-    Le système est responsable à la fois de l'envoie des notifications et de la validation des
+    Le système est responsable à la fois de l'envoi des notifications et de la validation des
     personnalisations souhaitées par l'utilisateur.
 
 * Exigences
@@ -311,23 +311,23 @@
     |          | informations sur l'activité journalière concernant la nutrition et le sport ou           |
     |          | encore d'autres données biologiques.                                                     |
     |----------+------------------------------------------------------------------------------------------|
-    | E.4      | L'application doit proposer une API utilisable par une application tier pour rajouter    |
+    | E.4      | L'application doit proposer une API utilisable par une application tiers pour rajouter   |
     |          | des informations.                                                                        |
     |----------+------------------------------------------------------------------------------------------|
     | E.5      | L'application doit proposer une interface pour visualiser ou exporter les informations   |
-    |          | collectées sous forme de rapport. Ceux-ci ne seront pas seulement des données brutes.    |
+    |          | collectées sous forme de rapport. Celles-ci ne seront pas seulement des données brutes.  |
     |          | L'application doit en effet proposer des statistiques pertinentes.                       |
     |----------+------------------------------------------------------------------------------------------|
-    | E.6      | L'application doit être capable d'utiliser des photographie, que ce soit des code-barres |
-    |          | pour obtenir la composition nutritionnelle d'un aliment                                  |
-    |          | ou encore de véritable photographies de nourriture pour estimer les calories présentes   |
+    | E.6      | L'application doit être capable d'utiliser des photographies, que ce soit à l'aide       |
+    |          | de code-barre pour obtenir la compositionnutritionnelle d'un aliment                     |
+    |          | ou encore de véritables photographies de nourriture pour estimer les calories présentes. |
     |----------+------------------------------------------------------------------------------------------|
     | E.7      | L'application doit être capable d'utiliser des équipements comme un GPS intégré au       |
     |          | téléphone, ou le podomètre, pour estimer les efforts et calories dépensées par les       |
     |          | utilisateurs                                                                             |
     |----------+------------------------------------------------------------------------------------------|
 
-** Non fonctionnelle
+** Non fonctionnelles
     Voici une revue des différentes exigences non fonctionnelles, et comment nous les traiterons
 
    | Exigence             | Description                                                                 |
@@ -335,22 +335,22 @@
    | Sécurité             | L'utilisation d'~OAuth2~ comme norme d'authentification et                  |
    |                      | autorisation forme une base solide pour garantir la sécurité du             |
    |                      | système. Egalement, l'hébergeur ~AWS~ garantit, dans la mesure du           |
-   |                      | possible la non-compromission du systeme.  Aussi, le système utilisant      |
-   |                      | une base de donnée commune entre tous les utilisateurs, il doit garantir    |
+   |                      | possible la non-compromission du système.  Aussi, le système utilisant      |
+   |                      | une base de données commune entre tous les utilisateurs, il doit garantir   |
    |                      | une isolation entre les utilisateurs (multi-tenant)                         |
    |----------------------+-----------------------------------------------------------------------------|
    | Maintenabilité       | L'utilisation de code suivant les principes ~SOLID~ et la                   |
    |                      | ~Clean Architecture~ permet de garantir la maintenabilité du logiciel       |
    |                      | dans le temps.                                                              |
    |----------------------+-----------------------------------------------------------------------------|
-   | Compatibilité        | L'application étant fondée à partir des formats standard du web comme       |
+   | Compatibilité        | L'application étant fondée à partir des formats standards du web comme      |
    |                      | ~HTTP~, ~JSON~ etc.  La compatibilité de l'application est garantie         |
    |                      | dans la mesure où les applications tierces utilisent aussi ces standards    |
    |----------------------+-----------------------------------------------------------------------------|
-   | Internationalisation | Pour s'adapter à l'internationale.                                          |
-   |                      | L'application peut utiliser des normes standard comme ~I18n~                |
+   | Internationalisation | Pour s'adapter à l'international, l'application peut utiliser               |
+   |                      | des normes standard comme ~I18n~                                            |
    |----------------------+-----------------------------------------------------------------------------|
-   |Coûts                 | Les coûts d'exploitations sont dépendant de la charge des serveurs          |
-   |                      | et dépendent de l'hébergeur, | Une approche ~Serverless~ permet de          |
-   |                      | réduire les coùts au minimum mais n'est pas envisagé.                       |
+   |Coûts                 | Les coûts d'exploitation sont dépendant de la charge des serveurs           |
+   |                      | et dépendent de l'hébergeur.                                                |
+   |                      | Nous utiliserons des instances managées (~ECS~), avec un coût moindre.      |
    |----------------------+-----------------------------------------------------------------------------|
