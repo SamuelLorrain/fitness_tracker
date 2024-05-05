@@ -8,8 +8,8 @@ import {
 } from "@ionic/react";
 import { useState } from "react";
 import { useDispatch } from 'react-redux';
-import { useLoginMutation } from '../state/api';
-import { initUser } from "../state/userSlice";
+import { useLoginMutation, useUserInfoMutation } from '../state/api';
+import { initUser, setUserInfos } from "../state/userSlice";
 import { useHistory } from "react-router-dom";
 import { PersistenceSingleton } from "../state/persistence";
 
@@ -18,6 +18,7 @@ const Login = () => {
   const [password, setPassword] = useState();
   const dispatch = useDispatch();
   const [mutateLogin, { isLoading }] = useLoginMutation();
+  const [mutateUserInfo] = useUserInfoMutation();
 
   const onLogin = async () => {
     try {
@@ -25,6 +26,10 @@ const Login = () => {
       dispatch(initUser(user));
       await PersistenceSingleton().set('user_email', email);
       await PersistenceSingleton().set('user_token', user.access_token);
+      const userInfos = await mutateUserInfo().unwrap();
+      console.log(userInfos);
+      dispatch(setUserInfos(userInfos))
+      setIsInitialized(true);
       window.history.replaceState(null, null, '/');
     } catch (e) {
       console.log("error", e);
