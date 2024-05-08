@@ -1,10 +1,11 @@
 from dataclasses import dataclass
+from typing import Optional
 from fitness.commons.exceptions import CustomException, EntityDoesNotExistsException
 
 
 @dataclass
 class FoodDoesNotExistsException(EntityDoesNotExistsException):
-    message = "food entity doesn't exists"
+    message: Optional[str] = "food entity doesn't exists"
     """Raised when a fetched food doesn't exist"""
 
 
