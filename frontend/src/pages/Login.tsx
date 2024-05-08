@@ -27,9 +27,7 @@ const Login = () => {
       await PersistenceSingleton().set('user_email', email);
       await PersistenceSingleton().set('user_token', user.access_token);
       const userInfos = await mutateUserInfo().unwrap();
-      console.log(userInfos);
       dispatch(setUserInfos(userInfos))
-      setIsInitialized(true);
       window.history.replaceState(null, null, '/');
     } catch (e) {
       console.log("error", e);
