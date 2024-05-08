@@ -1,7 +1,6 @@
 
 from dataclasses import dataclass
 
-import requests
 from fitness.commons.singleton import Singleton
 from fitness.food.domain.barcode_service import BarcodeService
 from fitness.food.domain.food_crud_service import FoodCrudService

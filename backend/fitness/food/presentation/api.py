@@ -78,6 +78,10 @@ def process_food_barcode(
     elif isinstance(food_or_new_food, FoodDistant):
         return NewFoodResponse(
             name=food_or_new_food.product.product_name,
+            # FIXME There is a possibility for an xss here
+            # because the barcode is sent to the user to be
+            # reevaliated in the create_food() function
+            barcode=barcode_request.text,
             nutrition=NutritionComposition(
                 calories=food_or_new_food.product.nutriments.energy_kcal_100g,
                 carbohydrates=Carbohydrates(

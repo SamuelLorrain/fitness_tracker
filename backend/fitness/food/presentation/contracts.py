@@ -14,6 +14,7 @@ class FoodRequest(BaseModel):
     })
 
     name: str = Field(min_length=1)
+    barcode_value: Optional[str] = None
     group: FoodGroup = Field(default=FoodGroup.unknown)
     nutrition: NutritionComposition = Field(default_factory=lambda:NutritionComposition())
     ingredient_list: list[str] = Field(default_factory=list)
@@ -52,4 +53,5 @@ class BarcodeRequest(BaseModel):
 
 class NewFoodResponse(BaseModel):
     name: str
+    barcode: str
     nutrition: NutritionComposition
