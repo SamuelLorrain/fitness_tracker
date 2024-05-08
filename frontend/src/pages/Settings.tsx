@@ -2,10 +2,17 @@ import Basis from "../components/Basis";
 import { IonCard, IonCardTitle, IonCardHeader, IonCardContent, IonButton } from "@ionic/react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { PersistenceSingleton } from "../state/persistence";
 
 const Settings: React.FC = () => {
   const user = useSelector(state => state.user);
   const history = useHistory();
+
+  const logout = async () => {
+    await PersistenceSingleton().clear();
+    window.history.replaceState(null,null,'/');
+    window.location.reload();
+  }
 
   return (
     <Basis name="Settings">
@@ -39,6 +46,7 @@ const Settings: React.FC = () => {
         </IonCardContent>
         <IonButton fill="clear" onClick={() => history.push('/settings/goals')}>Change</IonButton>
       </IonCard>
+      <IonButton expand="full" onClick={logout}>Logout</IonButton>
     </Basis>
   );
 }
