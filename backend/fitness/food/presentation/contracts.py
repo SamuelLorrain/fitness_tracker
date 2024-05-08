@@ -42,3 +42,14 @@ class ListFoodResponseItem(BaseModel):
 
 class ListFoodResponse(BaseModel):
     foods: list[ListFoodResponseItem]
+
+
+class BarcodeRequest(BaseModel):
+    text: str
+    format: str
+    formatName: str
+
+
+class NewFoodResponse(BaseModel):
+    name: str
+    nutrition: NutritionComposition
