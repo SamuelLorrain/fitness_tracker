@@ -21,3 +21,5 @@ class FoodRepository(Protocol):
     def delete_food(self, user_uuid: FoodUserUUID, food_uuid: FoodUUID) -> None:
         ... # pragma: no cover
 
+    def get_food_by_barcode(self, user_uuid: FoodUserUUID, barcode_value: str) -> Food:
+        ... # pragma: no cover
