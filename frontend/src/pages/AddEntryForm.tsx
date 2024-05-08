@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import Basis from "../components/Basis";
 import { useParams, useHistory } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import { IonInput, IonButton, IonButtons, IonSelect, IonSelectOption } from "@ionic/react";
 import { useGetFoodQuery, useCreateEntryMutation } from "../state/api";
 import { formatDay } from "../utils/date_utils";
