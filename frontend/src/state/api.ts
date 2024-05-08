@@ -35,6 +35,13 @@ export const api = createApi({
         }
       }),
     }),
+    register: builder.mutation({
+      query: (credentials) => ({
+        url: '/auth/register',
+        method: 'POST',
+        body: credentials
+      }),
+    }),
     userInfo: builder.mutation({
       query: () => ({
         url: '/user/',
@@ -114,6 +121,7 @@ export const {
   useListEntryQuery,
   useSetUserInfoMutation,
   useSetUserGoalsMutation,
-  useGetFoodBarcodeMutation
+  useGetFoodBarcodeMutation,
+  useRegisterMutation
 } = api;
 
