@@ -135,14 +135,14 @@ const AddEntryForm: React.FC = () => {
 
   if (isFetching || currentNutrition == null) {
     return (
-      <Basis>
+      <Basis name="Add entry" onReturn={() => history.push('/journal/add-entry')}>
         loading
       </Basis>
     );
   }
 
   return (
-    <Basis>
+    <Basis name="Add entry" onReturn={() => history.push('/journal/add-entry')}>
       <div>{food.name}</div>
       <div>
         <IonInput
