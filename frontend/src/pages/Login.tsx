@@ -35,26 +35,22 @@ const Login = () => {
   }
 
   return (
-    <IonGrid>
-      <IonRow>
-        <IonCol>
-          <IonInput label="Email"
-                    value={email}
-                    onIonChange={(e) => setEmail(e.target.value)}
-          />
-          <IonInput type="password"
-                    label="Password"
-                    value={password}
-                    onIonChange={(e) => setPassword(e.target.value)}
-          >
-            <IonInputPasswordToggle slot="end"/>
-          </IonInput>
-          <IonButton expand="full" disabled={isLoading} onClick={onLogin}>
-            Login
-          </IonButton>
-        </IonCol>
-      </IonRow>
-    </IonGrid>
+    <>
+      <IonInput label="Email"
+        value={email}
+        onIonChange={(e) => setEmail(e.target.value)}
+      />
+      <IonInput type="password"
+        label="Password"
+        value={password}
+        onIonChange={(e) => setPassword(e.target.value)}
+      >
+        <IonInputPasswordToggle slot="end"/>
+      </IonInput>
+      <IonButton expand="full" disabled={isLoading} onClick={onLogin}>
+        Login
+      </IonButton>
+    </>
   );
 }
 
