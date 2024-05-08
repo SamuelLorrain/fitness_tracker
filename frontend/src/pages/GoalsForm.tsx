@@ -1,13 +1,16 @@
+import { useState, useRef } from "react";
 import Basis from "../components/Basis";
-import { IonInput, IonButton } from "@ionic/react";
+import { IonInput, IonButton, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonContent, IonSelect, IonSelectOption } from "@ionic/react";
+import { IonGrid, IonRow, IonCol } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
 import { useSetUserGoalsMutation } from "../state/api";
 import { setUserInfos } from "../state/userSlice";
 import * as Yup from "yup";
+import GoalsIMCModal from "./GoalsIMCModal";
 
-const GoalsForm: React.FC = () => {
+const useGoalForm = () => {
   const user = useSelector(state => state.user);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -59,11 +62,46 @@ const GoalsForm: React.FC = () => {
     }
   });
 
+  const goalsUpdater = (calories: number, proteins: number, lipids: number, carbs: number) => {
+    formik.values.calories = calories;
+    formik.values.proteins = proteins;
+    formik.values.lipids = lipids;
+    formik.values.carbs = carbs;
+  }
+
+  const shouldUpdate = (
+    formik.values.calories != user.nutrition_goals_per_day?.calories
+  ) || (
+    formik.values.proteins != user.nutrition_goals_per_day?.proteins.protein
+  ) || (
+    formik.values.lipids != user.nutrition_goals_per_day?.lipids.fat
+  ) || (
+    formik.values.carbs != user.nutrition_goals_per_day?.carbohydrates.carbs
+  )
+
+  return {
+    user,
+    formik,
+    isLoading,
+    goalsUpdater,
+    shouldUpdate
+  }
+}
+
+const GoalsForm: React.FC = () => {
+  const { user, formik, isLoading, goalsUpdater, shouldUpdate } = useGoalForm();
+  const history = useHistory();
+  const [isIMCModalOpen, setIsIMCModalOpen] = useState(false);
+
   return (
     <Basis
         name="Settings"
         onReturn={() => history.push('/settings')}
     >
+      <GoalsIMCModal isOpen={isIMCModalOpen} setIsOpen={setIsIMCModalOpen} updater={goalsUpdater}/>
+      <IonButton fill="clear" expand="full" onClick={() => setIsIMCModalOpen(true)}>
+        setup goals automatically
+      </IonButton>
       <form onSubmit={formik.handleSubmit}>
         <IonInput
           className={`${formik.errors.calories && 'ion-invalid'} ${formik.touched.calories && 'ion-touched'} `}
@@ -97,9 +135,12 @@ const GoalsForm: React.FC = () => {
           onIonChange={(e) => formik.setFieldValue('lipids', e.detail.value)}
           onBlur={(e) => formik.setFieldTouched('lipids', true)}
         />
-      <IonButton type="submit" expand="full" disabled={isLoading}>
-        Change
-      </IonButton>
+      {
+        shouldUpdate ?
+        <IonButton type="submit" expand="full" disabled={isLoading || !shouldUpdate} >
+          Click to confirm update
+        </IonButton> : null
+      }
       </form>
     </Basis>
   );
