@@ -2,9 +2,12 @@ from typing import Annotated
 from uuid import UUID
 from fastapi import APIRouter, Depends, status, Response, Request
 from fitness.authentication.domain.entities import AuthPassKey
+from fitness.commons.exceptions import EntityDoesNotExistsException
 from fitness.food.configuration import FoodConfiguration
-from fitness.food.domain.value_objects import FoodVA
-from fitness.food.presentation.contracts import FilterFoodQuery, FoodRequest, FoodResponse, ListFoodResponse, PatchFoodRequest, ListFoodResponseItem
+from fitness.food.domain.entities import Food
+from fitness.food.domain.food_distant_client import FoodDistant
+from fitness.food.domain.value_objects import Carbohydrates, FoodVA, Lipids, NutritionComposition, Proteins, ServingSize
+from fitness.food.presentation.contracts import BarcodeRequest, FilterFoodQuery, FoodRequest, FoodResponse, ListFoodResponse, NewFoodResponse, PatchFoodRequest, ListFoodResponseItem
 from fitness.authentication.configuration import AuthenticationConfiguration
 
 
@@ -51,21 +54,6 @@ def create_food(
     new_food_uuid = food_service.store_food(auth_pass_key, food_va)
     response.headers["Location"] = f"{request.url}{new_food_uuid}"
 
-# TODO real patch
-# @food_router.patch('/{food_uuid}', status_code=status.HTTP_204_NO_CONTENT)
-# def patch_food(
-#     food_uuid: UUID,
-#     pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
-#     patch_food_request: PatchFoodRequest
-# ) -> Response:
-#     configuration = FoodConfiguration()
-#     food_service = configuration.food_crud_service
-#     food_service.patch_food(
-#         pass_key,
-#         food_uuid,
-#         patch_food_request.model_dump(exclude_unset=True)
-#     )
-
 
 @food_router.delete('/{food_uuid}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_food(
@@ -75,3 +63,32 @@ def delete_food(
     configuration = FoodConfiguration()
     food_service = configuration.food_crud_service
     food_service.delete_food(pass_key, food_uuid)
+
+
+@food_router.post('/barcode')
+def process_food_barcode(
+    pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
+    barcode_request: BarcodeRequest,
+) -> FoodResponse|NewFoodResponse:
+    configuration = FoodConfiguration()
+    barcode_service = configuration.barcode_service
+    food_or_new_food = barcode_service.try_get_food_by_barcode(pass_key, barcode_request.text)
+    if isinstance(food_or_new_food, Food):
+        return FoodResponse(**food_or_new_food.model_dump())
+    elif isinstance(food_or_new_food, FoodDistant):
+        return NewFoodResponse(
+            name=food_or_new_food.product.product_name,
+            nutrition=NutritionComposition(
+                calories=food_or_new_food.product.nutriments.energy_kcal_100g,
+                carbohydrates=Carbohydrates(
+                    carbs=food_or_new_food.product.nutriments.carbohydrates_100g
+                ),
+                proteins=Proteins(
+                    protein=food_or_new_food.product.nutriments.proteins_100g
+                ),
+                lipids=Lipids(
+                    fat=food_or_new_food.product.nutriments.fat_100g
+                )
+            )
+        )
+    raise EntityDoesNotExistsException
