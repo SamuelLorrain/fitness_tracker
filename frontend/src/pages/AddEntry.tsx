@@ -8,7 +8,7 @@ import { IonHeader, IonToolbar, IonTitle, IonContent } from "@ionic/react";
 import { IonCard, IonCardHeader, IonCardTitle } from "@ionic/react";
 import { IonIcon } from '@ionic/react';
 import { IonRippleEffect } from '@ionic/react';
-import { add, barcodeOutline } from 'ionicons/icons';
+import { add, barcodeOutline, arrowBack } from 'ionicons/icons';
 
 const isSearchValid = (search: String): boolean => {
   return search !== '' && search != null;
@@ -69,6 +69,11 @@ const AddEntry: React.FC = () => {
     <>
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonButton onClick={() => history.push('/journal')}>
+              <IonIcon icon={arrowBack}/>
+            </IonButton>
+          </IonButtons>
           <IonTitle>Add</IonTitle>
           <IonButtons slot="end">
             <IonButton onClick={() => history.push('/journal/barcode')}>
