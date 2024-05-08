@@ -91,6 +91,15 @@ export const api = createApi({
       },
       providesTags: ["Entry"]
     }),
+    getFoodBarcode: builder.mutation({
+      query: (barcode) => {
+        return {
+          url: '/food/barcode',
+          method: 'POST',
+          body: barcode
+        }
+      }
+    })
   }),
 });
 
@@ -105,5 +114,6 @@ export const {
   useListEntryQuery,
   useSetUserInfoMutation,
   useSetUserGoalsMutation,
+  useGetFoodBarcodeMutation
 } = api;
 

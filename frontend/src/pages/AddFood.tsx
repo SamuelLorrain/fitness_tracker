@@ -9,7 +9,7 @@ import {
 } from "@ionic/react";
 import { IonIcon } from "@ionic/react";
 import { arrowBack } from "ionicons/icons";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import FormInput from "../components/FormInput";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -17,6 +17,7 @@ import { useCreateFoodMutation } from "../state/api";
 
 const createValidFoodRequest = (data) => ({
   name: data.name,
+  barcode_value: data.barcode,
   nutrition: {
     serving_size: {
       name: data.serving_name,
@@ -35,19 +36,25 @@ const createValidFoodRequest = (data) => ({
   }
 })
 
+const getInitialValues = (state) => {
+  return {
+    name: state?.name ?? "",
+    barcode: state?.barcode ?? null,
+    serving_name: state?.nutrition.serving_size.name ?? "",
+    serving_weight: state?.nutrition.serving_size.grams ?? null,
+    energy: state?.nutrition.calories ?? null,
+    carbs: state?.nutrition.carbohydrates.carbs ?? null,
+    fat: state?.nutrition.lipids.fat ?? null,
+    proteins: state?.nutrition.proteins.protein ?? null,
+  }
+}
+
 const AddFoodForm: React.FC = () => {
   const [mutateCreateFood, { isLoading }] = useCreateFoodMutation();
   const history = useHistory();
+  const location = useLocation();
   const formik = useFormik({
-    initialValues: {
-      name: "",
-      serving_name: "",
-      serving_weight: null,
-      energy: null,
-      carbs: null,
-      fat: null,
-      proteins: null,
-    },
+    initialValues: getInitialValues(location?.state),
     validationSchema: Yup.object({
       name: Yup.string()
           .required("A name must be provided"),

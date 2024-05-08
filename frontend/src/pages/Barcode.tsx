@@ -1,48 +1,59 @@
 import Basis from "../components/Basis";
 import { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Html5QrcodeScanner } from "html5-qrcode";
-import { Html5Qrcode } from "html5-qrcode";
-import { IonButton } from "@ionic/react";
+import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
+import { IonButton, IonSpinner } from "@ionic/react";
 import { initCameras } from "../state/hardwareSlice";
+import { useGetFoodBarcodeMutation } from "../state/api";
 import { useDispatch, useSelector } from "react-redux";
+import AddEntryForm from "./AddEntryForm";
 
 
-const failure = (err) => {};
+const SCANNER_IDNAME = "scanner-id-el";
+let global_scanner = null;
+const getScanner = () => {
+  if (global_scanner == null) {
+    global_scanner = new Html5Qrcode(SCANNER_IDNAME);
+  }
+  return global_scanner;
+}
 
-const BarcodeScanner: React.FC = () => {
-  const SCANNER_IDNAME = "scanner-id-el";
+const BarcodeScanner: React.FC = ({ setBarcodeValue }) => {
   const cameras = useSelector(state => state.hardware.cameras);
   const scannerDiv = useRef();
   const [scanner, setScanner] = useState(null);
-  const [scannerStarted, setScannerStarted] = useState(false);
 
-  const success = async (a,b) => {
+  const success = async (value,codebarObject) => {
+    setBarcodeValue(codebarObject);
     await scanner.stop();
   }
 
-  console.log("a");
-
-  if (scannerDiv.current != null && scanner == null) {
-    console.log("b");
-    setScanner(new Html5Qrcode(SCANNER_IDNAME));
-  }
-
   useEffect(() => {
-    console.log("c");
-    if (scannerStarted || scanner == null) {
+    if (scannerDiv.current != null && scanner == null) {
+      setScanner(getScanner())
+      return;
+    } else if (scanner?.getState() == Html5QrcodeScannerState.SCANNING) {
       return;
     } else {
-      console.log("d");
-      scanner.start(
-        cameras[0].id,
-        {fps: 10},
-        success,
-        failure
-      );
-      setScannerStarted(true);
+      setTimeout(() => {
+        scanner.start(
+          cameras[0].id,
+          {fps: 10},
+          success,
+          () => undefined
+        );
+      }, 500);
     }
-  }, [scanner, scannerStarted, setScannerStarted]);
+    return async () => {
+      if (scanner && scanner?.getState() != Html5QrcodeScannerState.STOPPED) {
+        try {
+          await scanner.stop();
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    }
+  }, [scanner, scannerDiv.current]);
 
   return (
     <div ref={scannerDiv} id={SCANNER_IDNAME}>
@@ -56,6 +67,8 @@ const Barcode: React.FC = () => {
   const barcodeRef = useRef();
   const dispatch = useDispatch();
   const hasCameraPermission = useSelector(state => state.hardware.hasCameraPermission)
+  const [barcodeValue, setBarcodeValue] = useState(null);
+  const [mutateFoodBarcode, { isLoadingFoodBarcode }] = useGetFoodBarcodeMutation();
 
   const grantCameraPermission = () => {
     Html5Qrcode.getCameras().then(cameras => {
@@ -65,18 +78,52 @@ const Barcode: React.FC = () => {
     );
   }
 
+  useEffect(() => {
+    if (barcodeValue == null) {
+      return
+    }
+    (async () => {
+      try {
+        const response = await mutateFoodBarcode({
+          text: barcodeValue.result.text,
+          format: barcodeValue.result.format.format.toString(),
+          formatName: barcodeValue.result.format.formatName
+        }).unwrap();
+      } catch(error) {
+        console.log("unknown scanned food");
+        history.push('/journal/add-food');
+      }
+      // Not the best approach (would prefer type validation)
+      // but if there is an uuid, it means we retrieved
+      // an existing food and so we can directly enter the thing
+      if (response?.uuid) {
+        history.push(`/journal/entry-form/${response.uuid}`)
+      } else {
+        history.push('/journal/add-food', { ...response })
+      }
+    })()
+  }, [barcodeValue]);
+
+  if (barcodeValue == null) {
+    return (
+      <Basis name="Bar Code" onReturn={() => history.push('/journal/add-entry')}>
+        {
+          hasCameraPermission ?
+            <BarcodeScanner setBarcodeValue={setBarcodeValue}/>
+            :
+            <IonButton onClick={grantCameraPermission}>
+              grant camera permission
+            </IonButton>
+        }
+      </Basis>
+    );
+  }
+
   return (
     <Basis name="Bar Code" onReturn={() => history.push('/journal/add-entry')}>
-      {
-        hasCameraPermission ?
-        <BarcodeScanner/>
-        :
-        <IonButton onClick={grantCameraPermission}>
-          grant camera permission
-        </IonButton>
-      }
+      <IonSpinner/>
     </Basis>
-  );
+  )
 }
 
 export default Barcode;
