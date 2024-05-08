@@ -4,7 +4,7 @@ from fitness.commons.connection import MongoDBConnection
 from fitness.food.domain.entities import Food
 from fitness.food.domain.food_repository import FoodRepository, FoodUUID, FoodUserUUID
 from fitness.food.domain.value_objects import FoodVA
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from fitness.food.exceptions import FoodDoesNotExistsException
 
@@ -50,3 +50,14 @@ class MongoDBFoodRepository(FoodRepository):
         )
         if delete_result.deleted_count != 1:
             raise FoodDoesNotExistsException
+
+    def get_food_by_barcode(self, user_uuid: UUID, barcode_value: str) -> Food:
+        db_food = self.food_collection.find_one(
+            {
+                "user_uuid": user_uuid,
+                "barcode_value": barcode_value
+            }
+        )
+        if db_food is None:
+            raise FoodDoesNotExistsException
+        return Food(**db_food)

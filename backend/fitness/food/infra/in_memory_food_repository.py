@@ -4,7 +4,7 @@ from typing import Optional
 from fitness.food.domain.entities import Food
 from fitness.food.domain.food_repository import FoodRepository, FoodUUID, FoodUserUUID
 from fitness.food.domain.value_objects import FoodVA
-from uuid import uuid4
+from uuid import UUID, uuid4
 from fitness.food.exceptions import FoodDoesNotExistsException
 
 @dataclass
@@ -37,3 +37,5 @@ class InMemoryFoodRepository(FoodRepository):
         except KeyError:
             raise FoodDoesNotExistsException
 
+    def get_food_by_barcode(self, user_uuid: UUID, barcode_value: str) -> Food:
+        raise FoodDoesNotExistsException
