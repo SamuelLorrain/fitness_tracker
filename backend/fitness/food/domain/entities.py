@@ -7,6 +7,7 @@ from uuid import UUID
 class Food(BaseModel):
     uuid: UUID
     user_uuid: Optional[UUID]
+    barcode_value: Optional[str] = None
     name: str = Field(min_length=1)
     nutrition: NutritionComposition = Field(default_factory=lambda:NutritionComposition())
     group: FoodGroup = Field(default=FoodGroup.unknown)
