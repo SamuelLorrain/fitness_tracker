@@ -1,13 +1,14 @@
 from dataclasses import dataclass, field
-from datetime import datetime, date
+from datetime import date, datetime
 from typing import Generator, Optional
 from uuid import UUID, uuid4
+
 from fitness.entry.domain.entity import Entry
 from fitness.entry.domain.entry_repository import EntryRepository
 from fitness.entry.domain.savable_payload import SavablePayload
+from fitness.entry.exceptions import EntryDoesNotExistException
 from fitness.entry.presentation.contracts import EntryTypeEnum
 from fitness.food.domain.entities import Food
-from fitness.entry.exceptions import EntryDoesNotExistException
 
 
 @dataclass

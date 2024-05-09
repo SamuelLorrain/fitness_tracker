@@ -1,13 +1,15 @@
 from typing import Annotated
+
 from fastapi import APIRouter, Depends, status
+from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import SecretStr
 
 from fitness.authentication.configuration import AuthenticationConfiguration
 from fitness.authentication.domain.auth_formatter import AuthFormatter
 from fitness.authentication.domain.auth_service import AuthService
-from fastapi.security import OAuth2PasswordRequestForm
 from fitness.authentication.domain.entities import AuthPassKey
+
 from .contracts import AuthenticationResponse, RegisterRequest
-from pydantic import SecretStr
 
 auth_router = APIRouter(prefix="/auth", tags=["authentication"])
 auth_dep = AuthenticationConfiguration().authorisation_dependency

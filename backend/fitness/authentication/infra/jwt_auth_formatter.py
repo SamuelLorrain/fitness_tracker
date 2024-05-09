@@ -1,10 +1,11 @@
 from dataclasses import asdict, dataclass
+from datetime import datetime
+
 import jwt
 
 from fitness.authentication.domain.auth_formatter import AuthFormatter
 from fitness.authentication.domain.entities import AuthPassKey
 from fitness.commons.settings import Settings
-from datetime import datetime
 
 
 @dataclass

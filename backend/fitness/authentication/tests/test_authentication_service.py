@@ -5,7 +5,9 @@ from pydantic import SecretStr
 from pytest import fixture
 
 from fitness.authentication.domain.auth_service import AuthService
-from fitness.authentication.domain.authentication_repository import AuthenticationRepository
+from fitness.authentication.domain.authentication_repository import (
+    AuthenticationRepository,
+)
 from fitness.authentication.exceptions import (
     UnableToLoginException,
     UserAlreadyExistsException,

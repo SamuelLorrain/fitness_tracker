@@ -1,9 +1,11 @@
 from typing import Any
-from fitness.commons.settings import Settings
-from fitness.commons.singleton import Singleton
+
+from pymongo.database import Database
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from pymongo.database import Database
+
+from fitness.commons.settings import Settings
+from fitness.commons.singleton import Singleton
 
 
 class MongoDBConnection(Singleton):

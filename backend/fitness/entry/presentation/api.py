@@ -1,12 +1,19 @@
+from datetime import date
 from typing import Annotated
 from uuid import UUID
-from fastapi import APIRouter, Depends, Response, Request
+
+from fastapi import APIRouter, Depends, Request, Response
+
 from fitness.authentication.configuration import AuthenticationConfiguration
 from fitness.authentication.domain.entities import AuthPassKey
-from fitness.entry.exceptions import EntryDoesNotExistException
 from fitness.entry.configuration import EntryConfiguration
-from fitness.entry.presentation.contracts import CreateEntryRequest, EntryListItemResponse, EntryListResponse, EntryResponse
-from datetime import date
+from fitness.entry.exceptions import EntryDoesNotExistException
+from fitness.entry.presentation.contracts import (
+    CreateEntryRequest,
+    EntryListItemResponse,
+    EntryListResponse,
+    EntryResponse,
+)
 
 entry_router = APIRouter(tags=["entry"])
 auth_dep = AuthenticationConfiguration().authorisation_dependency

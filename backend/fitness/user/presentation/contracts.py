@@ -1,6 +1,8 @@
 from typing import Optional
-from fitness.food.domain.value_objects import NutritionComposition
+
 from pydantic import BaseModel, EmailStr
+
+from fitness.food.domain.value_objects import NutritionComposition
 
 
 class UserResponse(BaseModel):

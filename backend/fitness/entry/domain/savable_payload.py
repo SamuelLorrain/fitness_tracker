@@ -1,6 +1,9 @@
 from uuid import UUID
-from fitness.food.domain.value_objects import Grams, KCal, NutritionComposition
+
 from pydantic import BaseModel
+
+from fitness.food.domain.value_objects import Grams, KCal, NutritionComposition
+
 
 class WaterSavablePayload(BaseModel):
     grams: Grams

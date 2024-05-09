@@ -1,8 +1,11 @@
 from __future__ import annotations
-from typing import Annotated, Optional, Self
-from fitness.food.exceptions import InvalidAddOperation
-from pydantic import BaseModel, Field
+
 from enum import StrEnum
+from typing import Annotated, Optional, Self
+
+from pydantic import BaseModel, Field
+
+from fitness.food.exceptions import InvalidAddOperation
 
 # Be careful, annotated types are not validated at
 # runtime unless they are types of as pydantic BaseModel

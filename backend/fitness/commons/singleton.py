@@ -1,5 +1,6 @@
 import threading
 
+
 class Singleton:
     """
     Implement a thread safe singleton.

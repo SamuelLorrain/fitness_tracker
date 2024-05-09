@@ -1,14 +1,20 @@
 from dataclasses import dataclass
+from datetime import date, datetime
 from typing import Optional
 from uuid import UUID
-from datetime import date, datetime
 
 from fitness.entry.domain.entity import Entry
 from fitness.entry.domain.entity_payload import FoodPayload, KcalPayload, WaterPayload
 from fitness.entry.domain.entry_repository import EntryRepository
-from fitness.entry.domain.savable_payload import FoodSavablePayload, KCalSavablePayload, SavablePayload, WaterSavablePayload
+from fitness.entry.domain.savable_payload import (
+    FoodSavablePayload,
+    KCalSavablePayload,
+    SavablePayload,
+    WaterSavablePayload,
+)
 from fitness.entry.presentation.contracts import EntryPayload, EntryTypeEnum
 from fitness.food.exceptions import FoodDoesNotExistsException
+
 
 @dataclass
 class EntryService:

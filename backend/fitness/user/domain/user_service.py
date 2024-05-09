@@ -3,10 +3,12 @@ from typing import Optional
 from uuid import UUID
 
 from pydantic import EmailStr
+
 from fitness.commons.exceptions import EntityDoesNotExistsException
 from fitness.food.domain.value_objects import NutritionComposition
 from fitness.user.domain.entities import User
 from fitness.user.domain.user_repository import UserRepository
+
 
 @dataclass
 class UserService:

@@ -1,13 +1,15 @@
 from typing import Optional
 from uuid import uuid4
 
-from fitness.commons.connection import MongoDBConnection
 from pydantic import EmailStr
 
+from fitness.authentication.domain.authentication_repository import (
+    AuthenticationRepository,
+)
 from fitness.authentication.domain.entities import Auth
-from fitness.user.domain.entities import User
-from fitness.authentication.domain.authentication_repository import AuthenticationRepository
 from fitness.authentication.exceptions import UserAlreadyExistsException
+from fitness.commons.connection import MongoDBConnection
+from fitness.user.domain.entities import User
 
 
 class MongoDBAuthenticationRepository(AuthenticationRepository):

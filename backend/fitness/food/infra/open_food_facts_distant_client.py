@@ -1,9 +1,11 @@
 from dataclasses import dataclass, field
 from json import JSONDecodeError
 from typing import Optional
-from fitness.food.infra.barcode_client_settings import BarcodeClientSettings
-from fitness.food.domain.food_distant_client import FoodDistant, FoodDistantClient
+
 import requests
+
+from fitness.food.domain.food_distant_client import FoodDistant, FoodDistantClient
+from fitness.food.infra.barcode_client_settings import BarcodeClientSettings
 
 
 @dataclass

@@ -1,6 +1,8 @@
-from uuid import UUID
 from datetime import datetime
+from uuid import UUID
+
 from pydantic import BaseModel, EmailStr
+
 
 class Auth(BaseModel):
     user_uuid: UUID
