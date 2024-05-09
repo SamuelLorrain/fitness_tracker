@@ -1,6 +1,8 @@
 from typing import Annotated, Optional
-from fastapi.security import OAuth2PasswordBearer
+
 from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer
+
 from fitness.authentication.domain.auth_formatter import AuthFormatter
 from fitness.authentication.domain.auth_service import AuthService
 from fitness.authentication.domain.entities import AuthPassKey

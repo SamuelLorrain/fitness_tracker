@@ -1,11 +1,16 @@
 from typing import Annotated
+
 from fastapi import APIRouter, Depends, status
+
 from fitness.authentication.configuration import AuthenticationConfiguration
 from fitness.authentication.domain.entities import AuthPassKey
 from fitness.user.configuration import UserConfiguration
 from fitness.user.domain.entities import User
-from fitness.user.presentation.contracts import UserBasicInfosRequest, UserGoalsRequest, UserResponse
-
+from fitness.user.presentation.contracts import (
+    UserBasicInfosRequest,
+    UserGoalsRequest,
+    UserResponse,
+)
 
 user_router = APIRouter(prefix="/user", tags=["user"])
 auth_dep = AuthenticationConfiguration().authorisation_dependency

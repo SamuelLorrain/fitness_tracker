@@ -1,8 +1,10 @@
-from datetime import datetime, date
+from datetime import date, datetime
 from uuid import UUID
+
+from pydantic import BaseModel
+
 from fitness.entry.domain.entity_payload import EntryPayload
 from fitness.entry.domain.entry_type_enum import EntryTypeEnum
-from pydantic import BaseModel
 
 
 class CreateEntryRequest(BaseModel):

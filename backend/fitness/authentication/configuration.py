@@ -3,9 +3,13 @@ from datetime import timedelta
 
 from fitness.authentication.domain.auth_formatter import AuthFormatter
 from fitness.authentication.domain.auth_service import AuthService
-from fitness.authentication.domain.authentication_repository import AuthenticationRepository
+from fitness.authentication.domain.authentication_repository import (
+    AuthenticationRepository,
+)
 from fitness.authentication.infra.jwt_auth_formatter import JwtAuthFormatter
-from fitness.authentication.infra.mongodb_authentication_repository import MongoDBAuthenticationRepository
+from fitness.authentication.infra.mongodb_authentication_repository import (
+    MongoDBAuthenticationRepository,
+)
 from fitness.authentication.presentation.dependency import AuthorisationDependency
 from fitness.commons.singleton import Singleton
 

@@ -1,11 +1,11 @@
 from collections.abc import Generator
 from typing import Any, Optional
-from fitness.commons.connection import MongoDBConnection
-from fitness.food.domain.entities import Food
-from fitness.food.domain.food_repository import FoodRepository, FoodUUID, FoodUserUUID
-from fitness.food.domain.value_objects import FoodVA
 from uuid import UUID, uuid4
 
+from fitness.commons.connection import MongoDBConnection
+from fitness.food.domain.entities import Food
+from fitness.food.domain.food_repository import FoodRepository, FoodUserUUID, FoodUUID
+from fitness.food.domain.value_objects import FoodVA
 from fitness.food.exceptions import FoodDoesNotExistsException
 
 

@@ -1,7 +1,14 @@
 from typing import Optional
-from fitness.food.domain.value_objects import FoodCategory, FoodGroup, NutritionComposition, ServingSize
-from pydantic import BaseModel, Field
 from uuid import UUID
+
+from pydantic import BaseModel, Field
+
+from fitness.food.domain.value_objects import (
+    FoodCategory,
+    FoodGroup,
+    NutritionComposition,
+    ServingSize,
+)
 
 
 class Food(BaseModel):

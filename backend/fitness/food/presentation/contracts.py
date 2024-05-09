@@ -1,7 +1,14 @@
 from typing import Optional
 from uuid import UUID
-from fitness.food.domain.value_objects import FoodGroup, NutritionComposition, OptionalNutritionComposition, ServingSize
-from pydantic import BaseModel, Field, ConfigDict
+
+from pydantic import BaseModel, ConfigDict, Field
+
+from fitness.food.domain.value_objects import (
+    FoodGroup,
+    NutritionComposition,
+    OptionalNutritionComposition,
+    ServingSize,
+)
 
 
 class FilterFoodQuery(BaseModel):

@@ -1,4 +1,5 @@
 from functools import cached_property
+
 from fitness.commons.singleton import Singleton
 from fitness.user.domain.user_repository import UserRepository
 from fitness.user.domain.user_service import UserService

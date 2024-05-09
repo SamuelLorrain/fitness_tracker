@@ -1,15 +1,32 @@
 from typing import Annotated
 from uuid import UUID
-from fastapi import APIRouter, Depends, status, Response, Request
+
+from fastapi import APIRouter, Depends, Request, Response, status
+
+from fitness.authentication.configuration import AuthenticationConfiguration
 from fitness.authentication.domain.entities import AuthPassKey
 from fitness.commons.exceptions import EntityDoesNotExistsException
 from fitness.food.configuration import FoodConfiguration
 from fitness.food.domain.entities import Food
 from fitness.food.domain.food_distant_client import FoodDistant
-from fitness.food.domain.value_objects import Carbohydrates, FoodVA, Lipids, NutritionComposition, Proteins, ServingSize
-from fitness.food.presentation.contracts import BarcodeRequest, FilterFoodQuery, FoodRequest, FoodResponse, ListFoodResponse, NewFoodResponse, PatchFoodRequest, ListFoodResponseItem
-from fitness.authentication.configuration import AuthenticationConfiguration
-
+from fitness.food.domain.value_objects import (
+    Carbohydrates,
+    FoodVA,
+    Lipids,
+    NutritionComposition,
+    Proteins,
+    ServingSize,
+)
+from fitness.food.presentation.contracts import (
+    BarcodeRequest,
+    FilterFoodQuery,
+    FoodRequest,
+    FoodResponse,
+    ListFoodResponse,
+    ListFoodResponseItem,
+    NewFoodResponse,
+    PatchFoodRequest,
+)
 
 food_router = APIRouter(prefix="/food", tags=["food"])
 auth_dep = AuthenticationConfiguration().authorisation_dependency

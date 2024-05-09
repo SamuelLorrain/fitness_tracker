@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 from typing import Optional
 from uuid import UUID
+
 from fitness.authentication.domain.entities import AuthPassKey
 from fitness.food.domain.entities import Food
 from fitness.food.domain.food_repository import FoodRepository, FoodUUID
 from fitness.food.domain.value_objects import FoodVA, OptionalFoodVA
 from fitness.food.exceptions import FoodDoesNotExistsException
+
 
 @dataclass
 class FoodCrudService:

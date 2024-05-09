@@ -1,11 +1,12 @@
-from typing import Generator
 from dataclasses import dataclass, field
-from typing import Optional
-from fitness.food.domain.entities import Food
-from fitness.food.domain.food_repository import FoodRepository, FoodUUID, FoodUserUUID
-from fitness.food.domain.value_objects import FoodVA
+from typing import Generator, Optional
 from uuid import UUID, uuid4
+
+from fitness.food.domain.entities import Food
+from fitness.food.domain.food_repository import FoodRepository, FoodUserUUID, FoodUUID
+from fitness.food.domain.value_objects import FoodVA
 from fitness.food.exceptions import FoodDoesNotExistsException
+
 
 @dataclass
 class InMemoryFoodRepository(FoodRepository):

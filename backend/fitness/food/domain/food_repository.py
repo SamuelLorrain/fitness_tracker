@@ -1,8 +1,8 @@
-from typing import Generator
-from typing import Optional, Protocol, TypeAlias
-from fitness.food.domain.value_objects import FoodVA
-from fitness.food.domain.entities import Food
+from typing import Generator, Optional, Protocol, TypeAlias
 from uuid import UUID
+
+from fitness.food.domain.entities import Food
+from fitness.food.domain.value_objects import FoodVA
 
 FoodUserUUID: TypeAlias = UUID
 

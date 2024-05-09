@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from typing import Generator, Optional
 from uuid import UUID, uuid4
+
 from fitness.commons.connection import MongoDBConnection
 from fitness.entry.domain.entity import Entry, JournalRecord
 from fitness.entry.domain.entity_payload import FoodPayload, KcalPayload, WaterPayload

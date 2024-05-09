@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
+
 from fitness.authentication.domain.entities import AuthPassKey
 from fitness.food.domain.entities import Food
 from fitness.food.domain.food_distant_client import FoodDistant, FoodDistantClient

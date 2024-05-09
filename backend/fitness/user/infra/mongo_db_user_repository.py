@@ -1,5 +1,6 @@
 from typing import Optional
 from uuid import UUID
+
 from fitness.commons.connection import MongoDBConnection
 from fitness.user.domain.entities import User
 from fitness.user.domain.user_repository import UserRepository

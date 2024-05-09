@@ -1,4 +1,5 @@
 from typing import Optional
+
 from fitness.food.domain.food_distant_client import FoodDistant, FoodDistantClient
 
 

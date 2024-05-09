@@ -4,10 +4,12 @@ from uuid import uuid4
 
 from pydantic import EmailStr
 
+from fitness.authentication.domain.authentication_repository import (
+    AuthenticationRepository,
+)
 from fitness.authentication.domain.entities import Auth
-from fitness.user.domain.entities import User
-from fitness.authentication.domain.authentication_repository import AuthenticationRepository
 from fitness.authentication.exceptions import UserAlreadyExistsException
+from fitness.user.domain.entities import User
 
 
 @dataclass
