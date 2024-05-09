@@ -3,7 +3,7 @@ from typing import Generator, Optional
 from uuid import UUID, uuid4
 from fitness.commons.connection import MongoDBConnection
 from fitness.entry.domain.entity import Entry, JournalRecord
-from fitness.entry.domain.entity_payload import FoodPayload
+from fitness.entry.domain.entity_payload import FoodPayload, KcalPayload, WaterPayload
 from fitness.entry.domain.entry_repository import EntryRepository
 from fitness.entry.domain.entry_type_enum import EntryTypeEnum
 from fitness.entry.domain.savable_payload import SavablePayload
@@ -70,16 +70,36 @@ class MongoDBEntryRepository(EntryRepository):
         payload: SavablePayload
     ) -> UUID:
         entry_uuid = uuid4()
-        new_entry = Entry(
-            uuid=entry_uuid,
-            datetime=date_time,
-            entry_type=entry_type,
-            payload=FoodPayload(
-                food_name=payload.food_name,
-                base_food_uuid=payload.base_food_uuid,
-                nutrition=payload.nutrition
-            )
-        )
+        match entry_type:
+            case EntryTypeEnum.water:
+                new_entry = Entry(
+                    uuid=entry_uuid,
+                    datetime=date_time,
+                    entry_type=entry_type,
+                    payload=WaterPayload(
+                        grams=payload.grams,
+                    )
+                )
+            case EntryTypeEnum.kcal:
+                new_entry = Entry(
+                    uuid=entry_uuid,
+                    datetime=date_time,
+                    entry_type=entry_type,
+                    payload=KcalPayload(
+                        kcal=payload.kcal,
+                    )
+                )
+            case _:
+                new_entry = Entry(
+                    uuid=entry_uuid,
+                    datetime=date_time,
+                    entry_type=entry_type,
+                    payload=FoodPayload(
+                        food_name=payload.food_name,
+                        base_food_uuid=payload.base_food_uuid,
+                        nutrition=payload.nutrition
+                    )
+                )
         db_journal_record = self._get_journal_record(user_uuid, date_time.date())
         if db_journal_record is None:
             new_db_journal_record = self._create_journal_record(user_uuid, date_time.date())
