@@ -9,6 +9,7 @@ class Auth(BaseModel):
     email: EmailStr
     hashed_password: bytes
 
+
 class AuthPassKey(BaseModel):
     uuid: UUID
     email: EmailStr

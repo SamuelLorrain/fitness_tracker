@@ -14,8 +14,11 @@ from .contracts import AuthenticationResponse, RegisterRequest
 auth_router = APIRouter(prefix="/auth", tags=["authentication"])
 auth_dep = AuthenticationConfiguration().authorisation_dependency
 
+
 @auth_router.post("/login")
-def login(login_request: Annotated[OAuth2PasswordRequestForm, Depends()]) -> AuthenticationResponse:
+def login(
+    login_request: Annotated[OAuth2PasswordRequestForm, Depends()]
+) -> AuthenticationResponse:
     configuration = AuthenticationConfiguration()
     auth_service: AuthService = configuration.auth_service
     jwt_formatter: AuthFormatter = configuration.auth_formatter

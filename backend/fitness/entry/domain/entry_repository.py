@@ -14,24 +14,17 @@ class EntryRepository(Protocol):
         user_uuid: UUID,
         date_time: datetime,
         entry_type: EntryTypeEnum,
-        payload: SavablePayload
-    ) -> UUID:
-        ... # pragma: no cover
+        payload: SavablePayload,
+    ) -> UUID: ...  # pragma: no cover
 
     def get_entry(
-        self,
-        user_uuid: UUID,
-        date: date,
-        entry_uuid: UUID
-    ) -> Entry:
-        ... # pragma: no cover
+        self, user_uuid: UUID, date: date, entry_uuid: UUID
+    ) -> Entry: ...  # pragma: no cover
 
     def iter_entry(
-        self,
-        user_uuid: UUID,
-        date: date
-    ) -> Generator[Entry, None, None]:
-        ... # pragma: no cover
+        self, user_uuid: UUID, date: date
+    ) -> Generator[Entry, None, None]: ...  # pragma: no cover
 
-    def get_food(self, user_uuid: UUID, food_uuid: UUID) -> Optional[Food]:
-        ... # pragma: no cover
+    def get_food(
+        self, user_uuid: UUID, food_uuid: UUID
+    ) -> Optional[Food]: ...  # pragma: no cover

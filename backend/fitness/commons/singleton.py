@@ -6,6 +6,7 @@ class Singleton:
     Implement a thread safe singleton.
     inspired by : https://medium.com/analytics-vidhya/how-to-create-a-thread-safe-singleton-class-in-python-822e1170a7f6
     """
+
     _instance = None
     _lock = threading.Lock()
 

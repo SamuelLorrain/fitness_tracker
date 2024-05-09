@@ -16,7 +16,7 @@ user_router = APIRouter(prefix="/user", tags=["user"])
 auth_dep = AuthenticationConfiguration().authorisation_dependency
 
 
-@user_router.get('/')
+@user_router.get("/")
 def get_current_user_infos(
     auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
 ) -> UserResponse:
@@ -26,22 +26,25 @@ def get_current_user_infos(
     return UserResponse(**user.model_dump())
 
 
-@user_router.put('/goals', status_code=status.HTTP_204_NO_CONTENT)
+@user_router.put("/goals", status_code=status.HTTP_204_NO_CONTENT)
 def set_current_user_goals(
     auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
-    user_goals_request: UserGoalsRequest
+    user_goals_request: UserGoalsRequest,
 ) -> None:
     configuration = UserConfiguration()
     service = configuration.user_service
-    service.set_nutrition_goals_for_user(auth_pass_key.uuid, user_goals_request.nutrition_goals_per_day)
+    service.set_nutrition_goals_for_user(
+        auth_pass_key.uuid, user_goals_request.nutrition_goals_per_day
+    )
 
 
-@user_router.put('/', status_code=status.HTTP_204_NO_CONTENT)
+@user_router.put("/", status_code=status.HTTP_204_NO_CONTENT)
 def set_current_user_basic_infos(
     auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
-    user_basic_infos_request: UserBasicInfosRequest
+    user_basic_infos_request: UserBasicInfosRequest,
 ) -> None:
     configuration = UserConfiguration()
     service = configuration.user_service
-    service.set_user_basic_infos(auth_pass_key.uuid, **user_basic_infos_request.model_dump())
-
+    service.set_user_basic_infos(
+        auth_pass_key.uuid, **user_basic_infos_request.model_dump()
+    )

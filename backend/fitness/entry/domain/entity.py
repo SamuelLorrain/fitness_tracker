@@ -19,9 +19,8 @@ class JournalRecord(BaseModel):
     and some metadata. Because it's not used in the application layer,
     Journal doesn't have any handle outside of the repository for now.
     """
+
     uuid: UUID
     user_uuid: UUID
     date: date
     entries: list[Entry]
-
-

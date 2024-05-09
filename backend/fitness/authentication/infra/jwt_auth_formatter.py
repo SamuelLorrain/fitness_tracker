@@ -34,9 +34,11 @@ class JwtAuthFormatter(AuthFormatter):
         # TODO same as above
         # TODO if the token can't be decoded as claims,
         # we should have a proper error and not a 500
-        claims: Claims = Claims(**jwt.decode(token, Settings().JWT_SECRET, algorithms=["HS512"]))
+        claims: Claims = Claims(
+            **jwt.decode(token, Settings().JWT_SECRET, algorithms=["HS512"])
+        )
         return AuthPassKey(
             uuid=claims.uid,
             email=claims.name,
-            expiration=datetime.fromtimestamp(claims.exp)
+            expiration=datetime.fromtimestamp(claims.exp),
         )

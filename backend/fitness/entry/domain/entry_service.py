@@ -25,59 +25,40 @@ class EntryService:
         user_uuid: UUID,
         datetime: datetime,
         entry_type: EntryTypeEnum,
-        payload: EntryPayload
+        payload: EntryPayload,
     ) -> UUID:
         # TODO verify that entry_type is compatible with payload
         # TODO use some kind of dispatch
         savable: SavablePayload
         if isinstance(payload, FoodPayload):
-            food = self.entry_repository.get_food(
-                user_uuid,
-                payload.base_food_uuid
-            )
+            food = self.entry_repository.get_food(user_uuid, payload.base_food_uuid)
             if food is None:
                 raise FoodDoesNotExistsException
             savable = FoodSavablePayload(
                 food_name=payload.food_name,
                 base_food_uuid=payload.base_food_uuid,
-                nutrition=payload.nutrition.model_dump()
+                nutrition=payload.nutrition.model_dump(),
             )
         elif isinstance(payload, WaterPayload):
-            savable = WaterSavablePayload(
-                grams=payload.grams
-            )
+            savable = WaterSavablePayload(grams=payload.grams)
         else:
-            savable = KCalSavablePayload(
-                kcal=payload.kcal
-            )
+            savable = KCalSavablePayload(kcal=payload.kcal)
         return self.entry_repository.store_entry(
-            user_uuid,
-            datetime,
-            entry_type,
-            savable
+            user_uuid, datetime, entry_type, savable
         )
 
     def get_entry(
-        self,
-        user_uuid: UUID,
-        date: date,
-        entry_uuid: UUID
+        self, user_uuid: UUID, date: date, entry_uuid: UUID
     ) -> Optional[Entry]:
-        return self.entry_repository.get_entry(
-            user_uuid,
-            date,
-            entry_uuid
-        )
+        return self.entry_repository.get_entry(user_uuid, date, entry_uuid)
 
-    def list_entries(
-        self,
-        user_uuid: UUID,
-        date: date
-    ) -> list[Entry]:
-        return list(self.entry_repository.iter_entry(
-            user_uuid,
-            date,
-        ))
+    def list_entries(self, user_uuid: UUID, date: date) -> list[Entry]:
+        return list(
+            self.entry_repository.iter_entry(
+                user_uuid,
+                date,
+            )
+        )
 
     # def delete_entry(self, user_uuid: UUID, entry_uuid: UUID, date: date):
     #     return self.entry_repository.delete_entry()

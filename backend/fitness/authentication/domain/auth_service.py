@@ -25,16 +25,22 @@ class AuthService:
         if auth.hashed_password != hashed_password:
             raise UnableToLoginException
         return AuthPassKey(
-            uuid=auth.user_uuid, email=auth.email, expiration=datetime.now(UTC) + self.expiration_timedelta
+            uuid=auth.user_uuid,
+            email=auth.email,
+            expiration=datetime.now(UTC) + self.expiration_timedelta,
         )
 
     def register(
         self, first_name: str, last_name: str, email: EmailStr, password: SecretStr
     ) -> AuthPassKey:
         hash = self._hash_password(password)
-        auth = self.authentication_repository.store_auth_and_user(first_name, last_name, email, hash)
+        auth = self.authentication_repository.store_auth_and_user(
+            first_name, last_name, email, hash
+        )
         return AuthPassKey(
-            uuid=auth.user_uuid, email=email, expiration=datetime.now(UTC) + self.expiration_timedelta
+            uuid=auth.user_uuid,
+            email=email,
+            expiration=datetime.now(UTC) + self.expiration_timedelta,
         )
 
     def verify(self, auth_pass_key: AuthPassKey) -> bool:

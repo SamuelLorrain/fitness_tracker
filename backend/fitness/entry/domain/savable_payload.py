@@ -20,5 +20,3 @@ class FoodSavablePayload(BaseModel):
 
 
 SavablePayload = WaterSavablePayload | KCalSavablePayload | FoodSavablePayload
-
-

@@ -22,7 +22,9 @@ class MongoDBAuthenticationRepository(AuthenticationRepository):
         existing_user = self.user_collection.find_one({"email": email})
         if existing_user is None:
             return None
-        existing_auth = self.auth_collection.find_one({"user_uuid": existing_user["uuid"]})
+        existing_auth = self.auth_collection.find_one(
+            {"user_uuid": existing_user["uuid"]}
+        )
         if existing_auth is None:
             return None
         return Auth(**existing_auth)
@@ -38,7 +40,7 @@ class MongoDBAuthenticationRepository(AuthenticationRepository):
             first_name=first_name,
             last_name=last_name,
             email=email,
-            nutrition_goals_per_day=None
+            nutrition_goals_per_day=None,
         )
         auth = Auth(
             user_uuid=user.uuid,

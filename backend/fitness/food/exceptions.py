@@ -13,5 +13,5 @@ class FoodDoesNotExistsException(EntityDoesNotExistsException):
 @dataclass
 class InvalidAddOperation(CustomException):
     """Raised when an add operation is invalid"""
-    status_code: int = 400
 
+    status_code: int = 400

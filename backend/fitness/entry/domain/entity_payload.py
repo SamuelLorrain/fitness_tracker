@@ -20,5 +20,3 @@ class FoodPayload(BaseModel):
 
 
 EntryPayload = WaterPayload | KcalPayload | FoodPayload
-
-

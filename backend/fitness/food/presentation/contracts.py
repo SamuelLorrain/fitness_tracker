@@ -16,14 +16,14 @@ class FilterFoodQuery(BaseModel):
 
 
 class FoodRequest(BaseModel):
-    model_config: ConfigDict = ConfigDict({
-        "extra": 'forbid'
-    })
+    model_config: ConfigDict = ConfigDict({"extra": "forbid"})
 
     name: str = Field(min_length=1)
     barcode_value: Optional[str] = None
     group: FoodGroup = Field(default=FoodGroup.unknown)
-    nutrition: NutritionComposition = Field(default_factory=lambda:NutritionComposition())
+    nutrition: NutritionComposition = Field(
+        default_factory=lambda: NutritionComposition()
+    )
     ingredient_list: list[str] = Field(default_factory=list)
 
 
