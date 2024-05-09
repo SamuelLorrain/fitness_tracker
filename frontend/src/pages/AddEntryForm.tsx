@@ -3,7 +3,6 @@ import Basis from "../components/Basis";
 import { useParams, useHistory } from "react-router-dom";
 import { IonInput, IonButton, IonButtons, IonSelect, IonSelectOption } from "@ionic/react";
 import { useGetFoodQuery, useCreateEntryMutation } from "../state/api";
-import { formatDay } from "../utils/date_utils";
 import { parse } from "date-fns";
 import { useSelector } from "react-redux";
 
