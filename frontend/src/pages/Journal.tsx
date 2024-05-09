@@ -11,13 +11,15 @@ import { chevronBack, chevronForward } from "ionicons/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { setTimestamp } from "../state/userSlice";
 import { safeDiv } from "../utils/math_utils";
+import JournalCard from "../components/JournalCard";
 
 const useJournal = () => {
   const dispatch = useDispatch();
   const timestamp = useSelector(state => state.user.currentTimestamp);
   const date = parse(String(timestamp), 't', new Date());
   const { data, error, isLoading } = useListEntryQuery(formatDay(date));
-  const [entries, setEntries] = useState(data?.entries); // used to trigger the rerender of the entries
+  const [entries, setEntries] = useState(null); // used to trigger the rerender of the entries
+  const [foodEntries, setFoodEntries] = useState(null);
 
   const moveForward = () => {
     dispatch(setTimestamp({timestamp: getUnixTime(add(date, {days: 1}))}));
@@ -28,28 +30,40 @@ const useJournal = () => {
 
   useEffect(() => {
     if (data != null) {
-      setEntries(structuredClone(data?.entries))
+      setEntries(
+        structuredClone(data?.entries)
+      )
+      setFoodEntries(
+        structuredClone(data?.entries).filter(entry => entry.entry_type === 'food')
+      )
     }
   }, [data, setEntries, data && data?.entries.length]);
 
   let sumTodayCalories = 0;
-  if (entries != null) {
-    sumTodayCalories = entries.reduce((acc, entry) => acc + entry.payload.nutrition.calories, 0);
+  if (entries != null && foodEntries != null) {
+    sumTodayCalories = foodEntries.reduce((acc, entry) => acc + entry.payload.nutrition.calories, 0);
+    sumTodayCalories += entries.reduce((acc, entry) => {
+      if (entry.entry_type != 'kcal') {
+        return acc
+      }
+      return acc + entry.payload.kcal;
+    },
+    0);
   }
 
   let sumTodayProteins = 0;
-  if (entries != null) {
-    sumTodayProteins = entries.reduce((acc, entry) => acc + entry.payload.nutrition.proteins.protein, 0);
+  if (foodEntries != null) {
+    sumTodayProteins = foodEntries.reduce((acc, entry) => acc + entry.payload.nutrition.proteins.protein, 0);
   }
 
   let sumTodayLipids = 0;
-  if (entries != null) {
-    sumTodayLipids = entries.reduce((acc, entry) => acc + entry.payload.nutrition.lipids.fat, 0);
+  if (foodEntries != null) {
+    sumTodayLipids = foodEntries.reduce((acc, entry) => acc + entry.payload.nutrition.lipids.fat, 0);
   }
 
   let sumTodayCarbs = 0;
-  if (entries != null) {
-    sumTodayCarbs = entries.reduce((acc, entry) => acc + entry.payload.nutrition.carbohydrates.carbs, 0);
+  if (foodEntries != null) {
+    sumTodayCarbs = foodEntries.reduce((acc, entry) => acc + entry.payload.nutrition.carbohydrates.carbs, 0);
   }
 
   return {
@@ -207,15 +221,7 @@ const Journal: React.FC = () => {
           (entries == null || entries.length == 0) ?
             <div>no entries for today !</div>
           : (
-              entries?.map(entry => {
-                return (
-                  <div key={entry.uuid}>
-                    <div>{entry?.payload?.food_name}
-                      -
-                    {entry?.payload?.nutrition.serving_size.grams} g</div>
-                  </div>
-                );
-            })
+              entries?.map(entry => <JournalCard entry={entry} key={entry.key}/>)
           )
         }
         <IonButton expand="full" onClick={gotToAddEntryForm}>Add Entry</IonButton>
