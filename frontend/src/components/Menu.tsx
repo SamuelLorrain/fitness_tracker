@@ -20,7 +20,7 @@ import AccountInformationForm from "../pages/AccountInformationForm";
 import GoalsForm from "../pages/GoalsForm";
 import Barcode from "../pages/Barcode";
 
-import { ellipse, square, triangle } from 'ionicons/icons';
+import { journal, settings, easel} from "ionicons/icons";
 
 const Menu = () => {
   return (
@@ -42,15 +42,15 @@ const Menu = () => {
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="report" href="/report">
-            <IonIcon aria-hidden="true" icon={triangle} />
+            <IonIcon aria-hidden="true" icon={easel} />
             <IonLabel>Report</IonLabel>
           </IonTabButton>
           <IonTabButton tab="journal" href="/journal">
-            <IonIcon aria-hidden="true" icon={ellipse} />
+            <IonIcon aria-hidden="true" icon={journal} />
             <IonLabel>Journal</IonLabel>
           </IonTabButton>
           <IonTabButton tab="settings" href="/settings">
-            <IonIcon aria-hidden="true" icon={square} />
+            <IonIcon aria-hidden="true" icon={settings} />
             <IonLabel>Settings</IonLabel>
           </IonTabButton>
         </IonTabBar>
