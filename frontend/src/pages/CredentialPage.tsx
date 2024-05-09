@@ -12,7 +12,10 @@ const CredentialPage = () => {
         <IonRow>
           <IonCol>
             {isLogin ? <Login /> : <Register />}
-            <IonButton expand="full" onClick={() => setIsLogin(state => !state)}>
+            <IonButton
+              expand="full"
+              onClick={() => setIsLogin((state) => !state)}
+            >
               {isLogin ? "Register instead" : "Login instead"}
             </IonButton>
           </IonCol>

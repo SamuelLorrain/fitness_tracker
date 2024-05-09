@@ -6,36 +6,42 @@ import { parse } from "date-fns";
 import { useSelector } from "react-redux";
 
 type CaloriesEntry = {
-  datetime: Date,
-  entry_type: 'kcal'
+  datetime: Date;
+  entry_type: "kcal";
   payload: {
-    kcal: number
-  }
-}
+    kcal: number;
+  };
+};
 
-const isEntryValid = (calories: number): boolean => calories != null && calories !== '' && !Number.isNaN(Number.parseFloat(calories));
+const isEntryValid = (calories: number): boolean =>
+  calories != null &&
+  calories !== "" &&
+  !Number.isNaN(Number.parseFloat(calories));
 
-const formatCaloriesEntry = (datetime: Date, calories: number): CaloriesEntry => {
+const formatCaloriesEntry = (
+  datetime: Date,
+  calories: number,
+): CaloriesEntry => {
   return {
     datetime: datetime,
-    entry_type: 'kcal',
+    entry_type: "kcal",
     payload: {
-      kcal: Number(calories)
-    }
+      kcal: Number(calories),
+    },
   } as CaloriesEntry;
-}
+};
 
 const AddCaloriesEntryForm = () => {
   const [calories, setCalories] = useState<number>(null);
   const [entryMutation, { isLoading }] = useCreateEntryMutation();
   const history = useHistory();
-  const timestamp = useSelector(state => state.user.currentTimestamp);
-  const date = parse(String(timestamp), 't', new Date());
+  const timestamp = useSelector((state) => state.user.currentTimestamp);
+  const date = parse(String(timestamp), "t", new Date());
 
   const submitCalories = async () => {
     await entryMutation(formatCaloriesEntry(date, calories)).unwrap();
-    history.push('/journal');
-  }
+    history.push("/journal");
+  };
 
   return (
     <>
@@ -45,12 +51,15 @@ const AddCaloriesEntryForm = () => {
         value={calories}
         onIonInput={(e) => setCalories(e.target.value)}
       />
-      <IonButton expand="full"
+      <IonButton
+        expand="full"
         onClick={submitCalories}
         disabled={!isEntryValid(calories) || isLoading}
-      >Submit</IonButton>
+      >
+        Submit
+      </IonButton>
     </>
   );
-}
+};
 
 export default AddCaloriesEntryForm;

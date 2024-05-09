@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import Basis from "../components/Basis";
 import { useParams, useHistory } from "react-router-dom";
-import { IonInput, IonButton, IonButtons, IonSelect, IonSelectOption } from "@ionic/react";
+import {
+  IonInput,
+  IonButton,
+  IonButtons,
+  IonSelect,
+  IonSelectOption,
+} from "@ionic/react";
 import { useGetFoodQuery, useCreateEntryMutation } from "../state/api";
 import { parse } from "date-fns";
 import { useSelector } from "react-redux";
@@ -10,7 +16,7 @@ import { useToast } from "../hooks/useToast";
 type ServingSize = {
   name: String;
   grams: number;
-}
+};
 
 class BaseNutrition {
   readonly servingSize: ServingSize;
@@ -19,9 +25,16 @@ class BaseNutrition {
   readonly lipids: number;
   readonly proteins: number;
 
-  constructor(servingSize: ServingSize, calories: number, carbohydrates: number, lipids: number, proteins: number, name: string) {
+  constructor(
+    servingSize: ServingSize,
+    calories: number,
+    carbohydrates: number,
+    lipids: number,
+    proteins: number,
+    name: string,
+  ) {
     this.name = name;
-    this.servingSize = {name: servingSize.name, grams: servingSize.grams};
+    this.servingSize = { name: servingSize.name, grams: servingSize.grams };
     this.calories = calories;
     this.carbohydrates = carbohydrates;
     this.lipids = lipids;
@@ -30,12 +43,15 @@ class BaseNutrition {
 
   newServingSize(otherServingSize: ServingSize): BaseNutrition {
     return new BaseNutrition(
-      { name: otherServingSize.name, grams: otherServingSize.grams } as ServingSize,
+      {
+        name: otherServingSize.name,
+        grams: otherServingSize.grams,
+      } as ServingSize,
       (this.calories * otherServingSize.grams) / this.servingSize.grams,
       (this.carbohydrates * otherServingSize.grams) / this.servingSize.grams,
       (this.lipids * otherServingSize.grams) / this.servingSize.grams,
       (this.proteins * otherServingSize.grams) / this.servingSize.grams,
-      this.name
+      this.name,
     );
   }
 
@@ -53,44 +69,49 @@ class BaseNutrition {
           },
           calories: this.calories,
           carbohydrates: {
-            carbs: this.carbohydrates
+            carbs: this.carbohydrates,
           },
           lipids: {
-            fat: this.lipids
+            fat: this.lipids,
           },
           proteins: {
-            protein: this.proteins
-          }
-        }
-      }
-    }
+            protein: this.proteins,
+          },
+        },
+      },
+    };
   }
 }
 
 const useAddEntryForm = (uuid) => {
-  const {data, error, isFetching} = useGetFoodQuery(uuid);
+  const { data, error, isFetching } = useGetFoodQuery(uuid);
   const [entryMutation] = useCreateEntryMutation();
-  const [fetchedNutrition, setFetchedNutrition] = useState<BaseNutrition|null>(null);
-  const [currentNutrition, setCurrentNutrition] = useState<BaseNutrition|null>(null);
-  const [currentServingSize, setCurrentServingSize] = useState<ServingSize|null>(null);
+  const [fetchedNutrition, setFetchedNutrition] =
+    useState<BaseNutrition | null>(null);
+  const [currentNutrition, setCurrentNutrition] =
+    useState<BaseNutrition | null>(null);
+  const [currentServingSize, setCurrentServingSize] =
+    useState<ServingSize | null>(null);
 
   useEffect(() => {
     if (data != null && !isFetching) {
-      setFetchedNutrition(new BaseNutrition(
-        data.nutrition.serving_size as ServingSize,
-        data.nutrition.calories,
-        data.nutrition.carbohydrates.carbs,
-        data.nutrition.lipids.fat,
-        data.nutrition.proteins.protein,
-        data.name
-      ));
+      setFetchedNutrition(
+        new BaseNutrition(
+          data.nutrition.serving_size as ServingSize,
+          data.nutrition.calories,
+          data.nutrition.carbohydrates.carbs,
+          data.nutrition.lipids.fat,
+          data.nutrition.proteins.protein,
+          data.name,
+        ),
+      );
       setCurrentServingSize(data.nutrition.serving_size as ServingSize);
     }
   }, [data]);
 
   const updateServingSize = (e) => {
-    setCurrentServingSize({name: "g", grams: e.target.value} as ServingSize)
-  }
+    setCurrentServingSize({ name: "g", grams: e.target.value } as ServingSize);
+  };
 
   useEffect(() => {
     if (fetchedNutrition != null && currentServingSize != null) {
@@ -106,9 +127,9 @@ const useAddEntryForm = (uuid) => {
     data,
     error,
     isFetching,
-    entryMutation
-  }
-}
+    entryMutation,
+  };
+};
 
 const AddEntryForm: React.FC = () => {
   const { uuid } = useParams();
@@ -121,39 +142,44 @@ const AddEntryForm: React.FC = () => {
     data,
     error,
     isFetching,
-    entryMutation
+    entryMutation,
   } = useAddEntryForm(uuid);
-  const {toast} = useToast();
-  const timestamp = useSelector(state => state.user.currentTimestamp);
-  const date = parse(String(timestamp), 't', new Date());
+  const { toast } = useToast();
+  const timestamp = useSelector((state) => state.user.currentTimestamp);
+  const date = parse(String(timestamp), "t", new Date());
 
   const submitEntry = async () => {
     try {
-      await entryMutation(currentNutrition.toValidEntryForm(date, uuid)).unwrap();
-      history.push('/journal');
+      await entryMutation(
+        currentNutrition.toValidEntryForm(date, uuid),
+      ).unwrap();
+      history.push("/journal");
     } catch (e) {
       toast(e);
     }
-  }
+  };
 
   if (isFetching || currentNutrition == null) {
     return (
-      <Basis name="Add entry" onReturn={() => history.push('/journal/add-entry')}>
+      <Basis
+        name="Add entry"
+        onReturn={() => history.push("/journal/add-entry")}
+      >
         loading
       </Basis>
     );
   }
 
   return (
-    <Basis name="Add entry" onReturn={() => history.push('/journal/add-entry')}>
+    <Basis name="Add entry" onReturn={() => history.push("/journal/add-entry")}>
       <div>{food.name}</div>
       <div>
         <IonInput
-            label="serving grams"
-            type="number"
-            step="0.01"
-            value={currentServingSize.grams}
-            onIonInput={updateServingSize}
+          label="serving grams"
+          type="number"
+          step="0.01"
+          value={currentServingSize.grams}
+          onIonInput={updateServingSize}
         />
       </div>
       <div>
@@ -162,9 +188,11 @@ const AddEntryForm: React.FC = () => {
         <div>proteins : {currentNutrition.proteins}</div>
         <div>carbohydrates : {currentNutrition.carbohydrates}</div>
       </div>
-      <IonButton expand="full" onClick={submitEntry}>Submit</IonButton>
+      <IonButton expand="full" onClick={submitEntry}>
+        Submit
+      </IonButton>
     </Basis>
   );
-}
+};
 
 export default AddEntryForm;

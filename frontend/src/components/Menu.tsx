@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
@@ -7,8 +7,8 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-} from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
+} from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
 
 import AddEntry from "../pages/AddEntry";
 import AddEntryForm from "../pages/AddEntryForm";
@@ -20,24 +20,32 @@ import AccountInformationForm from "../pages/AccountInformationForm";
 import GoalsForm from "../pages/GoalsForm";
 import Barcode from "../pages/Barcode";
 
-import { journal, settings, easel} from "ionicons/icons";
+import { journal, settings, easel } from "ionicons/icons";
 
 const Menu = () => {
   return (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/:tab(report)/" component={Report}/>
-          <Route exact path="/:tab(journal)/barcode" component={Barcode}/>
-          <Route exact path="/:tab(journal)/add-entry" component={AddEntry}/>
-          <Route exact path="/:tab(journal)/add-food" component={AddFood}/>
-          <Route exact path="/:tab(settings)" component={Settings}/>
-          <Route exact path="/:tab(settings)/account" component={AccountInformationForm}/>
-          <Route exact path="/:tab(settings)/goals" component={GoalsForm}/>
-          <Route exact path="/:tab(journal)/entry-form/:uuid" component={AddEntryForm}/>
-          <Route exact path="/:tab(journal)" component={Journal}/>
+          <Route exact path="/:tab(report)/" component={Report} />
+          <Route exact path="/:tab(journal)/barcode" component={Barcode} />
+          <Route exact path="/:tab(journal)/add-entry" component={AddEntry} />
+          <Route exact path="/:tab(journal)/add-food" component={AddFood} />
+          <Route exact path="/:tab(settings)" component={Settings} />
+          <Route
+            exact
+            path="/:tab(settings)/account"
+            component={AccountInformationForm}
+          />
+          <Route exact path="/:tab(settings)/goals" component={GoalsForm} />
+          <Route
+            exact
+            path="/:tab(journal)/entry-form/:uuid"
+            component={AddEntryForm}
+          />
+          <Route exact path="/:tab(journal)" component={Journal} />
           <Route exact path="/">
-            <Redirect to="/report"/>
+            <Redirect to="/report" />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
@@ -57,6 +65,6 @@ const Menu = () => {
       </IonTabs>
     </IonReactRouter>
   );
-}
+};
 
 export default Menu;

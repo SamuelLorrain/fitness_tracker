@@ -6,9 +6,9 @@ import { useSearchFoodMutation } from "../state/api";
 import { IonInput, IonButton, IonButtons } from "@ionic/react";
 import { IonHeader, IonToolbar, IonTitle, IonContent } from "@ionic/react";
 import { IonCard, IonCardHeader, IonCardTitle } from "@ionic/react";
-import { IonIcon } from '@ionic/react';
-import { IonRippleEffect } from '@ionic/react';
-import { add, barcodeOutline, arrowBack } from 'ionicons/icons';
+import { IonIcon } from "@ionic/react";
+import { IonRippleEffect } from "@ionic/react";
+import { add, barcodeOutline, arrowBack } from "ionicons/icons";
 import { IonLabel, IonSegment, IonSegmentButton } from "@ionic/react";
 import AddWaterEntryForm from "./AddWaterEntryForm";
 import AddCaloriesEntryForm from "./AddCaloriesEntryForm";
@@ -16,12 +16,12 @@ import AddCaloriesEntryForm from "./AddCaloriesEntryForm";
 enum EntryType {
   food = "food",
   water = "water",
-  calories = "calories"
+  calories = "calories",
 }
 
 const isSearchValid = (search: String): boolean => {
-  return search !== '' && search != null;
-}
+  return search !== "" && search != null;
+};
 
 const FoodCard: React.FC = ({ food }) => {
   const history = useHistory();
@@ -31,18 +31,21 @@ const FoodCard: React.FC = ({ food }) => {
   };
 
   return (
-      <div>
-        <IonCard onClick={clickOnFood} className="clickable ion-activatable ripple-parent">
-          <IonRippleEffect></IonRippleEffect>
-          <IonCardHeader>
-            <IonCardTitle>{food.name}</IonCardTitle>
-          </IonCardHeader>
-        </IonCard>
-      </div>
+    <div>
+      <IonCard
+        onClick={clickOnFood}
+        className="clickable ion-activatable ripple-parent"
+      >
+        <IonRippleEffect></IonRippleEffect>
+        <IonCardHeader>
+          <IonCardTitle>{food.name}</IonCardTitle>
+        </IonCardHeader>
+      </IonCard>
+    </div>
   );
-}
+};
 
-const FoodList: React.FC = ({search}) => {
+const FoodList: React.FC = ({ search }) => {
   const [skip, setSkip] = useState(true);
   const [data, setData] = useState([]);
   const [mutateSearchFood, { isLoading }] = useSearchFoodMutation();
@@ -53,22 +56,26 @@ const FoodList: React.FC = ({search}) => {
     }
     const response = await mutateSearchFood(search).unwrap();
     setData(response);
-  }
+  };
 
   return (
     <>
-      <IonButton expand="full" onClick={onSearch} disabled={isLoading || !isSearchValid(search) }>
+      <IonButton
+        expand="full"
+        onClick={onSearch}
+        disabled={isLoading || !isSearchValid(search)}
+      >
         Search
       </IonButton>
       <>
-      {data?.foods?.map((x) => <FoodCard key={x.uuid} food={x}/>)}
-      {
-        data?.foods?.length === 0 ? <div>0 foods founds for the given search</div> : null
-      }
+        {data?.foods?.map((x) => <FoodCard key={x.uuid} food={x} />)}
+        {data?.foods?.length === 0 ? (
+          <div>0 foods founds for the given search</div>
+        ) : null}
       </>
     </>
   );
-}
+};
 
 const AddEntry: React.FC = () => {
   const [search, setSearch] = useState(null);
@@ -80,23 +87,26 @@ const AddEntry: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton onClick={() => history.push('/journal')}>
-              <IonIcon icon={arrowBack}/>
+            <IonButton onClick={() => history.push("/journal")}>
+              <IonIcon icon={arrowBack} />
             </IonButton>
           </IonButtons>
           <IonTitle>Add</IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={() => history.push('/journal/barcode')}>
-              <IonIcon icon={barcodeOutline}/>
+            <IonButton onClick={() => history.push("/journal/barcode")}>
+              <IonIcon icon={barcodeOutline} />
             </IonButton>
-            <IonButton onClick={() => history.push('/journal/add-food')}>
-              <IonIcon icon={add}/>
+            <IonButton onClick={() => history.push("/journal/add-food")}>
+              <IonIcon icon={add} />
             </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonSegment value={entryType} onIonChange={(e) => setEntryType(e.target.value)}>
+        <IonSegment
+          value={entryType}
+          onIonChange={(e) => setEntryType(e.target.value)}
+        >
           <IonSegmentButton value={EntryType.food}>
             <IonLabel>Food</IonLabel>
           </IonSegmentButton>
@@ -107,31 +117,21 @@ const AddEntry: React.FC = () => {
             <IonLabel>Calories</IonLabel>
           </IonSegmentButton>
         </IonSegment>
-        {
-          entryType === EntryType.food ?
+        {entryType === EntryType.food ? (
           <>
-            <IonInput label="search food"
-                      value={search}
-                      onIonInput={(e) => setSearch(e.target.value)}>
-            </IonInput>
-            <FoodList search={search}/>
+            <IonInput
+              label="search food"
+              value={search}
+              onIonInput={(e) => setSearch(e.target.value)}
+            ></IonInput>
+            <FoodList search={search} />
           </>
-          : null
-        }
-        {
-          entryType === EntryType.water ?
-          <AddWaterEntryForm/>
-          : null
-        }
-        {
-          entryType === EntryType.calories ?
-          <AddCaloriesEntryForm/>
-          : null
-        }
+        ) : null}
+        {entryType === EntryType.water ? <AddWaterEntryForm /> : null}
+        {entryType === EntryType.calories ? <AddCaloriesEntryForm /> : null}
       </IonContent>
     </>
   );
-}
-
+};
 
 export default AddEntry;
