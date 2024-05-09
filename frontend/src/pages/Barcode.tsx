@@ -7,7 +7,7 @@ import { initCameras } from "../state/hardwareSlice";
 import { useGetFoodBarcodeMutation } from "../state/api";
 import { useDispatch, useSelector } from "react-redux";
 import AddEntryForm from "./AddEntryForm";
-import {toast} from "../hooks/useToast";
+import {useToast} from "../hooks/useToast";
 
 
 const SCANNER_IDNAME = "scanner-id-el";
@@ -93,17 +93,17 @@ const Barcode: React.FC = () => {
           format: barcodeValue.result.format.format.toString(),
           formatName: barcodeValue.result.format.formatName
         }).unwrap();
+        // Not the best approach (would prefer type validation)
+        // but if there is an uuid, it means we retrieved
+        // an existing food and so we can directly enter the thing
+        if (response?.uuid) {
+          history.push(`/journal/entry-form/${response.uuid}`)
+        } else {
+          history.push('/journal/add-food', { ...response })
+        }
       } catch(e) {
         toast(e);
         history.push('/journal/add-food');
-      }
-      // Not the best approach (would prefer type validation)
-      // but if there is an uuid, it means we retrieved
-      // an existing food and so we can directly enter the thing
-      if (response?.uuid) {
-        history.push(`/journal/entry-form/${response.uuid}`)
-      } else {
-        history.push('/journal/add-food', { ...response })
       }
     })()
   }, [barcodeValue]);

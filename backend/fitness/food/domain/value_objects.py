@@ -220,6 +220,7 @@ class FoodCategory(StrEnum):
 
 class FoodVA(BaseModel):
     name: str = Field(min_length=1)
+    barcode_value: Optional[str] = None
     group: FoodGroup = Field(default=FoodGroup.unknown)
     nutrition: NutritionComposition = Field(default_factory=lambda:NutritionComposition())
     additional_serving_sizes: list[ServingSize] = Field(default_factory=list)
