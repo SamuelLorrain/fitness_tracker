@@ -5,6 +5,7 @@ import { IonInput, IonButton, IonButtons, IonSelect, IonSelectOption } from "@io
 import { useGetFoodQuery, useCreateEntryMutation } from "../state/api";
 import { parse } from "date-fns";
 import { useSelector } from "react-redux";
+import { useToast } from "../hooks/useToast";
 
 type ServingSize = {
   name: String;
@@ -122,12 +123,17 @@ const AddEntryForm: React.FC = () => {
     isFetching,
     entryMutation
   } = useAddEntryForm(uuid);
+  const {toast} = useToast();
   const timestamp = useSelector(state => state.user.currentTimestamp);
   const date = parse(String(timestamp), 't', new Date());
 
   const submitEntry = async () => {
-    await entryMutation(currentNutrition.toValidEntryForm(date, uuid)).unwrap();
-    history.push('/journal');
+    try {
+      await entryMutation(currentNutrition.toValidEntryForm(date, uuid)).unwrap();
+      history.push('/journal');
+    } catch (e) {
+      toast(e);
+    }
   }
 
   if (isFetching || currentNutrition == null) {

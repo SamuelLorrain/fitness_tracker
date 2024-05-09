@@ -7,6 +7,7 @@ import { initCameras } from "../state/hardwareSlice";
 import { useGetFoodBarcodeMutation } from "../state/api";
 import { useDispatch, useSelector } from "react-redux";
 import AddEntryForm from "./AddEntryForm";
+import {toast} from "../hooks/useToast";
 
 
 const SCANNER_IDNAME = "scanner-id-el";
@@ -66,6 +67,7 @@ const Barcode: React.FC = () => {
   const history = useHistory();
   const barcodeRef = useRef();
   const dispatch = useDispatch();
+  const {toast} = useToast()
   const hasCameraPermission = useSelector(state => state.hardware.hasCameraPermission)
   const [barcodeValue, setBarcodeValue] = useState(null);
   const [mutateFoodBarcode, { isLoadingFoodBarcode }] = useGetFoodBarcodeMutation();
@@ -74,7 +76,9 @@ const Barcode: React.FC = () => {
     Html5Qrcode.getCameras().then(cameras => {
       dispatch(initCameras(cameras));
     }).catch(
-      err => console.log(err)
+      err => {
+        toast(err);
+      }
     );
   }
 
@@ -89,8 +93,8 @@ const Barcode: React.FC = () => {
           format: barcodeValue.result.format.format.toString(),
           formatName: barcodeValue.result.format.formatName
         }).unwrap();
-      } catch(error) {
-        console.log("unknown scanned food");
+      } catch(e) {
+        toast(e);
         history.push('/journal/add-food');
       }
       // Not the best approach (would prefer type validation)

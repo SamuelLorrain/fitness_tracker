@@ -10,9 +10,9 @@ const formatCard = (entry) => {
   }
 }
 
-const JournalCard = ({ entry, key }) => {
+const JournalCard = ({ entry }) => {
   return (
-    <div key={key}>
+    <div>
       <div>{formatCard(entry)}</div>
     </div>
   );

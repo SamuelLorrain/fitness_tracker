@@ -2,18 +2,18 @@ import {
   IonButton,
   IonInput,
   IonInputPasswordToggle,
-  useIonToast,
 } from "@ionic/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRegisterMutation } from "../state/api";
 import { useHistory } from "react-router";
+import { useToast } from "../hooks/useToast";
 
 
 const Register: React.FC = () => {
   const [mutateRegister, { isLoading }] = useRegisterMutation();
   const history = useHistory();
-  const [presentToast] = useIonToast()
+  const {toast} = useToast()
   const formik = useFormik({
     initialValues: {
       first_name: null,
@@ -32,16 +32,10 @@ const Register: React.FC = () => {
     onSubmit: async (data) => {
       try {
         const response = await mutateRegister(data).unwrap();
+        window.location.reload();
       } catch(e) {
-        if (e?.data?.details) {
-          presentToast({
-            message: e?.data?.details,
-            position: 'bottom',
-            duration: 1500,
-          })
-        }
+        toast(e);
       }
-      window.location.reload();
     }
   });
 
