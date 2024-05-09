@@ -13,9 +13,13 @@ class BarcodeService:
     food_repository: FoodRepository
     food_distant_client: FoodDistantClient
 
-    def try_get_food_by_barcode(self, pass_key: AuthPassKey, barcode_value: str) -> Optional[Food|FoodDistant]:
+    def try_get_food_by_barcode(
+        self, pass_key: AuthPassKey, barcode_value: str
+    ) -> Optional[Food | FoodDistant]:
         try:
-            return self.food_repository.get_food_by_barcode(pass_key.uuid, barcode_value)
+            return self.food_repository.get_food_by_barcode(
+                pass_key.uuid, barcode_value
+            )
         except FoodDoesNotExistsException:
             return self._get_food_from_distant(barcode_value)
 

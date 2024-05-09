@@ -10,6 +10,7 @@ from fitness.authentication.exceptions import UnableToLoginException
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
+
 class AuthorisationDependency:
     """
     The role of the authorisation dependency is
@@ -21,7 +22,9 @@ class AuthorisationDependency:
         self.jwt_auth_formatter: AuthFormatter = auth_formatter
         self.auth_service: AuthService = auth_service
 
-    def __call__(self, token: Annotated[Optional[str], Depends(oauth2_scheme)] = None) -> Optional[AuthPassKey]:
+    def __call__(
+        self, token: Annotated[Optional[str], Depends(oauth2_scheme)] = None
+    ) -> Optional[AuthPassKey]:
         self.token = token
         if self.token is None:
             return None
@@ -29,4 +32,3 @@ class AuthorisationDependency:
         if self.auth_service.verify(auth_pass_key):
             return auth_pass_key
         raise UnableToLoginException
-

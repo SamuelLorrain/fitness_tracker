@@ -12,7 +12,7 @@ class MongoDBConnection(Singleton):
     def __init__(self) -> None:
         # TODO add url validation
         self._uri: str = Settings().MONGODB_CONNECTION_STRING
-        self._uri += "?uuidRepresentation=standard" # Needed for uuid
+        self._uri += "?uuidRepresentation=standard"  # Needed for uuid
         self._client: MongoClient = MongoClient(self._uri, server_api=ServerApi("1"))
         self._db: Database[Any] = self.client.fitness_tracker
 

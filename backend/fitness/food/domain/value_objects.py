@@ -15,6 +15,7 @@ Grams = Annotated[float, Field(ge=0)]
 KCal = Annotated[float, Field(ge=0)]
 Ui = Annotated[int, Field(ge=0)]
 
+
 def _safe_add(a: Optional[float], b: Optional[float]) -> Optional[float]:
     """
     Add two optional values, considering None as absorbant value
@@ -25,25 +26,28 @@ def _safe_add(a: Optional[float], b: Optional[float]) -> Optional[float]:
         return b
     elif a is not None and b is None:
         return a
-    return None # a is None and b is None
+    return None  # a is None and b is None
 
 
 class FoodGroup(StrEnum):
-    unknown = 'unknown'
-    fruit = 'fruit'
-    vegetable = 'vegetable'
-    starchy = 'starchy'
-    dairy = 'dairy'
-    protein = 'protein'
-    fat = 'fat'
+    unknown = "unknown"
+    fruit = "fruit"
+    vegetable = "vegetable"
+    starchy = "starchy"
+    dairy = "dairy"
+    protein = "protein"
+    fat = "fat"
+
 
 class ServingSize(BaseModel):
     name: str = "100g"
     grams: Grams = Field(default=100)
 
+
 class OptionalServingSize(BaseModel):
     name: Optional[str] = None
     grams: Optional[Grams] = None
+
 
 class Vitamins(BaseModel):
     b1: Optional[Grams] = None
@@ -102,6 +106,7 @@ class Minerals(BaseModel):
             zinc=_safe_add(self.zinc, rhs.zinc),
         )
 
+
 class Carbohydrates(BaseModel):
     carbs: Optional[Grams] = None
     fiber: Optional[Grams] = None
@@ -124,6 +129,7 @@ class Carbohydrates(BaseModel):
         fiber_value = float(self.fiber) if self.fiber is not None else 0
         return max(carbs_value - fiber_value, 0)
 
+
 class Lipids(BaseModel):
     cholesterol: Optional[Grams] = None
     fat: Optional[Grams] = None
@@ -145,6 +151,7 @@ class Lipids(BaseModel):
             saturated=_safe_add(self.saturated, rhs.saturated),
             trans_fats=_safe_add(self.trans_fats, rhs.trans_fats),
         )
+
 
 class Proteins(BaseModel):
     protein: Optional[Grams] = None
@@ -176,21 +183,24 @@ class Proteins(BaseModel):
             valine=_safe_add(self.valine, rhs.valine),
         )
 
+
 class NutritionComposition(BaseModel):
-    serving_size: ServingSize = Field(default_factory=lambda:ServingSize())
+    serving_size: ServingSize = Field(default_factory=lambda: ServingSize())
     calories: Optional[KCal] = None
     alcohol: Optional[Grams] = None
     caffeine: Optional[Grams] = None
     water: Optional[Grams] = None
-    vitamins: Vitamins = Field(default_factory=lambda:Vitamins())
-    minerals: Minerals = Field(default_factory=lambda:Minerals())
-    carbohydrates: Carbohydrates = Field(default_factory=lambda:Carbohydrates())
-    lipids: Lipids = Field(default_factory=lambda:Lipids())
-    proteins: Proteins = Field(default_factory=lambda:Proteins())
+    vitamins: Vitamins = Field(default_factory=lambda: Vitamins())
+    minerals: Minerals = Field(default_factory=lambda: Minerals())
+    carbohydrates: Carbohydrates = Field(default_factory=lambda: Carbohydrates())
+    lipids: Lipids = Field(default_factory=lambda: Lipids())
+    proteins: Proteins = Field(default_factory=lambda: Proteins())
 
     def __add__(self, rhs: NutritionComposition) -> NutritionComposition:
-        if (self.serving_size != rhs.serving_size):
-            raise InvalidAddOperation("The serving sizes must be equal to perform an add operation")
+        if self.serving_size != rhs.serving_size:
+            raise InvalidAddOperation(
+                "The serving sizes must be equal to perform an add operation"
+            )
         return NutritionComposition(
             serving_size=self.serving_size,
             calories=_safe_add(self.calories, rhs.calories),
@@ -201,8 +211,9 @@ class NutritionComposition(BaseModel):
             minerals=self.minerals + rhs.minerals,
             carbohydrates=self.carbohydrates + rhs.carbohydrates,
             lipids=self.lipids + rhs.lipids,
-            proteins=self.proteins + rhs.proteins
+            proteins=self.proteins + rhs.proteins,
         )
+
 
 class OptionalNutritionComposition(BaseModel):
     serving_size: Optional[OptionalServingSize] = None
@@ -225,7 +236,9 @@ class FoodVA(BaseModel):
     name: str = Field(min_length=1)
     barcode_value: Optional[str] = None
     group: FoodGroup = Field(default=FoodGroup.unknown)
-    nutrition: NutritionComposition = Field(default_factory=lambda:NutritionComposition())
+    nutrition: NutritionComposition = Field(
+        default_factory=lambda: NutritionComposition()
+    )
     additional_serving_sizes: list[ServingSize] = Field(default_factory=list)
     ingredient_list: list[str] = Field(default_factory=list)
 

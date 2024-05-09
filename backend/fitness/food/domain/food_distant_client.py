@@ -10,19 +10,22 @@ class FoodDistantNutriments(BaseModel):
     fat_100g: float
     proteins_100g: float
 
+
 class FoodDistantProduct(BaseModel):
     nutriments: FoodDistantNutriments
     product_name: str
+
 
 class FoodDistant(BaseModel):
     """
     We use a openfood fact api json alike format.
     """
+
     code: str
     product: FoodDistantProduct
 
 
 class FoodDistantClient(Protocol):
-    def fetch_food_by_barcode(self, barcode_value: str) -> Optional[FoodDistant]:
-        ... # pragma: no cover
-
+    def fetch_food_by_barcode(
+        self, barcode_value: str
+    ) -> Optional[FoodDistant]: ...  # pragma: no cover

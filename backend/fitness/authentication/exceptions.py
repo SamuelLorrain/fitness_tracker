@@ -7,6 +7,7 @@ from fitness.commons.exceptions import CustomException, EntityDoesNotExistsExcep
 @dataclass
 class UserAlreadyExistsException(CustomException):
     """Raise when a user already exist"""
+
     status_code: int = 409
     message: Optional[str] = "The user already exists"
 
@@ -19,6 +20,7 @@ class UnknownUserException(EntityDoesNotExistsException):
 @dataclass
 class BadPasswordException(CustomException):
     """Raise when a the password entered is bad"""
+
     status_code: int = 401
     message: Optional[str] = "Unable to login"
 
@@ -26,5 +28,6 @@ class BadPasswordException(CustomException):
 @dataclass
 class UnableToLoginException(CustomException):
     """Raise when a the password entered is bad"""
+
     status_code: int = 401
     message: Optional[str] = "Unable to login"

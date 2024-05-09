@@ -15,20 +15,16 @@ app.add_middleware(
     allow_origins=[Settings().FRONTEND_DOMAIN],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
+
 
 @app.exception_handler(CustomException)
 async def custom_exception_handler(_: Request, exc: CustomException) -> JSONResponse:
     content = None
     if exc.message is not None:
-        content = {
-            "details": exc.message
-        }
-    return JSONResponse(
-        status_code=exc.status_code,
-        content=content
-    )
+        content = {"details": exc.message}
+    return JSONResponse(status_code=exc.status_code, content=content)
 
 
 app.include_router(auth_router)

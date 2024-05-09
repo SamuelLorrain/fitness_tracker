@@ -21,7 +21,7 @@ class InMemoryEntryRepository(EntryRepository):
         user_uuid: UUID,
         datetime: datetime,
         entry_type: EntryTypeEnum,
-        payload: SavablePayload
+        payload: SavablePayload,
     ) -> UUID:
         date = datetime.date()
         uuid = uuid4()
@@ -30,7 +30,7 @@ class InMemoryEntryRepository(EntryRepository):
             user_uuid=user_uuid,
             datetime=datetime,
             entry_type=entry_type,
-            payload=payload
+            payload=payload,
         )
         if self.data.get((user_uuid, date)) is not None:
             self.data[(user_uuid, date)].append(entry)
@@ -38,27 +38,15 @@ class InMemoryEntryRepository(EntryRepository):
             self.data[(user_uuid, date)] = [entry]
         return uuid
 
-
-    def get_entry(
-        self,
-        user_uuid: UUID,
-        date: date,
-        entry_uuid: UUID
-    ) -> Entry:
+    def get_entry(self, user_uuid: UUID, date: date, entry_uuid: UUID) -> Entry:
         entries = self.data[(user_uuid, date)]
         filtered = [e for e in entries if e.uuid == entry_uuid]
         if len(filtered) >= 1:
             return filtered[0]
         raise EntryDoesNotExistException
 
-
-    def iter_entry(
-        self,
-        user_uuid: UUID,
-        date: date
-    ) -> Generator[Entry, None, None]:
+    def iter_entry(self, user_uuid: UUID, date: date) -> Generator[Entry, None, None]:
         return (entry for entry in self.data.get((user_uuid, date), []))
-
 
     def get_food(self, user_uuid: UUID, food_uuid: UUID) -> Optional[Food]:
         food = self.food_data.get(food_uuid)

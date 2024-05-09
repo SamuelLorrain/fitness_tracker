@@ -16,7 +16,9 @@ class Food(BaseModel):
     user_uuid: Optional[UUID]
     barcode_value: Optional[str] = None
     name: str = Field(min_length=1)
-    nutrition: NutritionComposition = Field(default_factory=lambda:NutritionComposition())
+    nutrition: NutritionComposition = Field(
+        default_factory=lambda: NutritionComposition()
+    )
     group: FoodGroup = Field(default=FoodGroup.unknown)
     category: FoodCategory = Field(default=FoodCategory.custom)
     # TODO Two more routes to handle the additional serving sizes and ingredient list

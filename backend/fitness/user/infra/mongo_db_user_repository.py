@@ -19,6 +19,5 @@ class MongoDBUserRepository(UserRepository):
 
     def set_user(self, user_uuid: UUID, user_infos: User) -> None:
         self.user_collection.update_one(
-            {"uuid": user_uuid},
-            {"$set": user_infos.model_dump()}
+            {"uuid": user_uuid}, {"$set": user_infos.model_dump()}
         )

@@ -18,26 +18,17 @@ class FoodCrudService:
         return list(self.food_repository.iter_food(pass_key.uuid, filter))
 
     def store_food(self, pass_key: AuthPassKey, food_va: FoodVA) -> FoodUUID:
-        return self.food_repository.store_food(
-            pass_key.uuid,
-            food_va
-        )
+        return self.food_repository.store_food(pass_key.uuid, food_va)
 
     # TODO return frozen Food object instead of entity ?
     def get_food(self, pass_key: AuthPassKey, food_uuid: UUID) -> Food:
-        food = self.food_repository.get_food(
-            pass_key.uuid,
-            food_uuid
-        )
+        food = self.food_repository.get_food(pass_key.uuid, food_uuid)
         if food is None:
             raise FoodDoesNotExistsException
         return food
 
     def delete_food(self, pass_key: AuthPassKey, food_uuid: UUID) -> None:
-        self.food_repository.delete_food(
-            pass_key.uuid,
-            food_uuid
-        )
+        self.food_repository.delete_food(pass_key.uuid, food_uuid)
 
     # def patch_food(
     #     self,

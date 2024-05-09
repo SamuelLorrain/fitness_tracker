@@ -14,13 +14,15 @@ from fitness.user.domain.user_repository import UserRepository
 class UserService:
     user_repository: UserRepository
 
-    def get_user(self , user_uuid: UUID) -> User:
+    def get_user(self, user_uuid: UUID) -> User:
         db_user = self.user_repository.get_user(user_uuid)
         if db_user is None:
             raise EntityDoesNotExistsException
         return db_user
 
-    def set_nutrition_goals_for_user(self, user_uuid: UUID, nutrition_goals_per_day: Optional[NutritionComposition]) -> None:
+    def set_nutrition_goals_for_user(
+        self, user_uuid: UUID, nutrition_goals_per_day: Optional[NutritionComposition]
+    ) -> None:
         db_user = self.user_repository.get_user(user_uuid)
         if db_user is None:
             raise EntityDoesNotExistsException
@@ -28,7 +30,9 @@ class UserService:
         validated_user = User(**db_user.model_dump())
         self.user_repository.set_user(user_uuid, validated_user)
 
-    def set_user_basic_infos(self, user_uuid: UUID, first_name: str, last_name: str, email: EmailStr) -> None:
+    def set_user_basic_infos(
+        self, user_uuid: UUID, first_name: str, last_name: str, email: EmailStr
+    ) -> None:
         db_user = self.user_repository.get_user(user_uuid)
         if db_user is None:
             raise EntityDoesNotExistsException

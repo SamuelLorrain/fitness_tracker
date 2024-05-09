@@ -18,19 +18,20 @@ from fitness.entry.presentation.contracts import (
 entry_router = APIRouter(tags=["entry"])
 auth_dep = AuthenticationConfiguration().authorisation_dependency
 
-@entry_router.post('/entry')
+
+@entry_router.post("/entry")
 def create_entry(
     auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
     request: Request,
     response: Response,
-    entry_request: CreateEntryRequest
+    entry_request: CreateEntryRequest,
 ) -> None:
     configuration = EntryConfiguration()
     new_uuid = configuration.entry_service.create_entry(
         auth_pass_key.uuid,
         entry_request.datetime,
         entry_request.entry_type,
-        entry_request.payload
+        entry_request.payload,
     )
     response.headers["Location"] = f"{request.url}/{new_uuid}"
 
@@ -39,14 +40,10 @@ def create_entry(
 def get_entry(
     auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
     date: date,
-    entry_uuid: UUID
+    entry_uuid: UUID,
 ) -> EntryResponse:
     configuration = EntryConfiguration()
-    entry = configuration.entry_service.get_entry(
-        auth_pass_key.uuid,
-        date,
-        entry_uuid
-    )
+    entry = configuration.entry_service.get_entry(auth_pass_key.uuid, date, entry_uuid)
     if entry is None:
         raise EntryDoesNotExistException
     return EntryResponse(**entry.model_dump())
@@ -65,5 +62,5 @@ def list_entry(
     return EntryListResponse(
         user_uuid=auth_pass_key.uuid,
         date=date,
-        entries=[EntryListItemResponse(**e.model_dump()) for e in entries]
+        entries=[EntryListItemResponse(**e.model_dump()) for e in entries],
     )
