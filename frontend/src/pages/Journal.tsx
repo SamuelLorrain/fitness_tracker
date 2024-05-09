@@ -6,12 +6,11 @@ import { IonButton, IonHeader, IonContent, IonToolbar, IonTitle, IonButtons, Ion
 import { IonCard, IonCardContent, IonProgressBar } from "@ionic/react";
 import { IonGrid, IonRow, IonCol } from "@ionic/react";
 import { formatDay } from "../utils/date_utils";
-import { add, format, parse, getUnixTime } from "date-fns";
-import { chevronBack, chevronForward } from "ionicons/icons";
+import { parse } from "date-fns";
 import { useSelector, useDispatch } from "react-redux";
-import { setTimestamp } from "../state/userSlice";
 import { safeDiv } from "../utils/math_utils";
 import JournalCard from "../components/JournalCard";
+import JournalDateButtons from "../components/JournalDateButtons";
 
 const useJournal = () => {
   const dispatch = useDispatch();
@@ -20,13 +19,6 @@ const useJournal = () => {
   const { data, error, isLoading } = useListEntryQuery(formatDay(date));
   const [entries, setEntries] = useState(null); // used to trigger the rerender of the entries
   const [foodEntries, setFoodEntries] = useState(null);
-
-  const moveForward = () => {
-    dispatch(setTimestamp({timestamp: getUnixTime(add(date, {days: 1}))}));
-  }
-  const moveBackward = () => {
-    dispatch(setTimestamp({timestamp: getUnixTime(add(date, {days: -1}))}));
-  }
 
   useEffect(() => {
     if (data != null) {
@@ -67,9 +59,6 @@ const useJournal = () => {
   }
 
   return {
-    moveForward,
-    moveBackward,
-    date,
     isLoading,
     entries,
     sumTodayCalories,
@@ -181,11 +170,8 @@ const DailyProgress: React.FC = ({ todayCalories, todayProteins, todayLipids, to
 const Journal: React.FC = () => {
   const history = useHistory();
   const {
-    date,
     entries,
     isLoading,
-    moveForward,
-    moveBackward,
     sumTodayCalories,
     sumTodayLipids,
     sumTodayProteins,
@@ -204,13 +190,7 @@ const Journal: React.FC = () => {
             Journal
           </IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={moveBackward}>
-              <IonIcon icon={chevronBack}></IonIcon>
-            </IonButton>
-            {date ? format(date, 'yyy MMM dd') : null}
-            <IonButton onClick={moveForward}>
-              <IonIcon icon={chevronForward}></IonIcon>
-            </IonButton>
+            <JournalDateButtons/>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -221,7 +201,7 @@ const Journal: React.FC = () => {
           (entries == null || entries.length == 0) ?
             <div>no entries for today !</div>
           : (
-              entries?.map(entry => <JournalCard entry={entry} key={entry.key}/>)
+              entries?.map(entry => <JournalCard entry={entry} key={entry.uuid}/>)
           )
         }
         <IonButton expand="full" onClick={gotToAddEntryForm}>Add Entry</IonButton>
