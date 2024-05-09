@@ -16,3 +16,16 @@ jobs:
         run: cd backend && poetry run isort --check .
       - name: launch black check
         run: cd backend && poetry run black --check .
+  frontend-linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository to the runner
+        uses: actions/checkout@v4
+      - name: install frontend project
+        run: |
+         ls
+         cd frontend
+         npm ci
+      - name: launch prettier
+        run: cd frontend && npx prettier --check src/
+
