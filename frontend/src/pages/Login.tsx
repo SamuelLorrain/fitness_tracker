@@ -4,11 +4,11 @@ import {
   IonRow,
   IonButton,
   IonInput,
-  IonInputPasswordToggle
+  IonInputPasswordToggle,
 } from "@ionic/react";
 import { useState } from "react";
-import { useDispatch } from 'react-redux';
-import { useLoginMutation, useUserInfoMutation } from '../state/api';
+import { useDispatch } from "react-redux";
+import { useLoginMutation, useUserInfoMutation } from "../state/api";
 import { initUser, setUserInfos } from "../state/userSlice";
 import { useHistory } from "react-router-dom";
 import { PersistenceSingleton } from "../state/persistence";
@@ -22,36 +22,38 @@ const Login = () => {
 
   const onLogin = async () => {
     try {
-      const user = await mutateLogin({username: email, password }).unwrap();
+      const user = await mutateLogin({ username: email, password }).unwrap();
       dispatch(initUser(user));
-      await PersistenceSingleton().set('user_email', email);
-      await PersistenceSingleton().set('user_token', user.access_token);
+      await PersistenceSingleton().set("user_email", email);
+      await PersistenceSingleton().set("user_token", user.access_token);
       const userInfos = await mutateUserInfo().unwrap();
-      dispatch(setUserInfos(userInfos))
-      window.history.replaceState(null, null, '/');
+      dispatch(setUserInfos(userInfos));
+      window.history.replaceState(null, null, "/");
     } catch (e) {
       console.log("error", e);
     }
-  }
+  };
 
   return (
     <>
-      <IonInput label="Email"
+      <IonInput
+        label="Email"
         value={email}
         onIonChange={(e) => setEmail(e.target.value)}
       />
-      <IonInput type="password"
+      <IonInput
+        type="password"
         label="Password"
         value={password}
         onIonChange={(e) => setPassword(e.target.value)}
       >
-        <IonInputPasswordToggle slot="end"/>
+        <IonInputPasswordToggle slot="end" />
       </IonInput>
       <IonButton expand="full" disabled={isLoading} onClick={onLogin}>
         Login
       </IonButton>
     </>
   );
-}
+};
 
 export default Login;

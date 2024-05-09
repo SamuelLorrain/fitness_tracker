@@ -1,5 +1,4 @@
-import { Storage } from '@ionic/storage';
-
+import { Storage } from "@ionic/storage";
 
 let singleton = null;
 
@@ -8,4 +7,4 @@ export const PersistenceSingleton = () => {
     singleton = new Storage();
   }
   return singleton;
-}
+};

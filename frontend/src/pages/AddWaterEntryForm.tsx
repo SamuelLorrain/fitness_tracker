@@ -6,36 +6,37 @@ import { parse } from "date-fns";
 import { useSelector } from "react-redux";
 
 type WaterEntry = {
-  datetime: Date,
-  entry_type: 'water'
+  datetime: Date;
+  entry_type: "water";
   payload: {
-    water: number
-  }
-}
+    water: number;
+  };
+};
 
-const isEntryValid = (water: number): boolean => water != null && water !== '' && !Number.isNaN(Number.parseFloat(water));
+const isEntryValid = (water: number): boolean =>
+  water != null && water !== "" && !Number.isNaN(Number.parseFloat(water));
 
 const formatWaterEntry = (datetime: Date, water: number): WaterEntry => {
   return {
     datetime: datetime,
-    entry_type: 'water',
+    entry_type: "water",
     payload: {
-      grams: Number(water)
-    }
+      grams: Number(water),
+    },
   } as WaterEntry;
-}
+};
 
 const AddWaterEntryForm = () => {
   const [water, setWater] = useState<number>(null);
   const [entryMutation, { isLoading }] = useCreateEntryMutation();
   const history = useHistory();
-  const timestamp = useSelector(state => state.user.currentTimestamp);
-  const date = parse(String(timestamp), 't', new Date());
+  const timestamp = useSelector((state) => state.user.currentTimestamp);
+  const date = parse(String(timestamp), "t", new Date());
 
   const submitWater = async () => {
     await entryMutation(formatWaterEntry(date, water)).unwrap();
-    history.push('/journal');
-  }
+    history.push("/journal");
+  };
 
   return (
     <>
@@ -45,12 +46,15 @@ const AddWaterEntryForm = () => {
         value={water}
         onIonInput={(e) => setWater(e.target.value)}
       />
-      <IonButton expand="full"
+      <IonButton
+        expand="full"
         onClick={submitWater}
         disabled={!isEntryValid(water) || isLoading}
-      >Submit</IonButton>
+      >
+        Submit
+      </IonButton>
     </>
   );
-}
+};
 
 export default AddWaterEntryForm;

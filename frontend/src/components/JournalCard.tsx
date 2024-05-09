@@ -1,4 +1,3 @@
-
 const formatCard = (entry) => {
   switch (entry.entry_type) {
     case "food":
@@ -8,7 +7,7 @@ const formatCard = (entry) => {
     default:
       return `Calories -  ${entry.payload.kcal} kcal`;
   }
-}
+};
 
 const JournalCard = ({ entry }) => {
   return (
@@ -16,6 +15,6 @@ const JournalCard = ({ entry }) => {
       <div>{formatCard(entry)}</div>
     </div>
   );
-}
+};
 
 export default JournalCard;
