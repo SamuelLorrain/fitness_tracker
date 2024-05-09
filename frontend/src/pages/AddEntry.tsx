@@ -9,6 +9,15 @@ import { IonCard, IonCardHeader, IonCardTitle } from "@ionic/react";
 import { IonIcon } from '@ionic/react';
 import { IonRippleEffect } from '@ionic/react';
 import { add, barcodeOutline, arrowBack } from 'ionicons/icons';
+import { IonLabel, IonSegment, IonSegmentButton } from "@ionic/react";
+import AddWaterEntryForm from "./AddWaterEntryForm";
+import AddCaloriesEntryForm from "./AddCaloriesEntryForm";
+
+enum EntryType {
+  food = "food",
+  water = "water",
+  calories = "calories"
+}
 
 const isSearchValid = (search: String): boolean => {
   return search !== '' && search != null;
@@ -63,6 +72,7 @@ const FoodList: React.FC = ({search}) => {
 
 const AddEntry: React.FC = () => {
   const [search, setSearch] = useState(null);
+  const [entryType, setEntryType] = useState(EntryType.food);
   const history = useHistory();
 
   return (
@@ -86,11 +96,38 @@ const AddEntry: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonInput label="search food"
-                  value={search}
-                  onIonInput={(e) => setSearch(e.target.value)}>
-        </IonInput>
-        <FoodList search={search}/>
+        <IonSegment value={entryType} onIonChange={(e) => setEntryType(e.target.value)}>
+          <IonSegmentButton value={EntryType.food}>
+            <IonLabel>Food</IonLabel>
+          </IonSegmentButton>
+          <IonSegmentButton value={EntryType.water}>
+            <IonLabel>Water</IonLabel>
+          </IonSegmentButton>
+          <IonSegmentButton value={EntryType.calories}>
+            <IonLabel>Calories</IonLabel>
+          </IonSegmentButton>
+        </IonSegment>
+        {
+          entryType === EntryType.food ?
+          <>
+            <IonInput label="search food"
+                      value={search}
+                      onIonInput={(e) => setSearch(e.target.value)}>
+            </IonInput>
+            <FoodList search={search}/>
+          </>
+          : null
+        }
+        {
+          entryType === EntryType.water ?
+          <AddWaterEntryForm/>
+          : null
+        }
+        {
+          entryType === EntryType.calories ?
+          <AddCaloriesEntryForm/>
+          : null
+        }
       </IonContent>
     </>
   );
