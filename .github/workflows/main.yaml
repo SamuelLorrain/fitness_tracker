@@ -1,0 +1,18 @@
+on: [push]
+jobs:
+  backend-linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository to the runner
+        uses: actions/checkout@v4
+      - name: install python project
+        run: |
+         ls
+         cd backend
+         sudo apt install python3.11 pip
+         pip install poetry
+         poetry install
+      - name: launch isort check
+        run: cd backend && poetry run isort --check .
+      - name: launch black check
+        run: cd backend && poetry run black --check .
