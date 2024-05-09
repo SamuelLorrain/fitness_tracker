@@ -86,8 +86,6 @@ const useGoalsIMCModal = (setIsOpen: Function, updater: Function) => {
         data.activity
       );
       setTdeeData(tdeeData);
-      console.log(tdeeData);
-      console.log(tdeeData.getTDEE());
     }
   });
 
