@@ -1,3 +1,4 @@
+import sys
 from typing import Any
 
 from pymongo.database import Database
@@ -17,9 +18,10 @@ class MongoDBConnection(Singleton):
         self._db: Database[Any] = self.client.fitness_tracker
 
         try:
+            print("Trying to connect to mongo db ...", file=sys.stderr)
             self.client.admin.command("ping")
-        except Exception:
-            print("Unable to connect to mongodb")
+        except Exception as e:
+            print("Unable to connect to mongodb", e)
             exit(1)
 
     @property
