@@ -233,6 +233,7 @@ class FoodCategory(StrEnum):
 
 
 class FoodVA(BaseModel):
+    all_users: bool = False
     name: str = Field(min_length=1)
     barcode_value: Optional[str] = None
     group: FoodGroup = Field(default=FoodGroup.unknown)

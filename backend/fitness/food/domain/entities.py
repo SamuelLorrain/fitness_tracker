@@ -14,6 +14,7 @@ from fitness.food.domain.value_objects import (
 class Food(BaseModel):
     uuid: UUID
     user_uuid: Optional[UUID]
+    all_users: bool = False
     barcode_value: Optional[str] = None
     name: str = Field(min_length=1)
     nutrition: NutritionComposition = Field(

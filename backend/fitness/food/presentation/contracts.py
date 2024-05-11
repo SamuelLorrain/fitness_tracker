@@ -18,6 +18,7 @@ class FilterFoodQuery(BaseModel):
 class NewFoodRequest(BaseModel):
     model_config: ConfigDict = ConfigDict({"extra": "forbid"})
 
+    all_users: bool = False
     name: str = Field(min_length=1)
     barcode_value: Optional[str] = None
     group: FoodGroup = Field(default=FoodGroup.unknown)

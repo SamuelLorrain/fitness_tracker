@@ -19,6 +19,8 @@ class MongoDBFoodRepository(FoodRepository):
     ) -> Generator[Food, None, None]:
         search: dict[str, Any] = {"user_uuid": user_uuid}
         if filter is not None:
+            del search["user_uuid"]
+            search["$or"] = [{"user_uuid": user_uuid}, {"all_users": True}]
             search["name"] = {"$regex": filter, "$options": "i"}
         db_foods = self.food_collection.find(search)
         return (Food(**food) for food in db_foods)
@@ -30,7 +32,12 @@ class MongoDBFoodRepository(FoodRepository):
 
     def get_food(self, user_uuid: FoodUserUUID, food_uuid: FoodUUID) -> Optional[Food]:
         db_food = self.food_collection.find_one(
-            {"uuid": food_uuid, "user_uuid": user_uuid}
+            {
+                "$or": [
+                    {"uuid": food_uuid, "user_uuid": user_uuid},
+                    {"uuid": food_uuid, "all_users": True},
+                ]
+            }
         )
         if db_food is None:
             return None
