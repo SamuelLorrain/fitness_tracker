@@ -19,6 +19,7 @@ import Journal from "../pages/Journal";
 import AccountInformationForm from "../pages/AccountInformationForm";
 import GoalsForm from "../pages/GoalsForm";
 import Barcode from "../pages/Barcode";
+import NotificationsForm from "../pages/NotificationsForm";
 
 import { journal, settings, easel } from "ionicons/icons";
 
@@ -38,6 +39,11 @@ const Menu = () => {
             component={AccountInformationForm}
           />
           <Route exact path="/:tab(settings)/goals" component={GoalsForm} />
+          <Route
+            exact
+            path="/:tab(settings)/notifications"
+            component={NotificationsForm}
+          />
           <Route
             exact
             path="/:tab(journal)/entry-form/:uuid"
