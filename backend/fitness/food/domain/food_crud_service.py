@@ -29,14 +29,3 @@ class FoodCrudService:
 
     def delete_food(self, pass_key: AuthPassKey, food_uuid: UUID) -> None:
         self.food_repository.delete_food(pass_key.uuid, food_uuid)
-
-    # def patch_food(
-    #     self,
-    #     pass_key: AuthPassKey,
-    #     food_uuid: UUID,
-    #     optional_food_va: OptionalFoodVA
-    # ) -> None:
-    #     food = self.food_repository.get_food(pass_key.uuid, food_uuid)
-    #     if food is None:
-    #         raise FoodDoesNotExistsException
-    #     # TODO to implement for real
