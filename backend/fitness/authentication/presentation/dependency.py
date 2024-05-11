@@ -15,8 +15,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 
 class AuthorisationDependency(Protocol):
-    def __call__(self, token: Annotated[Optional[str], Depends(oauth2_scheme)] = None) -> Optional[AuthPassKey]:
-        ...
+    def __call__(
+        self, token: Annotated[Optional[str], Depends(oauth2_scheme)] = None
+    ) -> Optional[AuthPassKey]: ...
 
 
 class SimpleAuthorisationDependency(AuthorisationDependency):
@@ -78,7 +79,8 @@ class AuthorisationPermissionDependencyCreator:
         self.auth_service: AuthService = auth_service
 
     def __call__(self, permission: Permission) -> AuthorisationPermissionDependency:
-        dep = AuthorisationPermissionDependency(self.jwt_auth_formatter, self.auth_service)
+        dep = AuthorisationPermissionDependency(
+            self.jwt_auth_formatter, self.auth_service
+        )
         dep._set_needed_permission(permission)
         return dep
-

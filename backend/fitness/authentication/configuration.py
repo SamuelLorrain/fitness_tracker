@@ -42,5 +42,9 @@ class AuthenticationConfiguration(Singleton):
         return SimpleAuthorisationDependency(self.auth_formatter, self.auth_service)
 
     @property
-    def authorisation_permission_dependency_creator(self) -> Callable[..., AuthorisationDependency]:
-        return AuthorisationPermissionDependencyCreator(self.auth_formatter, self.auth_service)
+    def authorisation_permission_dependency_creator(
+        self,
+    ) -> Callable[..., AuthorisationDependency]:
+        return AuthorisationPermissionDependencyCreator(
+            self.auth_formatter, self.auth_service
+        )

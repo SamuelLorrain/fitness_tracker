@@ -28,7 +28,7 @@ class AuthService:
             uuid=auth.user_uuid,
             email=auth.email,
             expiration=datetime.now(UTC) + self.expiration_timedelta,
-            permissions=auth.permissions
+            permissions=auth.permissions,
         )
 
     def register(
@@ -61,5 +61,7 @@ class AuthService:
         )
         return hash
 
-    def set_permissions(self, auth_pass_key: AuthPassKey, permissions: list[Permission]) -> None:
+    def set_permissions(
+        self, auth_pass_key: AuthPassKey, permissions: list[Permission]
+    ) -> None:
         self.authentication_repository.set_permissions(auth_pass_key.uuid, permissions)

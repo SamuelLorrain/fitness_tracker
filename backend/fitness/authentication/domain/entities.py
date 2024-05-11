@@ -14,7 +14,7 @@ class Auth(BaseModel):
     user_uuid: UUID
     email: EmailStr
     hashed_password: bytes
-    permissions: list[Permission] = Field(default_factory=lambda:[])
+    permissions: list[Permission] = Field(default_factory=lambda: [])
 
 
 class AuthPassKey(BaseModel):

@@ -1,5 +1,3 @@
-
-
 from fitness.authentication.domain.entities import AuthPassKey, Permission
 
 
