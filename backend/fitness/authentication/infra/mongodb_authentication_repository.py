@@ -1,13 +1,13 @@
 from typing import Optional
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from pydantic import EmailStr
 
 from fitness.authentication.domain.authentication_repository import (
     AuthenticationRepository,
 )
-from fitness.authentication.domain.entities import Auth
-from fitness.authentication.exceptions import UserAlreadyExistsException
+from fitness.authentication.domain.entities import Auth, Permission
+from fitness.authentication.exceptions import UnknownUserException, UserAlreadyExistsException
 from fitness.commons.connection import MongoDBConnection
 from fitness.user.domain.entities import User
 
@@ -50,3 +50,12 @@ class MongoDBAuthenticationRepository(AuthenticationRepository):
         self.user_collection.insert_one(user.model_dump())
         self.auth_collection.insert_one(auth.model_dump())
         return auth
+
+    def set_permissions(self, user_uuid: UUID, permissions: list[Permission]) -> None:
+        db_user = self.auth_collection.find_one({"user_uuid": user_uuid})
+        if db_user is None:
+            raise UnknownUserException
+        db_user["permissions"] = permissions
+        db_user = self.auth_collection.update_one(
+            {"user_uuid": user_uuid}, {"$set": db_user}
+        )
