@@ -7,12 +7,13 @@ from pydantic import SecretStr
 from fitness.authentication.configuration import AuthenticationConfiguration
 from fitness.authentication.domain.auth_formatter import AuthFormatter
 from fitness.authentication.domain.auth_service import AuthService
-from fitness.authentication.domain.entities import AuthPassKey
+from fitness.authentication.domain.entities import AuthPassKey, Permission
 
-from .contracts import AuthenticationResponse, RegisterRequest
+from .contracts import AuthenticationResponse, PermissionRequest, RegisterRequest
 
 auth_router = APIRouter(prefix="/auth", tags=["authentication"])
 auth_dep = AuthenticationConfiguration().authorisation_dependency
+auth_permission_dep = AuthenticationConfiguration().authorisation_permission_dependency_creator
 
 
 @auth_router.post("/login")
@@ -56,3 +57,13 @@ def verify(_: Annotated[AuthPassKey, Depends(auth_dep)]) -> None:
     throw an unauthorized response
     """
     ...
+
+
+@auth_router.post("/permissions", status_code=status.HTTP_204_NO_CONTENT)
+def set_permissions(
+    permission_request: PermissionRequest,
+    auth_pass_key: Annotated[AuthPassKey, Depends(auth_permission_dep(Permission.change_permissions))]
+) -> None:
+    configuration = AuthenticationConfiguration()
+    auth_service: AuthService = configuration.auth_service
+    auth_service.set_permissions(auth_pass_key, permission_request.permissions)
