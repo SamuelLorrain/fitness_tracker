@@ -7,7 +7,10 @@ from fitness.authentication.domain.authentication_repository import (
     AuthenticationRepository,
 )
 from fitness.authentication.domain.entities import Auth, Permission
-from fitness.authentication.exceptions import UnknownUserException, UserAlreadyExistsException
+from fitness.authentication.exceptions import (
+    UnknownUserException,
+    UserAlreadyExistsException,
+)
 from fitness.commons.connection import MongoDBConnection
 from fitness.user.domain.entities import User
 

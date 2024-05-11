@@ -6,7 +6,10 @@ from fastapi.security import OAuth2PasswordBearer
 from fitness.authentication.domain.auth_formatter import AuthFormatter
 from fitness.authentication.domain.auth_service import AuthService
 from fitness.authentication.domain.entities import AuthPassKey, Permission
-from fitness.authentication.exceptions import UnableToLoginException, UnauthorizedException
+from fitness.authentication.exceptions import (
+    UnableToLoginException,
+    UnauthorizedException,
+)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 

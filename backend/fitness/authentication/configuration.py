@@ -11,7 +11,11 @@ from fitness.authentication.infra.jwt_auth_formatter import JwtAuthFormatter
 from fitness.authentication.infra.mongodb_authentication_repository import (
     MongoDBAuthenticationRepository,
 )
-from fitness.authentication.presentation.dependency import AuthorisationDependency, AuthorisationPermissionDependencyCreator, SimpleAuthorisationDependency
+from fitness.authentication.presentation.dependency import (
+    AuthorisationDependency,
+    AuthorisationPermissionDependencyCreator,
+    SimpleAuthorisationDependency,
+)
 from fitness.commons.singleton import Singleton
 
 
