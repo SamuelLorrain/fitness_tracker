@@ -12,7 +12,7 @@ from fitness.user.presentation.api import user_router
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[Settings().FRONTEND_DOMAIN],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
