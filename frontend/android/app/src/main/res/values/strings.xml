@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">fitness_tracker</string>
+    <string name="title_activity_main">fitness_tracker</string>
+    <string name="package_name">app.fitness.tracker.com</string>
+    <string name="custom_url_scheme">app.fitness.tracker.com</string>
+</resources>
