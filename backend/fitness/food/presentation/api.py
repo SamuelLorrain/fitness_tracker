@@ -15,17 +15,15 @@ from fitness.food.domain.value_objects import (
     Lipids,
     NutritionComposition,
     Proteins,
-    ServingSize,
 )
 from fitness.food.presentation.contracts import (
     BarcodeRequest,
     FilterFoodQuery,
-    FoodRequest,
     FoodResponse,
     ListFoodResponse,
     ListFoodResponseItem,
+    NewFoodRequest,
     NewFoodResponse,
-    PatchFoodRequest,
 )
 
 food_router = APIRouter(prefix="/food", tags=["food"])
@@ -62,7 +60,7 @@ def get_food(
 # TODO proper response doc
 @food_router.post("/", status_code=status.HTTP_201_CREATED)
 def create_food(
-    food_request: FoodRequest,
+    food_request: NewFoodRequest,
     auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
     request: Request,
     response: Response,
