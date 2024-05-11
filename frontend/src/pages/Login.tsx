@@ -1,7 +1,4 @@
 import {
-  IonGrid,
-  IonCol,
-  IonRow,
   IonButton,
   IonInput,
   IonInputPasswordToggle,
@@ -10,7 +7,6 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLoginMutation, useUserInfoMutation } from "../state/api";
 import { initUser, setUserInfos } from "../state/userSlice";
-import { useHistory } from "react-router-dom";
 import { PersistenceSingleton } from "../state/persistence";
 
 const Login = () => {
@@ -28,9 +24,8 @@ const Login = () => {
       await PersistenceSingleton().set("user_token", user.access_token);
       const userInfos = await mutateUserInfo().unwrap();
       dispatch(setUserInfos(userInfos));
-      window.history.replaceState(null, null, "/");
     } catch (e) {
-      console.log("error", e);
+      console.log("error", JSON.stringify(e));
     }
   };
 
