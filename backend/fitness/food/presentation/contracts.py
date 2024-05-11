@@ -15,7 +15,7 @@ class FilterFoodQuery(BaseModel):
     name_filter: Optional[str] = None
 
 
-class FoodRequest(BaseModel):
+class NewFoodRequest(BaseModel):
     model_config: ConfigDict = ConfigDict({"extra": "forbid"})
 
     name: str = Field(min_length=1)
