@@ -27,9 +27,11 @@ const Settings: React.FC = () => {
           <IonCardTitle>Account</IonCardTitle>
         </IonCardHeader>
         <IonCardContent>
-          <div>{user.first_name}</div>
-          <div>{user.last_name}</div>
-          <div>{user.email}</div>
+          <ul>
+            <li>{user.first_name}</li>
+            <li>{user.last_name}</li>
+            <li>{user.email}</li>
+          </ul>
         </IonCardContent>
         <IonButton
           fill="clear"
@@ -55,6 +57,22 @@ const Settings: React.FC = () => {
           </ul>
         </IonCardContent>
         <IonButton fill="clear" onClick={() => history.push("/settings/goals")}>
+          Change
+        </IonButton>
+      </IonCard>
+      <IonCard>
+        <IonCardHeader>
+          <IonCardTitle>Notification settings</IonCardTitle>
+        </IonCardHeader>
+        <IonCardContent>
+          <ul>
+            <li>Water settings : </li>
+          </ul>
+        </IonCardContent>
+        <IonButton
+          fill="clear"
+          onClick={() => history.push("/settings/notifications")}
+        >
           Change
         </IonButton>
       </IonCard>

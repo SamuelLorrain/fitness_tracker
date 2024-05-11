@@ -1,18 +1,6 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Basis from "../components/Basis";
-import {
-  IonInput,
-  IonButton,
-  IonModal,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
-  IonContent,
-  IonSelect,
-  IonSelectOption,
-} from "@ionic/react";
-import { IonGrid, IonRow, IonCol } from "@ionic/react";
+import { IonInput, IonButton } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
@@ -63,12 +51,19 @@ const useGoalForm = () => {
         },
       };
       const new_user_infos = structuredClone(user);
+      if (new_user_infos.nutrition_goals_per_day == null) {
+        new_user_infos.nutrition_goals_per_day = {
+          proteins: {},
+          lipids: {},
+          carbohydrates: {},
+        };
+      }
       new_user_infos.nutrition_goals_per_day.calories = data.calories;
       new_user_infos.nutrition_goals_per_day.proteins.protein = data.proteins;
       new_user_infos.nutrition_goals_per_day.lipids.fat = data.lipids;
       new_user_infos.nutrition_goals_per_day.carbohydrates.carbs = data.carbs;
       await mutateSetUserGoals(formattedData).unwrap();
-      await dispatch(setUserInfos(new_user_infos));
+      dispatch(setUserInfos(new_user_infos));
       history.push("/settings");
     },
   });
