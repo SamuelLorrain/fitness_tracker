@@ -27,7 +27,9 @@ class JwtAuthFormatter(AuthFormatter):
             uid=str(auth_pass_key.uuid),
             name=auth_pass_key.email,
             exp=int(auth_pass_key.expiration.timestamp()),
-            scopes=' '.join([permission.value for permission in auth_pass_key.permissions])
+            scopes=" ".join(
+                [permission.value for permission in auth_pass_key.permissions]
+            ),
         )
 
         # TODO settings should use a configuration class
@@ -41,12 +43,14 @@ class JwtAuthFormatter(AuthFormatter):
         claims: Claims = Claims(
             **jwt.decode(token, Settings().JWT_SECRET, algorithms=["HS512"])
         )
-        if claims.scopes == '':
+        if claims.scopes == "":
             permissions = []
         elif claims.scopes is not None:
             try:
-                permissions = [Permission(permission) for permission in claims.scopes.split(' ')]
-            except ValueError: # raised when a permission is not valid
+                permissions = [
+                    Permission(permission) for permission in claims.scopes.split(" ")
+                ]
+            except ValueError:  # raised when a permission is not valid
                 raise UnauthorizedException
         else:
             permissions = []
@@ -54,5 +58,5 @@ class JwtAuthFormatter(AuthFormatter):
             uuid=claims.uid,
             email=claims.name,
             expiration=datetime.fromtimestamp(claims.exp),
-            permissions=permissions
+            permissions=permissions,
         )

@@ -15,5 +15,6 @@ class AuthenticationRepository(Protocol):
         self, first_name: str, last_name: str, email: EmailStr, hashed_password: bytes
     ) -> Auth: ...  # pragma: no cover
 
-    def set_permissions(self, user_uuid: UUID, permissions: list[Permission]) -> None:
-        ... # pragma: no cover
+    def set_permissions(
+        self, user_uuid: UUID, permissions: list[Permission]
+    ) -> None: ...  # pragma: no cover
