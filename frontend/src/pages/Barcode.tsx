@@ -114,7 +114,7 @@ const Barcode: React.FC = () => {
         {hasCameraPermission ? (
           <BarcodeScanner setBarcodeValue={setBarcodeValue} />
         ) : (
-          <IonButton onClick={grantCameraPermission}>
+          <IonButton expand="full" onClick={grantCameraPermission}>
             grant camera permission
           </IonButton>
         )}

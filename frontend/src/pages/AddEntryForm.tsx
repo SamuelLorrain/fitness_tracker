@@ -1,20 +1,14 @@
 import { useState, useEffect } from "react";
 import Basis from "../components/Basis";
 import { useParams, useHistory } from "react-router-dom";
-import {
-  IonInput,
-  IonButton,
-  IonButtons,
-  IonSelect,
-  IonSelectOption,
-} from "@ionic/react";
+import { IonInput, IonButton } from "@ionic/react";
 import { useGetFoodQuery, useCreateEntryMutation } from "../state/api";
 import { parse } from "date-fns";
 import { useSelector } from "react-redux";
 import { useToast } from "../hooks/useToast";
 
 type ServingSize = {
-  name: String;
+  name: string;
   grams: number;
 };
 
@@ -24,6 +18,7 @@ class BaseNutrition {
   readonly carbohydrates: number;
   readonly lipids: number;
   readonly proteins: number;
+  name: string;
 
   constructor(
     servingSize: ServingSize,
@@ -84,7 +79,7 @@ class BaseNutrition {
 }
 
 const useAddEntryForm = (uuid) => {
-  const { data, error, isFetching } = useGetFoodQuery(uuid);
+  const { data, isFetching } = useGetFoodQuery(uuid);
   const [entryMutation] = useCreateEntryMutation();
   const [fetchedNutrition, setFetchedNutrition] =
     useState<BaseNutrition | null>(null);
@@ -124,8 +119,6 @@ const useAddEntryForm = (uuid) => {
     currentNutrition,
     currentServingSize,
     updateServingSize,
-    data,
-    error,
     isFetching,
     entryMutation,
   };
@@ -139,8 +132,6 @@ const AddEntryForm: React.FC = () => {
     currentNutrition,
     currentServingSize,
     updateServingSize,
-    data,
-    error,
     isFetching,
     entryMutation,
   } = useAddEntryForm(uuid);

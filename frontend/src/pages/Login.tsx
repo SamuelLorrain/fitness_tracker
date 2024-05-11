@@ -1,8 +1,4 @@
-import {
-  IonButton,
-  IonInput,
-  IonInputPasswordToggle,
-} from "@ionic/react";
+import { IonButton, IonInput, IonInputPasswordToggle } from "@ionic/react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLoginMutation, useUserInfoMutation } from "../state/api";
