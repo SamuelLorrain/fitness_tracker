@@ -31,3 +31,11 @@ class UnableToLoginException(CustomException):
 
     status_code: int = 401
     message: Optional[str] = "Unable to login"
+
+
+@dataclass
+class UnauthorizedException(CustomException):
+    """Raise when user is trying to do unauthorized thing"""
+
+    status_code: int = 401
+    message: Optional[str] = "Unable to perform this action"

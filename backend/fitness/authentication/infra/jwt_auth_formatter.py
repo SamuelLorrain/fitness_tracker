@@ -1,10 +1,12 @@
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
+from typing import Optional
 
+from fitness.authentication.exceptions import UnauthorizedException
 import jwt
 
 from fitness.authentication.domain.auth_formatter import AuthFormatter
-from fitness.authentication.domain.entities import AuthPassKey
+from fitness.authentication.domain.entities import AuthPassKey, Permission
 from fitness.commons.settings import Settings
 
 
@@ -14,6 +16,7 @@ class Claims:
     name: str
     uid: str
     exp: int
+    scopes: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -24,6 +27,7 @@ class JwtAuthFormatter(AuthFormatter):
             uid=str(auth_pass_key.uuid),
             name=auth_pass_key.email,
             exp=int(auth_pass_key.expiration.timestamp()),
+            scopes=' '.join([permission.value for permission in auth_pass_key.permissions])
         )
 
         # TODO settings should use a configuration class
@@ -37,8 +41,18 @@ class JwtAuthFormatter(AuthFormatter):
         claims: Claims = Claims(
             **jwt.decode(token, Settings().JWT_SECRET, algorithms=["HS512"])
         )
+        if claims.scopes == '':
+            permissions = []
+        elif claims.scopes is not None:
+            try:
+                permissions = [Permission(permission) for permission in claims.scopes.split(' ')]
+            except ValueError: # raised when a permission is not valid
+                raise UnauthorizedException
+        else:
+            permissions = []
         return AuthPassKey(
             uuid=claims.uid,
             email=claims.name,
             expiration=datetime.fromtimestamp(claims.exp),
+            permissions=permissions
         )

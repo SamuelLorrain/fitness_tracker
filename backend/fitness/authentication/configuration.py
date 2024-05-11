@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import timedelta
+from typing import Callable
 
 from fitness.authentication.domain.auth_formatter import AuthFormatter
 from fitness.authentication.domain.auth_service import AuthService
@@ -10,7 +11,7 @@ from fitness.authentication.infra.jwt_auth_formatter import JwtAuthFormatter
 from fitness.authentication.infra.mongodb_authentication_repository import (
     MongoDBAuthenticationRepository,
 )
-from fitness.authentication.presentation.dependency import AuthorisationDependency
+from fitness.authentication.presentation.dependency import AuthorisationDependency, AuthorisationPermissionDependencyCreator, SimpleAuthorisationDependency
 from fitness.commons.singleton import Singleton
 
 
@@ -34,4 +35,8 @@ class AuthenticationConfiguration(Singleton):
 
     @property
     def authorisation_dependency(self) -> AuthorisationDependency:
-        return AuthorisationDependency(self.auth_formatter, self.auth_service)
+        return SimpleAuthorisationDependency(self.auth_formatter, self.auth_service)
+
+    @property
+    def authorisation_permission_dependency_creator(self) -> Callable[..., AuthorisationDependency]:
+        return AuthorisationPermissionDependencyCreator(self.auth_formatter, self.auth_service)
