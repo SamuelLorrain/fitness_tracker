@@ -2,11 +2,11 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from typing import Optional
 
-from fitness.authentication.exceptions import UnauthorizedException
 import jwt
 
 from fitness.authentication.domain.auth_formatter import AuthFormatter
 from fitness.authentication.domain.entities import AuthPassKey, Permission
+from fitness.authentication.exceptions import UnauthorizedException
 from fitness.commons.settings import Settings
 
 

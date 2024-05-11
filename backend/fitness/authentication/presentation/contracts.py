@@ -1,6 +1,8 @@
 from uuid import UUID
-from fitness.authentication.domain.entities import Permission
+
 from pydantic import BaseModel, EmailStr, Field, SecretStr
+
+from fitness.authentication.domain.entities import Permission
 
 
 class RegisterRequest(BaseModel):
