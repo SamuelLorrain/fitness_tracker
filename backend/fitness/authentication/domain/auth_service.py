@@ -7,7 +7,7 @@ from pydantic import EmailStr, SecretStr
 from fitness.authentication.domain.authentication_repository import (
     AuthenticationRepository,
 )
-from fitness.authentication.domain.entities import AuthPassKey
+from fitness.authentication.domain.entities import AuthPassKey, Permission
 from fitness.authentication.exceptions import UnableToLoginException
 from fitness.commons.settings import Settings
 
@@ -28,6 +28,7 @@ class AuthService:
             uuid=auth.user_uuid,
             email=auth.email,
             expiration=datetime.now(UTC) + self.expiration_timedelta,
+            permissions=auth.permissions
         )
 
     def register(
@@ -59,3 +60,6 @@ class AuthService:
             p=2,
         )
         return hash
+
+    def set_permissions(self, auth_pass_key: AuthPassKey, permissions: list[Permission]) -> None:
+        self.authentication_repository.set_permissions(auth_pass_key.uuid, permissions)
