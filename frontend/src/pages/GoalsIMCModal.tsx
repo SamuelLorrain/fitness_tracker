@@ -48,7 +48,7 @@ class TDEEData {
     age: number,
     weight: number,
     height: number,
-    activity: ActivityEnum,
+    activity: ActivityEnum
   ) {
     this.sex = sex;
     this.age = age;
@@ -105,7 +105,7 @@ const useGoalsIMCModal = (setIsOpen: Function, updater: Function) => {
         data.age,
         data.weight,
         data.height,
-        data.activity,
+        data.activity
       );
       setTdeeData(tdeeData);
     },
@@ -147,7 +147,7 @@ const GoalsIMCModal = ({
 }) => {
   const { tdeeFormik, tdeeData, updateGoals } = useGoalsIMCModal(
     setIsOpen,
-    updater,
+    updater
   );
 
   return (
@@ -163,7 +163,9 @@ const GoalsIMCModal = ({
       <IonContent className="ion-padding">
         <form onSubmit={tdeeFormik.handleSubmit}>
           <IonSelect
-            className={`${tdeeFormik.errors.sex && "ion-invalid"} ${tdeeFormik.touched.sex && "ion-touched"} `}
+            className={`${tdeeFormik.errors.sex && "ion-invalid"} ${
+              tdeeFormik.touched.sex && "ion-touched"
+            } `}
             label="Sex"
             value={tdeeFormik.values.sex}
             errorText={tdeeFormik.errors.sex}
@@ -174,7 +176,9 @@ const GoalsIMCModal = ({
             <IonSelectOption value="female">Female</IonSelectOption>
           </IonSelect>
           <IonInput
-            className={`${tdeeFormik.errors.age && "ion-invalid"} ${tdeeFormik.touched.age && "ion-touched"} `}
+            className={`${tdeeFormik.errors.age && "ion-invalid"} ${
+              tdeeFormik.touched.age && "ion-touched"
+            } `}
             label="Age"
             type="number"
             value={tdeeFormik.values.age}
@@ -183,7 +187,9 @@ const GoalsIMCModal = ({
             onBlur={(e) => tdeeFormik.setFieldTouched("age", true)}
           />
           <IonInput
-            className={`${tdeeFormik.errors.weight && "ion-invalid"} ${tdeeFormik.touched.weight && "ion-touched"} `}
+            className={`${tdeeFormik.errors.weight && "ion-invalid"} ${
+              tdeeFormik.touched.weight && "ion-touched"
+            } `}
             label="Weight"
             type="number"
             value={tdeeFormik.values.weight}
@@ -194,7 +200,9 @@ const GoalsIMCModal = ({
             onBlur={(e) => tdeeFormik.setFieldTouched("weight", true)}
           />
           <IonInput
-            className={`${tdeeFormik.errors.height && "ion-invalid"} ${tdeeFormik.touched.height && "ion-touched"} `}
+            className={`${tdeeFormik.errors.height && "ion-invalid"} ${
+              tdeeFormik.touched.height && "ion-touched"
+            } `}
             label="Height"
             type="number"
             value={tdeeFormik.values.height}
@@ -205,7 +213,9 @@ const GoalsIMCModal = ({
             onBlur={(e) => tdeeFormik.setFieldTouched("height", true)}
           />
           <IonSelect
-            className={`${tdeeFormik.errors.activity && "ion-invalid"} ${tdeeFormik.touched.activity && "ion-touched"} `}
+            className={`${tdeeFormik.errors.activity && "ion-invalid"} ${
+              tdeeFormik.touched.activity && "ion-touched"
+            } `}
             label="Activity"
             type="number"
             value={tdeeFormik.values.activity}

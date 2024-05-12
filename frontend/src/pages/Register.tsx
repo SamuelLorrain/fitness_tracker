@@ -24,7 +24,7 @@ const Register: React.FC = () => {
       password: Yup.string().required("A password must be provided"),
       confirm_password: Yup.string().oneOf(
         [Yup.ref("password"), null],
-        "Must match password",
+        "Must match password"
       ),
     }),
     onSubmit: async (data) => {
@@ -41,7 +41,9 @@ const Register: React.FC = () => {
     <>
       <form onSubmit={formik.handleSubmit}>
         <IonInput
-          className={`${formik.errors.first_name && "ion-invalid"} ${formik.touched.first_name && "ion-touched"} `}
+          className={`${formik.errors.first_name && "ion-invalid"} ${
+            formik.touched.first_name && "ion-touched"
+          } `}
           label="First Name"
           value={formik.values.first_name}
           errorText={formik.errors.first_name}
@@ -51,7 +53,9 @@ const Register: React.FC = () => {
           onBlur={(e) => formik.setFieldTouched("first_name", true)}
         />
         <IonInput
-          className={`${formik.errors.last_name && "ion-invalid"} ${formik.touched.last_name && "ion-touched"} `}
+          className={`${formik.errors.last_name && "ion-invalid"} ${
+            formik.touched.last_name && "ion-touched"
+          } `}
           label="Last Name"
           value={formik.values.last_name}
           errorText={formik.errors.last_name}
@@ -59,7 +63,9 @@ const Register: React.FC = () => {
           onBlur={(e) => formik.setFieldTouched("last_name", true)}
         />
         <IonInput
-          className={`${formik.errors.email && "ion-invalid"} ${formik.touched.email && "ion-touched"} `}
+          className={`${formik.errors.email && "ion-invalid"} ${
+            formik.touched.email && "ion-touched"
+          } `}
           label="Email"
           value={formik.values.email}
           errorText={formik.errors.email}
@@ -68,7 +74,9 @@ const Register: React.FC = () => {
         />
         <IonInput
           type="password"
-          className={`${formik.errors.password && "ion-invalid"} ${formik.touched.password && "ion-touched"} `}
+          className={`${formik.errors.password && "ion-invalid"} ${
+            formik.touched.password && "ion-touched"
+          } `}
           label="Password"
           value={formik.values.password}
           errorText={formik.errors.password}
@@ -79,7 +87,9 @@ const Register: React.FC = () => {
         </IonInput>
         <IonInput
           type="password"
-          className={`${formik.errors.confirm_password && "ion-invalid"} ${formik.touched.confirm_password && "ion-touched"} `}
+          className={`${formik.errors.confirm_password && "ion-invalid"} ${
+            formik.touched.confirm_password && "ion-touched"
+          } `}
           label="confirm_password"
           value={formik.values.confirm_password}
           errorText={formik.errors.confirm_password}

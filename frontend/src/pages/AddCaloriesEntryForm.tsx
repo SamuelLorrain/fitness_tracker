@@ -20,7 +20,7 @@ const isEntryValid = (calories: number): boolean =>
 
 const formatCaloriesEntry = (
   datetime: Date,
-  calories: number,
+  calories: number
 ): CaloriesEntry => {
   return {
     datetime: datetime,

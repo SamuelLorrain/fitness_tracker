@@ -26,7 +26,7 @@ class BaseNutrition {
     carbohydrates: number,
     lipids: number,
     proteins: number,
-    name: string,
+    name: string
   ) {
     this.name = name;
     this.servingSize = { name: servingSize.name, grams: servingSize.grams };
@@ -46,7 +46,7 @@ class BaseNutrition {
       (this.carbohydrates * otherServingSize.grams) / this.servingSize.grams,
       (this.lipids * otherServingSize.grams) / this.servingSize.grams,
       (this.proteins * otherServingSize.grams) / this.servingSize.grams,
-      this.name,
+      this.name
     );
   }
 
@@ -97,8 +97,8 @@ const useAddEntryForm = (uuid) => {
           data.nutrition.carbohydrates.carbs,
           data.nutrition.lipids.fat,
           data.nutrition.proteins.protein,
-          data.name,
-        ),
+          data.name
+        )
       );
       setCurrentServingSize(data.nutrition.serving_size as ServingSize);
     }
@@ -142,7 +142,7 @@ const AddEntryForm: React.FC = () => {
   const submitEntry = async () => {
     try {
       await entryMutation(
-        currentNutrition.toValidEntryForm(date, uuid),
+        currentNutrition.toValidEntryForm(date, uuid)
       ).unwrap();
       history.push("/journal");
     } catch (e) {

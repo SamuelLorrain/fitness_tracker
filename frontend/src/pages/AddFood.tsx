@@ -84,7 +84,9 @@ const AddFoodForm: React.FC = () => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <IonInput
-        className={`${formik.errors.name && "ion-invalid"} ${formik.touched.name && "ion-touched"} `}
+        className={`${formik.errors.name && "ion-invalid"} ${
+          formik.touched.name && "ion-touched"
+        } `}
         label="Name"
         value={formik.values.name}
         errorText={formik.errors.name}
@@ -92,7 +94,9 @@ const AddFoodForm: React.FC = () => {
         onBlur={(e) => formik.setFieldTouched("name", true)}
       />
       <IonInput
-        className={`${formik.errors.serving_name && "ion-invalid"} ${formik.touched.serving_name && "ion-touched"} `}
+        className={`${formik.errors.serving_name && "ion-invalid"} ${
+          formik.touched.serving_name && "ion-touched"
+        } `}
         label="Serving Name"
         value={formik.values.serving_name}
         errorText={formik.errors.serving_name}
@@ -102,7 +106,9 @@ const AddFoodForm: React.FC = () => {
         onBlur={(e) => formik.setFieldTouched("serving_name", true)}
       />
       <IonInput
-        className={`${formik.errors.serving_weight && "ion-invalid"} ${formik.touched.serving_weight && "ion-touched"} `}
+        className={`${formik.errors.serving_weight && "ion-invalid"} ${
+          formik.touched.serving_weight && "ion-touched"
+        } `}
         label="Serving Weight"
         step="0.01"
         value={formik.values.serving_weight}
@@ -115,7 +121,9 @@ const AddFoodForm: React.FC = () => {
       />
       <IonInput
         label="Energy"
-        className={`${formik.errors.energy && "ion-invalid"} ${formik.touched.energy && "ion-touched"} `}
+        className={`${formik.errors.energy && "ion-invalid"} ${
+          formik.touched.energy && "ion-touched"
+        } `}
         step="0.01"
         value={formik.values.energy}
         errorText={formik.errors.energy}
@@ -126,7 +134,9 @@ const AddFoodForm: React.FC = () => {
       <IonInput
         label="Fat"
         step="0.01"
-        className={`${formik.errors.fat && "ion-invalid"} ${formik.touched.fat && "ion-touched"} `}
+        className={`${formik.errors.fat && "ion-invalid"} ${
+          formik.touched.fat && "ion-touched"
+        } `}
         value={formik.values.fat}
         errorText={formik.errors.fat}
         onIonChange={(e) => formik.setFieldValue("fat", e.detail.value)}
@@ -136,7 +146,9 @@ const AddFoodForm: React.FC = () => {
       <IonInput
         label="Carbs"
         step="0.01"
-        className={`${formik.errors.carbs && "ion-invalid"} ${formik.touched.carbs && "ion-touched"} `}
+        className={`${formik.errors.carbs && "ion-invalid"} ${
+          formik.touched.carbs && "ion-touched"
+        } `}
         value={formik.values.carbs}
         errorText={formik.errors.carbs}
         onIonChange={(e) => formik.setFieldValue("carbs", e.detail.value)}
@@ -146,7 +158,9 @@ const AddFoodForm: React.FC = () => {
       <IonInput
         label="Proteins"
         step="0.01"
-        className={`${formik.errors.proteins && "ion-invalid"} ${formik.touched.proteins && "ion-touched"} `}
+        className={`${formik.errors.proteins && "ion-invalid"} ${
+          formik.touched.proteins && "ion-touched"
+        } `}
         value={formik.values.proteins}
         errorText={formik.errors.proteins}
         onIonChange={(e) => formik.setFieldValue("proteins", e.detail.value)}

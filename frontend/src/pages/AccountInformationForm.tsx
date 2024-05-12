@@ -40,7 +40,9 @@ const AccountInformationForm: React.FC = () => {
     <Basis name="Settings" onReturn={() => history.push("/settings")}>
       <form onSubmit={formik.handleSubmit}>
         <IonInput
-          className={`${formik.errors.first_name && "ion-invalid"} ${formik.touched.first_name && "ion-touched"} `}
+          className={`${formik.errors.first_name && "ion-invalid"} ${
+            formik.touched.first_name && "ion-touched"
+          } `}
           label="First name"
           value={formik.values.first_name}
           errorText={formik.errors.first_name}
@@ -50,7 +52,9 @@ const AccountInformationForm: React.FC = () => {
           onBlur={(e) => formik.setFieldTouched("first_name", true)}
         />
         <IonInput
-          className={`${formik.errors.last_name && "ion-invalid"} ${formik.touched.last_name && "ion-touched"} `}
+          className={`${formik.errors.last_name && "ion-invalid"} ${
+            formik.touched.last_name && "ion-touched"
+          } `}
           label="Last name"
           value={formik.values.last_name}
           errorText={formik.errors.last_name}
@@ -58,7 +62,9 @@ const AccountInformationForm: React.FC = () => {
           onBlur={(e) => formik.setFieldTouched("last_name", true)}
         />
         <IonInput
-          className={`${formik.errors.email && "ion-invalid"} ${formik.touched.email && "ion-touched"} `}
+          className={`${formik.errors.email && "ion-invalid"} ${
+            formik.touched.email && "ion-touched"
+          } `}
           label="Email"
           value={formik.values.email}
           errorText={formik.errors.email}
