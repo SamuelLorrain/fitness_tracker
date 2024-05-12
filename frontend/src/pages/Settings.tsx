@@ -66,7 +66,16 @@ const Settings: React.FC = () => {
         </IonCardHeader>
         <IonCardContent>
           <ul>
-            <li>Water settings : </li>
+            <li>Water settings :
+            {
+              !user.notification_enabled ? 'disabled': null
+            }
+            </li>
+            {
+              user.notification_enabled ? (
+              <li>Every {user.notification_delta_hours} hours</li>
+              ) : null
+            }
           </ul>
         </IonCardContent>
         <IonButton
