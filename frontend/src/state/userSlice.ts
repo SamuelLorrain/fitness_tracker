@@ -11,13 +11,17 @@ export interface UserState {
   last_name: String | null;
   // TODO real type
   nutrition_goals_per_day: Any;
+  notification_enabled: boolean;
+  notification_delta_hours: number|null;
 }
 
 const initialState: UserState = {
   email: "",
   token: null,
   isLogged: false,
-  currentTimestamp: getUnixTime(new Date()),
+  currentTimestamp: getUnixTime(new Date()), // TODO should be UTC (see date-fns-tz)
+  notification_enabled: false,
+  notification_delta_hours: null
 };
 
 export const userSlice = createSlice({
@@ -36,6 +40,8 @@ export const userSlice = createSlice({
       if (action.payload.nutrition_goals_per_day) {
         state.nutrition_goals_per_day = action.payload.nutrition_goals_per_day;
       }
+      state.notification_enabled = action.payload.notification_enabled;
+      state.notification_delta_hours = action.payload.notification_delta_hours;
     },
     setTimestamp: (state, action) => {
       state.currentTimestamp = action.payload.timestamp;
