@@ -77,7 +77,7 @@ const useGoalForm = () => {
     calories: number,
     proteins: number,
     lipids: number,
-    carbs: number,
+    carbs: number
   ) => {
     formik.values.calories = calories;
     formik.values.proteins = proteins;
@@ -121,7 +121,9 @@ const GoalsForm: React.FC = () => {
       </IonButton>
       <form onSubmit={formik.handleSubmit}>
         <IonInput
-          className={`${formik.errors.calories && "ion-invalid"} ${formik.touched.calories && "ion-touched"} `}
+          className={`${formik.errors.calories && "ion-invalid"} ${
+            formik.touched.calories && "ion-touched"
+          } `}
           label="calories per day"
           value={formik.values.calories}
           errorText={formik.errors.calories}
@@ -129,7 +131,9 @@ const GoalsForm: React.FC = () => {
           onBlur={(e) => formik.setFieldTouched("calories", true)}
         />
         <IonInput
-          className={`${formik.errors.proteins && "ion-invalid"} ${formik.touched.proteins && "ion-touched"} `}
+          className={`${formik.errors.proteins && "ion-invalid"} ${
+            formik.touched.proteins && "ion-touched"
+          } `}
           label="proteins per day"
           value={formik.values.proteins}
           errorText={formik.errors.proteins}
@@ -137,7 +141,9 @@ const GoalsForm: React.FC = () => {
           onBlur={(e) => formik.setFieldTouched("proteins", true)}
         />
         <IonInput
-          className={`${formik.errors.carbs && "ion-invalid"} ${formik.touched.carbs && "ion-touched"} `}
+          className={`${formik.errors.carbs && "ion-invalid"} ${
+            formik.touched.carbs && "ion-touched"
+          } `}
           label="carbs per day"
           value={formik.values.carbs}
           errorText={formik.errors.carbs}
@@ -145,7 +151,9 @@ const GoalsForm: React.FC = () => {
           onBlur={(e) => formik.setFieldTouched("carbs", true)}
         />
         <IonInput
-          className={`${formik.errors.lipids && "ion-invalid"} ${formik.touched.lipids && "ion-touched"} `}
+          className={`${formik.errors.lipids && "ion-invalid"} ${
+            formik.touched.lipids && "ion-touched"
+          } `}
           label="lipids per day"
           value={formik.values.lipids}
           errorText={formik.errors.lipids}

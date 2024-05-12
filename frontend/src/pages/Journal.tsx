@@ -33,8 +33,8 @@ const useJournal = () => {
       setEntries(structuredClone(data?.entries));
       setFoodEntries(
         structuredClone(data?.entries).filter(
-          (entry) => entry.entry_type === "food",
-        ),
+          (entry) => entry.entry_type === "food"
+        )
       );
     }
   }, [data, setEntries, data && data?.entries.length]);
@@ -43,7 +43,7 @@ const useJournal = () => {
   if (entries != null && foodEntries != null) {
     sumTodayCalories = foodEntries.reduce(
       (acc, entry) => acc + entry.payload.nutrition.calories,
-      0,
+      0
     );
     sumTodayCalories += entries.reduce((acc, entry) => {
       if (entry.entry_type != "kcal") {
@@ -57,7 +57,7 @@ const useJournal = () => {
   if (foodEntries != null) {
     sumTodayProteins = foodEntries.reduce(
       (acc, entry) => acc + entry.payload.nutrition.proteins.protein,
-      0,
+      0
     );
   }
 
@@ -65,7 +65,7 @@ const useJournal = () => {
   if (foodEntries != null) {
     sumTodayLipids = foodEntries.reduce(
       (acc, entry) => acc + entry.payload.nutrition.lipids.fat,
-      0,
+      0
     );
   }
 
@@ -73,7 +73,7 @@ const useJournal = () => {
   if (foodEntries != null) {
     sumTodayCarbs = foodEntries.reduce(
       (acc, entry) => acc + entry.payload.nutrition.carbohydrates.carbs,
-      0,
+      0
     );
   }
 
@@ -89,16 +89,16 @@ const useJournal = () => {
 
 const useDailyProgress = () => {
   const caloriesGoal = useSelector(
-    (state) => state.user?.nutrition_goals_per_day?.calories,
+    (state) => state.user?.nutrition_goals_per_day?.calories
   );
   const proteinsGoal = useSelector(
-    (state) => state.user?.nutrition_goals_per_day?.proteins.protein,
+    (state) => state.user?.nutrition_goals_per_day?.proteins.protein
   );
   const lipidsGoal = useSelector(
-    (state) => state.user?.nutrition_goals_per_day?.lipids.fat,
+    (state) => state.user?.nutrition_goals_per_day?.lipids.fat
   );
   const carbsGoal = useSelector(
-    (state) => state.user?.nutrition_goals_per_day?.carbohydrates.carbs,
+    (state) => state.user?.nutrition_goals_per_day?.carbohydrates.carbs
   );
 
   const hasCaloriesGoal = caloriesGoal != null;

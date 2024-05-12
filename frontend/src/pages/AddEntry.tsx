@@ -68,7 +68,9 @@ const FoodList: React.FC = ({ search }) => {
         Search
       </IonButton>
       <>
-        {data?.foods?.map((x) => <FoodCard key={x.uuid} food={x} />)}
+        {data?.foods?.map((x) => (
+          <FoodCard key={x.uuid} food={x} />
+        ))}
         {data?.foods?.length === 0 ? (
           <div>0 foods founds for the given search</div>
         ) : null}

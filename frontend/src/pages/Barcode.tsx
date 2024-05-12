@@ -63,7 +63,7 @@ const Barcode: React.FC = () => {
   const dispatch = useDispatch();
   const { toast } = useToast();
   const hasCameraPermission = useSelector(
-    (state) => state.hardware.hasCameraPermission,
+    (state) => state.hardware.hasCameraPermission
   );
   const [barcodeValue, setBarcodeValue] = useState(null);
   const [mutateFoodBarcode, { isLoadingFoodBarcode }] =

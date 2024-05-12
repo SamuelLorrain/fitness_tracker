@@ -65,7 +65,7 @@ const Initialization: React.FC = ({ children }) => {
       dispatch(
         initUser({
           access_token: token,
-        }),
+        })
       );
       const userInfos = await mutateUserInfo().unwrap();
       dispatch(setUserInfos(userInfos));
