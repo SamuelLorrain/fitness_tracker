@@ -107,6 +107,13 @@ export const api = createApi({
         };
       },
     }),
+    updateWaterNotification: builder.mutation({
+      query: (data) => ({
+        url: "/user/water-notification",
+        method: "PUT",
+        body: data
+      })
+    })
   }),
 });
 
@@ -123,4 +130,5 @@ export const {
   useSetUserGoalsMutation,
   useGetFoodBarcodeMutation,
   useRegisterMutation,
+  useUpdateWaterNotificationMutation
 } = api;
