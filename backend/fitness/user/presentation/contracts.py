@@ -10,6 +10,8 @@ class UserResponse(BaseModel):
     last_name: str
     email: EmailStr
     nutrition_goals_per_day: Optional[NutritionComposition]
+    notification_enabled: bool = False
+    notification_delta_hours: Optional[int]
 
 
 class UserGoalsRequest(BaseModel):
@@ -20,3 +22,8 @@ class UserBasicInfosRequest(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
+
+
+class UserWaterNotificationSettingsRequest(BaseModel):
+    notification_enabled: bool
+    notification_delta_hours: int

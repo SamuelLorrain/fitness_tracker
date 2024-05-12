@@ -12,3 +12,5 @@ class User(BaseModel):
     last_name: str
     email: EmailStr
     nutrition_goals_per_day: Optional[NutritionComposition]
+    notification_enabled: bool = False
+    notification_delta_hours: Optional[int]
