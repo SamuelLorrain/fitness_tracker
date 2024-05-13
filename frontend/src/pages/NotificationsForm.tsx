@@ -3,38 +3,52 @@ import Basis from "../components/Basis";
 import { IonToggle, IonInput, IonButton, IonSpinner } from "@ionic/react";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import { useUpdateWaterNotificationMutation } from "../state/api";
+import {
+  useSendTestNotificationMutation,
+  useUpdateWaterNotificationMutation,
+} from "../state/api";
 import { useToast } from "../hooks/useToast";
 
-const isValid = (value: string|number) => value != null && value != '' && !Number.isNaN(Number(value))
+const isValid = (value: string | number) =>
+  value != null && value != "" && !Number.isNaN(Number(value));
 
 const NotificationsForm: React.FC = () => {
-  const user = useSelector(state => state.user);
+  const user = useSelector((state) => state.user);
   const history = useHistory();
-  const [waterValue, setWaterValue] = useState(user.notification_enabled ? user.notification_delta_hours : null);
+  const [waterValue, setWaterValue] = useState(
+    user.notification_enabled ? user.notification_delta_hours : null
+  );
   const [enabled, setEnabled] = useState(user.notification_enabled);
-  const [mutateNotification, { isLoading }] = useUpdateWaterNotificationMutation();
-  const { messageToast } = useToast();
+  const [mutateNotification, { isLoading }] =
+    useUpdateWaterNotificationMutation();
+  const [mutateSendTest, { isLoading: isLoadingTest }] =
+    useSendTestNotificationMutation();
+  const { messageToast, toast } = useToast();
 
   const tryEnableNotifications = async () => {
     try {
       await mutateNotification({
         notification_enabled: !enabled,
-        notification_delta_hours: waterValue
+        notification_delta_hours: waterValue,
       }).unwrap();
       setEnabled((state: boolean) => !state);
-    } catch(e) {
+    } catch (e) {
       if (enabled) {
         messageToast("Error, unable to disable notifications");
       } else {
         messageToast("Error, unable to enable notifications");
       }
     }
-  }
+  };
 
-  const testNotification = () => {
-    messageToast("You will receive a notification soon");
-  }
+  const testNotification = async () => {
+    try {
+      await mutateSendTest({}).unwrap();
+      messageToast("You will receive a notification soon");
+    } catch (e) {
+      toast(e);
+    }
+  };
 
   return (
     <Basis
@@ -45,7 +59,7 @@ const NotificationsForm: React.FC = () => {
         type="number"
         label="Water notification time"
         value={waterValue}
-        onIonInput={e => setWaterValue(e.target.value)}
+        onIonInput={(e) => setWaterValue(e.target.value)}
         placeholder="hours"
       />
       <div>
@@ -53,14 +67,17 @@ const NotificationsForm: React.FC = () => {
           enableOnOffLabels={true}
           disabled={!isValid(waterValue)}
           checked={enabled}
-          onIonChange={tryEnableNotifications}>
+          onIonChange={tryEnableNotifications}
+        >
           Enable water notifications
         </IonToggle>
-        {
-          isLoading ? <IonSpinner/> : null
-        }
+        {isLoading ? <IonSpinner /> : null}
       </div>
-      <IonButton expand="full" disabled={!enabled} onClick={testNotification}>
+      <IonButton
+        expand="full"
+        disabled={!enabled || isLoadingTest}
+        onClick={testNotification}
+      >
         Test notification
       </IonButton>
     </Basis>

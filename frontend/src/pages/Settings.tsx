@@ -9,6 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { PersistenceSingleton } from "../state/persistence";
+import { isPlatform } from "@ionic/react";
 
 const Settings: React.FC = () => {
   const user = useSelector((state) => state.user);
@@ -60,31 +61,29 @@ const Settings: React.FC = () => {
           Change
         </IonButton>
       </IonCard>
-      <IonCard>
-        <IonCardHeader>
-          <IonCardTitle>Notification settings</IonCardTitle>
-        </IonCardHeader>
-        <IonCardContent>
-          <ul>
-            <li>Water settings :
-            {
-              !user.notification_enabled ? 'disabled': null
-            }
-            </li>
-            {
-              user.notification_enabled ? (
-              <li>Every {user.notification_delta_hours} hours</li>
-              ) : null
-            }
-          </ul>
-        </IonCardContent>
-        <IonButton
-          fill="clear"
-          onClick={() => history.push("/settings/notifications")}
-        >
-          Change
-        </IonButton>
-      </IonCard>
+      {isPlatform("android") ? (
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Notification settings</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <ul>
+              <li>
+                Water settings :{!user.notification_enabled ? "disabled" : null}
+              </li>
+              {user.notification_enabled ? (
+                <li>Every {user.notification_delta_hours} hours</li>
+              ) : null}
+            </ul>
+          </IonCardContent>
+          <IonButton
+            fill="clear"
+            onClick={() => history.push("/settings/notifications")}
+          >
+            Change
+          </IonButton>
+        </IonCard>
+      ) : null}
       <IonButton expand="full" onClick={logout}>
         Logout
       </IonButton>
