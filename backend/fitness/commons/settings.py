@@ -11,3 +11,4 @@ class Settings(BaseSettings):
     JWT_SECRET: str
     FRONTEND_DOMAIN: str
     MONGODB_CONNECTION_STRING: str
+    FIREBASE_TOKEN_FILE: str
