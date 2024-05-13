@@ -23,10 +23,10 @@ export const useToast = () => {
         duration: TOAST_DURATION,
       });
     }
-  }
+  };
 
   return {
     toast,
-    messageToast
+    messageToast,
   };
 };
