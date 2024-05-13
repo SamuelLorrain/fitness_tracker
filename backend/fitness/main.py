@@ -4,9 +4,9 @@ from fastapi.responses import JSONResponse
 
 from fitness.authentication.presentation.api import auth_router
 from fitness.commons.exceptions import CustomException
-from fitness.commons.settings import Settings
 from fitness.entry.presentation.api import entry_router
 from fitness.food.presentation.api import food_router
+from fitness.notification.presentation.api import notification_router
 from fitness.user.presentation.api import user_router
 
 app = FastAPI()
@@ -31,3 +31,4 @@ app.include_router(auth_router)
 app.include_router(food_router)
 app.include_router(entry_router)
 app.include_router(user_router)
+app.include_router(notification_router)
