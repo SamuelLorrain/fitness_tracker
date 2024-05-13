@@ -58,7 +58,9 @@ def set_user_water_notification(
     configuration = UserConfiguration()
     service = configuration.user_service
     service.set_water_notification_settings(
-        auth_pass_key.uuid, water_request.notification_enabled, water_request.notification_delta_hours
+        auth_pass_key.uuid,
+        water_request.notification_enabled,
+        water_request.notification_delta_hours,
     )
 
 
