@@ -12,7 +12,8 @@ export interface UserState {
   // TODO real type
   nutrition_goals_per_day: Any;
   notification_enabled: boolean;
-  notification_delta_hours: number|null;
+  notification_delta_hours: number | null;
+  push_notification_token: Any;
 }
 
 const initialState: UserState = {
@@ -21,7 +22,8 @@ const initialState: UserState = {
   isLogged: false,
   currentTimestamp: getUnixTime(new Date()), // TODO should be UTC (see date-fns-tz)
   notification_enabled: false,
-  notification_delta_hours: null
+  notification_delta_hours: null,
+  push_notification_token: null,
 };
 
 export const userSlice = createSlice({
@@ -46,8 +48,12 @@ export const userSlice = createSlice({
     setTimestamp: (state, action) => {
       state.currentTimestamp = action.payload.timestamp;
     },
+    setToken: (state, action) => {
+      state.push_notification_token = action.payload.token;
+    },
   },
 });
 
-export const { initUser, setUserInfos, setTimestamp } = userSlice.actions;
+export const { initUser, setUserInfos, setTimestamp, setToken } =
+  userSlice.actions;
 export default userSlice.reducer;

@@ -111,9 +111,22 @@ export const api = createApi({
       query: (data) => ({
         url: "/user/water-notification",
         method: "PUT",
-        body: data
-      })
-    })
+        body: data,
+      }),
+    }),
+    updateFirebaseNotificationToken: builder.mutation({
+      query: (data) => ({
+        url: "/notification/token",
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    sendTestNotification: builder.mutation({
+      query: () => ({
+        url: "/notification/send-test",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -130,5 +143,6 @@ export const {
   useSetUserGoalsMutation,
   useGetFoodBarcodeMutation,
   useRegisterMutation,
-  useUpdateWaterNotificationMutation
+  useUpdateWaterNotificationMutation,
+  useSendTestNotificationMutation,
 } = api;
