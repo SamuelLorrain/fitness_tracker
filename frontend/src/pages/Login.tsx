@@ -1,9 +1,15 @@
-import { IonButton, IonInput, IonInputPasswordToggle } from "@ionic/react";
+import {
+  IonButton,
+  IonInput,
+  IonInputPasswordToggle,
+  isPlatform,
+} from "@ionic/react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLoginMutation, useUserInfoMutation } from "../state/api";
 import { initUser, setUserInfos } from "../state/userSlice";
 import { PersistenceSingleton } from "../state/persistence";
+import { setupPushNotifications } from "../utils/push_notifications_utils";
 
 const Login = () => {
   const [email, setEmail] = useState();
@@ -20,6 +26,9 @@ const Login = () => {
       await PersistenceSingleton().set("user_token", user.access_token);
       const userInfos = await mutateUserInfo().unwrap();
       dispatch(setUserInfos(userInfos));
+      if (isPlatform("android")) {
+        setupPushNotifications();
+      }
     } catch (e) {
       console.log("error", JSON.stringify(e));
     }

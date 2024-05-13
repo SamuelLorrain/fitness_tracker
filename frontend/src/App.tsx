@@ -40,11 +40,10 @@ import { PersistenceSingleton } from "./state/persistence";
 import { useDispatch } from "react-redux";
 import { initUser, setUserInfos } from "./state/userSlice";
 import { useVerifyMutation, useUserInfoMutation } from "./state/api";
+import { isPlatform } from "@ionic/react";
 import { setupPushNotifications } from "./utils/push_notifications_utils";
 
 setupIonicReact();
-
-setupPushNotifications();
 
 const TryLogin: React.FC = () => {
   const isLogged = useSelector((state) => state.user.isLogged);
@@ -73,6 +72,9 @@ const Initialization: React.FC = ({ children }) => {
       const userInfos = await mutateUserInfo().unwrap();
       dispatch(setUserInfos(userInfos));
       setIsInitialized(true);
+      if (isPlatform("android")) {
+        setupPushNotifications();
+      }
     })();
   }, [
     setIsInitialized,
