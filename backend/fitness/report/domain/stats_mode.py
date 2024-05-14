@@ -1,0 +1,13 @@
+from typing import Protocol
+
+
+class StatsMode(Protocol): ...
+
+
+class WeeklyStatsMode(StatsMode): ...
+
+
+class MonthlyStatsMode(StatsMode): ...
+
+
+class YearlyStatsMode(StatsMode): ...
