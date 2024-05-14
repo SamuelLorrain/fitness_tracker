@@ -37,6 +37,13 @@ class MongoDbNotificationRepository(NotificationRepository):
             raise UnknownUserException
         return db_auth.get("notification_token")
 
+    def update_water_notification_date(self, user_uuid: UUID) -> None:
+        db_user = self.user_collection.find_one({"user_uuid": user_uuid})
+        if db_user is None:
+            raise UnknownUserException
+        db_user["latest_water_notification"] = datetime.now(tz=timezone.utc)
+        self.user_collection.update_one({"user_uuid": user_uuid}, {"$set": db_user})
+
     def get_elligible_notification_receivers(self) -> list[NotificationReceiver]:
         elligible_user_query = {
             "$match": {
