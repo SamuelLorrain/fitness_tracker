@@ -2,9 +2,13 @@ from dataclasses import dataclass
 
 from fitness.authentication.domain.entities import AuthPassKey
 from fitness.commons.exceptions import EntityDoesNotExistsException
-from fitness.notification.domain.value_objects import NotificationMessage, Token
-from fitness.notification.domain.notification_repository import NotificationRepository
 from fitness.notification.domain.notification_client import NotificationClient
+from fitness.notification.domain.notification_repository import NotificationRepository
+from fitness.notification.domain.value_objects import (
+    NotificationMessage,
+    NotificationReceiver,
+    Token,
+)
 
 
 @dataclass
@@ -27,5 +31,14 @@ class NotificationService:
         )
 
     def schedule_notifications(self) -> None:
-        # tokens = self.notification_repository.get_elligible_users_tokens()
-        ...
+        receivers: list[NotificationReceiver] = (
+            self.notification_repository.get_elligible_notification_receivers()
+        )
+        for receiver in receivers:
+            self.notification_client.send_notification(
+                NotificationMessage(
+                    title="Water notification", text="don't forget to drink water"
+                ),
+                receiver.token,
+            )
+            self.notification_repository.update_water_notification_date(receiver.uuid)
