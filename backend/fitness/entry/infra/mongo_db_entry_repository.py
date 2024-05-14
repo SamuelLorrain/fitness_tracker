@@ -2,6 +2,7 @@ from datetime import date, datetime
 from typing import Generator, Optional
 from uuid import UUID, uuid4
 
+from fitness.authentication.exceptions import UnknownUserException
 from fitness.commons.connection import MongoDBConnection
 from fitness.entry.domain.entity import Entry, JournalRecord
 from fitness.entry.domain.entity_payload import FoodPayload, KcalPayload, WaterPayload
@@ -17,6 +18,7 @@ class MongoDBEntryRepository(EntryRepository):
         self.db = MongoDBConnection().db
         self.journal_collection = self.db.journal_collection
         self.food_collection = self.db.food_collection
+        self.user_collection = self.db.user_collection
 
     def get_entry(self, user_uuid: UUID, date: date, entry_uuid: UUID) -> Entry:
         # NOT SURE ABOUT THIS
@@ -149,3 +151,12 @@ class MongoDBEntryRepository(EntryRepository):
             }
         )
         return journal_record
+
+    def update_water_latest_entry_datetime(
+        self, user_uuid: UUID, date_time: datetime
+    ) -> None:
+        db_user = self.user_collection.find_one({"uuid": user_uuid})
+        if db_user is None:
+            raise UnknownUserException
+        db_user["water_latest_entry_date"] = date_time
+        self.user_collection.update_one({"uuid": user_uuid}, {"$set": db_user})
