@@ -1,5 +1,6 @@
 from typing import Optional, Protocol
 from uuid import UUID
+
 from fitness.notification.domain.value_objects import NotificationReceiver, Token
 
 
