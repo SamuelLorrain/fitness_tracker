@@ -7,7 +7,7 @@ from fitness.authentication.domain.entities import AuthPassKey
 from fitness.notification.configuration import NotificationConfiguration
 from fitness.notification.presentation.contracts import TokenRequest
 
-notification_router = APIRouter(prefix="/notification", tags=["notifications"])
+notification_router = APIRouter(prefix="/notification", tags=["notification"])
 auth_dep = AuthenticationConfiguration().authorisation_dependency
 
 
