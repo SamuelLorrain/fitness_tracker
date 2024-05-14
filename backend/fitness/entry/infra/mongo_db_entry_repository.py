@@ -28,7 +28,6 @@ class MongoDBEntryRepository(EntryRepository):
                 "date": datetime.combine(date, datetime.min.time()),
             }
         )
-        print("entry", db_entry)
         if db_entry is None:
             raise EntryDoesNotExistException
         return Entry(**db_entry)
