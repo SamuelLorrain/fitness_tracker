@@ -41,6 +41,9 @@ class EntryService:
             )
         elif isinstance(payload, WaterPayload):
             savable = WaterSavablePayload(grams=payload.grams)
+            self.entry_repository.update_water_latest_entry_datetime(
+                user_uuid, datetime
+            )
         else:
             savable = KCalSavablePayload(kcal=payload.kcal)
         return self.entry_repository.store_entry(

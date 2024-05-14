@@ -28,3 +28,7 @@ class EntryRepository(Protocol):
     def get_food(
         self, user_uuid: UUID, food_uuid: UUID
     ) -> Optional[Food]: ...  # pragma: no cover
+
+    def update_water_latest_entry_datetime(
+        self, user_uuid: UUID, date_time: datetime
+    ) -> None: ...  # pragma: no cover
