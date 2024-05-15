@@ -44,6 +44,7 @@ type NutritionBasicsWithDate = {
   lipidsInKcal: null | number;
   proteinsInKcal: null | number;
   waterInGrams: null | number;
+  weightInKiloGrams: null | number;
 };
 
 const parseReportData = (data: Object): NutritionBasicsWithDate[] => {
@@ -56,6 +57,7 @@ const parseReportData = (data: Object): NutritionBasicsWithDate[] => {
       lipidsInKcal: entries[1] ? entries[1]?.lipids_in_grams * 9 : null,
       proteinsInKcal: entries[1] ? entries[1]?.proteins_in_grams * 4 : null,
       waterInGrams: entries[1] ? entries[1]?.water_in_grams : null,
+      weightInKiloGrams: entries[1] ? entries[1]?.weight_in_kilo_grams : null,
     }))
     .filter((el) => {
       if (isBegin && el.caloriesInKcal == null) {
@@ -82,6 +84,7 @@ const Report: React.FC = () => {
   >(null);
   const [displayWater, setDisplayWater] = useState<boolean>(false);
   const [displayCalories, setDisplayCalories] = useState<boolean>(true);
+  const [displayWeight, setDisplayWeight] = useState<boolean>(true);
   const graphRef = useRef<null | HTMLDivElement>(null);
   const aggregateRef = useRef<null | HTMLIonSelectElement>(null);
 
@@ -99,7 +102,7 @@ const Report: React.FC = () => {
       return;
     }
     const firstColumn =
-      "date;calories in kcal;carbs in kcal;lipids in kcal;proteins in kcal; water in grams\r\n";
+      "date;calories in kcal;carbs in kcal;lipids in kcal;proteins in kcal;water in grams;weight in kilo grams\r\n";
     const content = parsedData
       .splice(1)
       .map(
@@ -108,7 +111,7 @@ const Report: React.FC = () => {
             e.carbsInKcal ?? ""
           };${e.lipidsInKcal ?? ""};${e.proteinsInKcal ?? ""};${
             e.waterInGrams ?? ""
-          }\r\n`
+          };${e.weightInKiloGrams}\r\n`
       )
       .join("");
     const csv = firstColumn + content;
@@ -234,6 +237,16 @@ const Report: React.FC = () => {
                     strokeWidth={2}
                   />
                 ) : null}
+                {displayWeight ? (
+                  <Line
+                    animationDuration={500}
+                    connectNulls
+                    type="monotone"
+                    dataKey="weightInKiloGrams"
+                    stroke="#cf0000"
+                    strokeWidth={3}
+                  />
+                ) : null}
                 <XAxis
                   dataKey={(e) => format(e.date, "yyyy mm dd")}
                   angle={-45}
@@ -263,6 +276,12 @@ const Report: React.FC = () => {
                   onIonChange={() => setDisplayCalories((state) => !state)}
                 >
                   Calories
+                </IonToggle>
+                <IonToggle
+                  checked={displayWeight}
+                  onIonChange={() => setDisplayWeight((state) => !state)}
+                >
+                  Weight
                 </IonToggle>
               </div>
             ) : null}

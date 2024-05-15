@@ -9,7 +9,6 @@ import {
   IonToolbar,
   IonTitle,
   IonButtons,
-  IonIcon,
   IonList,
 } from "@ionic/react";
 import { IonCard, IonCardContent, IonProgressBar } from "@ionic/react";
@@ -129,12 +128,12 @@ type DailyProgressParam = {
   todayCarbs: number;
 };
 
-const DailyProgress: React.FC = ({
+const DailyProgress: React.FC<DailyProgressParam> = ({
   todayCalories,
   todayProteins,
   todayLipids,
   todayCarbs,
-}: DailyProgressParam) => {
+}) => {
   const {
     hasGoals,
     hasCaloriesGoal,
