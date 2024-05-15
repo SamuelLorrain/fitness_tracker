@@ -1,3 +1,5 @@
+import { IonItem } from "@ionic/react";
+
 const formatCard = (entry) => {
   switch (entry.entry_type) {
     case "food":
@@ -11,9 +13,9 @@ const formatCard = (entry) => {
 
 const JournalCard = ({ entry }) => {
   return (
-    <div>
+    <IonItem>
       <div>{formatCard(entry)}</div>
-    </div>
+    </IonItem>
   );
 };
 

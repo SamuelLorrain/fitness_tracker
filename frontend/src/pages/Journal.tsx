@@ -10,6 +10,7 @@ import {
   IonTitle,
   IonButtons,
   IonIcon,
+  IonList,
 } from "@ionic/react";
 import { IonCard, IonCardContent, IonProgressBar } from "@ionic/react";
 import { IonGrid, IonRow, IonCol } from "@ionic/react";
@@ -232,16 +233,20 @@ const Journal: React.FC = () => {
             todayCarbs={sumTodayCarbs}
             todayLipids={sumTodayLipids}
           />
-          {entries == null || entries.length == 0 ? (
-            <div>no entries for today !</div>
-          ) : (
-            entries?.map((entry) => (
-              <JournalCard entry={entry} key={entry.uuid} />
-            ))
-          )}
           <IonButton expand="full" onClick={gotToAddEntryForm}>
             Add Entry
           </IonButton>
+          {entries == null || entries.length == 0 ? (
+            <IonCard>
+              <IonCardContent>no entries for today !</IonCardContent>
+            </IonCard>
+          ) : (
+            <IonList>
+              {entries?.map((entry) => (
+                <JournalCard entry={entry} key={entry.uuid} />
+              ))}
+            </IonList>
+          )}
         </div>
         <div className="blank-space"> </div>
       </IonContent>
