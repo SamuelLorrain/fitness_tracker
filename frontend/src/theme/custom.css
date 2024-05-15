@@ -1,9 +1,25 @@
+.hide {
+  display: none;
+}
+
 .clickable:hover {
   cursor: pointer;
 }
 
 .scrollable {
   overflow-y: auto;
+}
+
+.no-y-scrollable {
+  overflow-y: hidden;
+}
+
+.no-ripple {
+  --ripple-color: transparent;
+}
+
+.chart {
+  width: 100%;
 }
 
 .blank-space {
