@@ -12,8 +12,15 @@ class StatsModeEnum(str, Enum):
     MONTHLY = "monthly"
 
 
+class AggregateModeEnum(str, Enum):
+    AGGREGATE_DAILY = "aggregate_daily"
+    AGGREGATE_WEEKLY = "aggregate_weekly"
+    AGGREGATE_MONTHLY = "aggregate_monthly"
+
+
 class StatsQuery(BaseModel):
     mode: StatsModeEnum
+    aggregate: AggregateModeEnum
 
 
 class StatsResponse(BaseModel):
