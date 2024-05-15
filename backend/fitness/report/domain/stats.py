@@ -10,6 +10,7 @@ class NutritionCompositionBasic(BaseModel):
     lipids_in_grams: float
     carbs_in_grams: float
     water_in_grams: float
+    weight_in_kilo_grams: Optional[float]
 
 
 class Stats(BaseModel):

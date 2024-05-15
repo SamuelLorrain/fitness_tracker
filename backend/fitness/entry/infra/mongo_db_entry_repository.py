@@ -5,7 +5,12 @@ from uuid import UUID, uuid4
 from fitness.authentication.exceptions import UnknownUserException
 from fitness.commons.connection import MongoDBConnection
 from fitness.entry.domain.entity import Entry, JournalRecord
-from fitness.entry.domain.entity_payload import FoodPayload, KcalPayload, WaterPayload
+from fitness.entry.domain.entity_payload import (
+    FoodPayload,
+    KcalPayload,
+    WaterPayload,
+    WeightPayload,
+)
 from fitness.entry.domain.entry_repository import EntryRepository
 from fitness.entry.domain.entry_type_enum import EntryTypeEnum
 from fitness.entry.domain.savable_payload import SavablePayload
@@ -81,6 +86,15 @@ class MongoDBEntryRepository(EntryRepository):
                     entry_type=entry_type,
                     payload=KcalPayload(
                         kcal=payload.kcal,
+                    ),
+                )
+            case EntryTypeEnum.weight:
+                new_entry = Entry(
+                    uuid=entry_uuid,
+                    datetime=date_time,
+                    entry_type=entry_type,
+                    payload=WeightPayload(
+                        kilo_grams=payload.kilo_grams,
                     ),
                 )
             case _:

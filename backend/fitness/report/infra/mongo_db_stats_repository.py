@@ -116,6 +116,21 @@ class MongoDbStatsRepository(StatsRepository):
                             }
                         }
                     },
+                    "weight_in_kilo_grams": {
+                        "$avg": {
+                            "$switch": {
+                                "branches": [
+                                    {
+                                        "case": {
+                                            "$eq": ["$entries.entry_type", "weight"]
+                                        },
+                                        "then": "$entries.payload.kilo_grams",
+                                    },
+                                ],
+                                "default": None,
+                            }
+                        }
+                    },
                 }
             },
         ]
@@ -225,6 +240,21 @@ class MongoDbStatsRepository(StatsRepository):
                                     },
                                 ],
                                 "default": 0,
+                            }
+                        }
+                    },
+                    "weight_in_kilo_grams": {
+                        "$avg": {
+                            "$switch": {
+                                "branches": [
+                                    {
+                                        "case": {
+                                            "$eq": ["$entries.entry_type", "weight"]
+                                        },
+                                        "then": "$entries.payload.kilo_grams",
+                                    },
+                                ],
+                                "default": None,
                             }
                         }
                     },

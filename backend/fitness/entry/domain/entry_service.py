@@ -11,6 +11,7 @@ from fitness.entry.domain.savable_payload import (
     KCalSavablePayload,
     SavablePayload,
     WaterSavablePayload,
+    WeightSavablePayload,
 )
 from fitness.entry.presentation.contracts import EntryPayload, EntryTypeEnum
 from fitness.food.exceptions import FoodDoesNotExistsException
@@ -44,8 +45,10 @@ class EntryService:
             self.entry_repository.update_water_latest_entry_datetime(
                 user_uuid, datetime
             )
-        else:
+        elif isinstance(payload, KcalPayload):
             savable = KCalSavablePayload(kcal=payload.kcal)
+        else:
+            savable = WeightSavablePayload(kilo_grams=payload.kilo_grams)
         return self.entry_repository.store_entry(
             user_uuid, datetime, entry_type, savable
         )
