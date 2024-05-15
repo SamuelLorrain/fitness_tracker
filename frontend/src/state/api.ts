@@ -127,6 +127,12 @@ export const api = createApi({
         method: "GET",
       }),
     }),
+    getStats: builder.query({
+      query: (data) => ({
+        url: `/report/?mode=${data.mode}&aggregate=${data.aggregate}`,
+        method: "GET"
+      })
+    })
   }),
 });
 
@@ -145,4 +151,5 @@ export const {
   useRegisterMutation,
   useUpdateWaterNotificationMutation,
   useSendTestNotificationMutation,
+  useGetStatsQuery,
 } = api;
