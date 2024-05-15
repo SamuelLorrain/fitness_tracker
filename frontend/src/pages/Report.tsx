@@ -20,10 +20,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonSpinner,
-  IonButton,
-  IonIcon,
 } from "@ionic/react";
-import { ellipsisHorizontal, ellipsisVertical } from "ionicons/icons";
 
 enum StatsMode {
   WEEKLY = "weekly",
@@ -48,14 +45,16 @@ type NutritionBasicsWithDate = {
 
 const parseReportData = (data: Object): NutritionBasicsWithDate[] => {
   let isBegin = true;
-  return Object.entries(data).map<NutritionBasicsWithDate>((entries) => ({
-    date: parse(entries[0], "yyyy-mm-dd", new Date()),
-    caloriesInKcal: entries[1] ? entries[1]?.calories_in_kcal : null,
-    carbsInKcal: entries[1] ? entries[1]?.carbs_in_grams * 4 : null,
-    lipidsInKcal: entries[1] ? entries[1]?.lipids_in_grams * 9 : null,
-    proteinsInKcal: entries[1] ? entries[1]?.proteins_in_grams * 4 : null,
-    waterInGrams: entries[1] ? entries[1]?.water_in_grams : null,
-  })).filter(el => {
+  return Object.entries(data)
+    .map<NutritionBasicsWithDate>((entries) => ({
+      date: parse(entries[0], "yyyy-mm-dd", new Date()),
+      caloriesInKcal: entries[1] ? entries[1]?.calories_in_kcal : null,
+      carbsInKcal: entries[1] ? entries[1]?.carbs_in_grams * 4 : null,
+      lipidsInKcal: entries[1] ? entries[1]?.lipids_in_grams * 9 : null,
+      proteinsInKcal: entries[1] ? entries[1]?.proteins_in_grams * 4 : null,
+      waterInGrams: entries[1] ? entries[1]?.water_in_grams : null,
+    }))
+    .filter((el) => {
       if (isBegin && el.caloriesInKcal == null) {
         return false;
       } else if (isBegin && el.caloriesInKcal != null) {
@@ -63,7 +62,7 @@ const parseReportData = (data: Object): NutritionBasicsWithDate[] => {
         return true;
       }
       return true;
-  });
+    });
 };
 
 const Report: React.FC = () => {
@@ -79,7 +78,7 @@ const Report: React.FC = () => {
     NutritionBasicsWithDate[] | null
   >(null);
   const [displayWater, setDisplayWater] = useState<boolean>(false);
-  const [displayCalories, setDisplayCalories] = useState<boolean>(false);
+  const [displayCalories, setDisplayCalories] = useState<boolean>(true);
   const graphRef = useRef<null | HTMLDivElement>(null);
   const aggregateRef = useRef<null | HTMLIonSelectElement>(null);
 
@@ -102,29 +101,19 @@ const Report: React.FC = () => {
               aria-label="Stats mode"
               value={statsMode}
               onIonChange={(e) => {
-                setStatsMode(e.detail.value)
+                setStatsMode(e.detail.value);
                 if (e.detail.value == StatsMode.WEEKLY) {
-                  setAggregateMode(StatsAggregateMode.AGGREGATE_DAILY)
+                  setAggregateMode(StatsAggregateMode.AGGREGATE_DAILY);
+                } else if (e.detail.value == StatsMode.MONTHLY) {
+                  setAggregateMode(StatsAggregateMode.AGGREGATE_WEEKLY);
                 }
-              }
-              }
+              }}
             >
               <IonSelectOption value={StatsMode.WEEKLY}>Weekly</IonSelectOption>
               <IonSelectOption value={StatsMode.MONTHLY}>
                 Monthly
               </IonSelectOption>
             </IonSelect>
-            <IonButton
-              disabled={statsMode == StatsMode.WEEKLY}
-              onClick={(_) => aggregateRef?.current?.click()}
-              className="no-ripple"
-            >
-              <IonIcon
-                slot="icon-only"
-                ios={ellipsisHorizontal}
-                md={ellipsisVertical}
-              ></IonIcon>
-            </IonButton>
             <IonSelect
               aria-label="Aggregate"
               value={aggregateMode}
@@ -146,6 +135,9 @@ const Report: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
+        {parsedData && parsedData.length == 0 ? (
+          <div>no data available</div>
+        ) : null}
         {isLoading || (isFetching && parsedData == null) ? (
           <IonSpinner />
         ) : null}
@@ -211,27 +203,29 @@ const Report: React.FC = () => {
                 <CartesianGrid stroke="#ccc" />
               </ComposedChart>
             </div>
-            <div
-              style={{
-                display: "flex",
-                gap: "20px",
-                flexWrap: "wrap",
-                justifyContent: "space-around",
-              }}
-            >
-              <IonToggle
-                checked={displayWater}
-                onIonChange={() => setDisplayWater((state) => !state)}
+            {parsedData && parsedData.length != 0 ? (
+              <div
+                style={{
+                  display: "flex",
+                  gap: "20px",
+                  flexWrap: "wrap",
+                  justifyContent: "space-around",
+                }}
               >
-                Water
-              </IonToggle>
-              <IonToggle
-                checked={displayCalories}
-                onIonChange={() => setDisplayCalories((state) => !state)}
-              >
-                Calories
-              </IonToggle>
-            </div>
+                <IonToggle
+                  checked={displayWater}
+                  onIonChange={() => setDisplayWater((state) => !state)}
+                >
+                  Water
+                </IonToggle>
+                <IonToggle
+                  checked={displayCalories}
+                  onIonChange={() => setDisplayCalories((state) => !state)}
+                >
+                  Calories
+                </IonToggle>
+              </div>
+            ) : null}
           </>
         ) : null}
         <div className="blank-space"></div>

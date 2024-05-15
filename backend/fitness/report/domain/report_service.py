@@ -7,25 +7,18 @@ from uuid import UUID
 from fitness.authentication.domain.entities import AuthPassKey
 from fitness.report.domain.stats import NutritionCompositionBasic, Stats
 from fitness.report.domain.stats_mode import (
+    AggregateMode,
+    AggregateModeFactory,
+    DailyAggregate,
     MonthlyStatsMode,
     StatsMode,
+    StatsModeFactory,
+    WeeklyAggregate,
     WeeklyStatsMode,
     YearlyStatsMode,
 )
 from fitness.report.domain.stats_repository import StatsRepository
-from fitness.report.presentation.contracts import StatsModeEnum
-
-
-class StatsModeFactory:
-    @staticmethod
-    def create(mode_enum: StatsModeEnum) -> StatsMode:
-        match mode_enum:
-            case StatsModeEnum.WEEKLY:
-                return WeeklyStatsMode()
-            case StatsModeEnum.MONTHLY:
-                return MonthlyStatsMode()
-            case StatsModeEnum.YEARLY:
-                return YearlyStatsMode()
+from fitness.report.presentation.contracts import AggregateModeEnum, StatsModeEnum
 
 
 @dataclass
@@ -38,11 +31,8 @@ class StatsInformations:
     start_date: date
     end_date: date
 
-    def compute(self, stats_repository: StatsRepository) -> Stats:
+    def _format(self, db_stats: dict) -> Stats:
         stats = Stats()
-        db_stats = stats_repository.get_days_stats(
-            self.user_uuid, self.start_date, self.end_date
-        )
         current_stat: Optional[NutritionCompositionBasic] = None
         current_date = datetime.combine(self.start_date, datetime.min.time())
         while current_date < datetime.combine(self.end_date, datetime.max.time()):
@@ -52,6 +42,26 @@ class StatsInformations:
             )
             current_date += timedelta(days=1)
         return stats
+
+    def _week_aggregate(self, stats: Stats) -> Stats: ...
+
+    @singledispatchmethod
+    def compute(self, _: AggregateMode, state_repository: StatsRepository) -> Stats:
+        raise NotImplementedError
+
+    @compute.register
+    def _(self, aggregate: DailyAggregate, stats_repository: StatsRepository) -> Stats:
+        db_stats = stats_repository.get_days_stats(
+            self.user_uuid, self.start_date, self.end_date
+        )
+        return self._format(db_stats)
+
+    @compute.register
+    def _(self, aggregate: WeeklyAggregate, stats_repository: StatsRepository) -> Stats:
+        db_stats = stats_repository.get_weeks_stats(
+            self.user_uuid, self.start_date, self.end_date
+        )
+        return self._format(db_stats)
 
 
 @dataclass
@@ -94,11 +104,16 @@ class ReportService:
     stats_repository: StatsRepository
 
     def process_stats(
-        self, auth_pass_key: AuthPassKey, mode: StatsModeEnum, end_date: date
+        self,
+        auth_pass_key: AuthPassKey,
+        mode: StatsModeEnum,
+        aggregate: AggregateModeEnum,
+        end_date: date,
     ) -> Stats:
         stats_mode = StatsModeFactory.create(mode)
+        aggregate_mode = AggregateModeFactory.create(aggregate)
         stats_informations = StatsInformationBuilder(
             auth_pass_key.uuid
         ).build_stats_informations(stats_mode, end_date)
-        stats = stats_informations.compute(self.stats_repository)
+        stats = stats_informations.compute(aggregate_mode, self.stats_repository)
         return stats

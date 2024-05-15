@@ -121,3 +121,118 @@ class MongoDbStatsRepository(StatsRepository):
         ]
         entries = self.journal_collection.aggregate(pipeline)
         return {stat["_id"]: NutritionCompositionBasic(**stat) for stat in entries}
+
+    def get_weeks_stats(
+        self, user_uuid: UUID, start_date: date, end_date: date
+    ) -> dict[date, NutritionCompositionBasic]:
+        pipeline = [
+            {
+                "$match": {
+                    "user_uuid": user_uuid,
+                    "date": {
+                        "$gte": datetime.combine(start_date, datetime.min.time()),
+                        "$lte": datetime.combine(end_date, datetime.max.time()),
+                    },
+                },
+            },
+            {"$unwind": "$entries"},
+            {
+                "$group": {
+                    # Group by year and week
+                    "_id": {"year": {"$year": "$date"}, "week": {"$week": "$date"}},
+                    "week_start_date": {"$min": "$date"},
+                    "calories_in_kcal": {
+                        "$sum": {
+                            "$switch": {
+                                "branches": [
+                                    {
+                                        "case": {
+                                            "$eq": ["$entries.entry_type", "food"]
+                                        },
+                                        "then": "$entries.payload.nutrition.calories",
+                                    },
+                                    {
+                                        "case": {
+                                            "$eq": ["$entries.entry_type", "kcal"]
+                                        },
+                                        "then": "$entries.payload.kcal",
+                                    },
+                                ],
+                                "default": 0,
+                            }
+                        }
+                    },
+                    "proteins_in_grams": {
+                        "$sum": {
+                            "$switch": {
+                                "branches": [
+                                    {
+                                        "case": {
+                                            "$eq": ["$entries.entry_type", "food"]
+                                        },
+                                        "then": "$entries.payload.nutrition.proteins.protein",
+                                    },
+                                ],
+                                "default": 0,
+                            }
+                        }
+                    },
+                    "lipids_in_grams": {
+                        "$sum": {
+                            "$switch": {
+                                "branches": [
+                                    {
+                                        "case": {
+                                            "$eq": ["$entries.entry_type", "food"]
+                                        },
+                                        "then": "$entries.payload.nutrition.lipids.fat",
+                                    },
+                                ],
+                                "default": 0,
+                            }
+                        }
+                    },
+                    "carbs_in_grams": {
+                        "$sum": {
+                            "$switch": {
+                                "branches": [
+                                    {
+                                        "case": {
+                                            "$eq": ["$entries.entry_type", "food"]
+                                        },
+                                        "then": "$entries.payload.nutrition.carbohydrates.carbs",
+                                    },
+                                ],
+                                "default": 0,
+                            }
+                        }
+                    },
+                    "water_in_grams": {
+                        "$sum": {
+                            "$switch": {
+                                "branches": [
+                                    {
+                                        "case": {
+                                            "$eq": ["$entries.entry_type", "food"]
+                                        },
+                                        "then": "$entries.payload.nutrition.water",
+                                    },
+                                    {
+                                        "case": {
+                                            "$eq": ["$entries.entry_type", "water"]
+                                        },
+                                        "then": "$entries.payload.grams",
+                                    },
+                                ],
+                                "default": 0,
+                            }
+                        }
+                    },
+                }
+            },
+        ]
+        entries = self.journal_collection.aggregate(pipeline)
+        return {
+            stat["week_start_date"]: NutritionCompositionBasic(**stat)
+            for stat in entries
+        }

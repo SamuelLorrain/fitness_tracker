@@ -20,5 +20,7 @@ def get_stats(
 ) -> StatsResponse:
     configuration = ReportConfiguration()
     report_service = configuration.report_service
-    stats = report_service.process_stats(auth_pass_key, stats_query.mode, date.today())
+    stats = report_service.process_stats(
+        auth_pass_key, stats_query.mode, stats_query.aggregate, date.today()
+    )
     return StatsResponse(mode=stats_query.mode, fields_per_day=stats.fields_per_day)

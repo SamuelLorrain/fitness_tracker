@@ -130,9 +130,9 @@ export const api = createApi({
     getStats: builder.query({
       query: (data) => ({
         url: `/report/?mode=${data.mode}&aggregate=${data.aggregate}`,
-        method: "GET"
-      })
-    })
+        method: "GET",
+      }),
+    }),
   }),
 });
 
