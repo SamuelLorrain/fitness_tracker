@@ -12,11 +12,13 @@ import { add, barcodeOutline, arrowBack } from "ionicons/icons";
 import { IonLabel, IonSegment, IonSegmentButton } from "@ionic/react";
 import AddWaterEntryForm from "./AddWaterEntryForm";
 import AddCaloriesEntryForm from "./AddCaloriesEntryForm";
+import AddWeightEntryForm from "./AddWeightEntryForm";
 
 enum EntryType {
   food = "food",
   water = "water",
   calories = "calories",
+  weight = "weight",
 }
 
 const isSearchValid = (search: String): boolean => {
@@ -118,6 +120,9 @@ const AddEntry: React.FC = () => {
           <IonSegmentButton value={EntryType.calories}>
             <IonLabel>Calories</IonLabel>
           </IonSegmentButton>
+          <IonSegmentButton value={EntryType.weight}>
+            <IonLabel>Weight</IonLabel>
+          </IonSegmentButton>
         </IonSegment>
         {entryType === EntryType.food ? (
           <>
@@ -131,6 +136,7 @@ const AddEntry: React.FC = () => {
         ) : null}
         {entryType === EntryType.water ? <AddWaterEntryForm /> : null}
         {entryType === EntryType.calories ? <AddCaloriesEntryForm /> : null}
+        {entryType === EntryType.weight ? <AddWeightEntryForm /> : null}
       </IonContent>
     </>
   );
