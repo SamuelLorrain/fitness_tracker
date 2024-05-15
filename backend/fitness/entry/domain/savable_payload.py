@@ -2,7 +2,12 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from fitness.food.domain.value_objects import Grams, KCal, NutritionComposition
+from fitness.food.domain.value_objects import (
+    Grams,
+    KCal,
+    KiloGrams,
+    NutritionComposition,
+)
 
 
 class WaterSavablePayload(BaseModel):
@@ -11,6 +16,10 @@ class WaterSavablePayload(BaseModel):
 
 class KCalSavablePayload(BaseModel):
     kcal: KCal
+
+
+class WeightSavablePayload(BaseModel):
+    kilo_grams: KiloGrams
 
 
 class FoodSavablePayload(BaseModel):

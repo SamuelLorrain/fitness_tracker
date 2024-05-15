@@ -12,6 +12,7 @@ from fitness.food.exceptions import InvalidAddOperation
 # To validate them directly,
 # see: https://docs.pydantic.dev/latest/concepts/types/#adding-validation-and-serialization
 Grams = Annotated[float, Field(ge=0)]
+KiloGrams = Annotated[float, Field(ge=0)]
 KCal = Annotated[float, Field(ge=0)]
 Ui = Annotated[int, Field(ge=0)]
 
