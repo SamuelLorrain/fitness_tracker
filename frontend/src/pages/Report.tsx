@@ -20,7 +20,10 @@ import {
   IonSelect,
   IonSelectOption,
   IonSpinner,
+  IonButton,
+  IonIcon,
 } from "@ionic/react";
+import { download } from "ionicons/icons";
 
 enum StatsMode {
   WEEKLY = "weekly",
@@ -91,6 +94,37 @@ const Report: React.FC = () => {
     }
   }, [data, isLoading, graphRef.current]);
 
+  const downloadData = () => {
+    if (parsedData == null) {
+      return;
+    }
+    const firstColumn =
+      "date;calories in kcal;carbs in kcal;lipids in kcal;proteins in kcal; water in grams\r\n";
+    const content = parsedData
+      .splice(1)
+      .map(
+        (e) =>
+          `${format(e.date, "yyyy-mm-dd")};${e.caloriesInKcal ?? ""};${
+            e.carbsInKcal ?? ""
+          };${e.lipidsInKcal ?? ""};${e.proteinsInKcal ?? ""};${
+            e.waterInGrams ?? ""
+          }\r\n`
+      )
+      .join("");
+    const csv = firstColumn + content;
+    console.log(csv);
+    const element = document.createElement("a");
+    element.setAttribute(
+      "href",
+      "data:text/plain;charset=utf-8," + encodeURIComponent(csv)
+    );
+    element.setAttribute("download", "report.csv");
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
   return (
     <>
       <IonHeader>
@@ -131,6 +165,12 @@ const Report: React.FC = () => {
                 Aggregate Monthly
               </IonSelectOption>
             </IonSelect>
+            <IonButton
+              disabled={parsedData != null && parsedData?.length === 0}
+              onClick={downloadData}
+            >
+              <IonIcon icon={download} />
+            </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
