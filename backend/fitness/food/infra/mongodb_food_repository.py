@@ -3,6 +3,7 @@ from typing import Any, Optional
 from uuid import UUID, uuid4
 
 from fitness.commons.connection import MongoDBConnection
+from fitness.commons.dict_utils import delete_null_keys_from_dict
 from fitness.food.domain.entities import Food
 from fitness.food.domain.food_repository import FoodRepository, FoodUserUUID, FoodUUID
 from fitness.food.domain.value_objects import FoodVA
@@ -27,7 +28,9 @@ class MongoDBFoodRepository(FoodRepository):
 
     def store_food(self, user_uuid: FoodUserUUID, food_va: FoodVA) -> FoodUUID:
         new_food = Food(uuid=uuid4(), user_uuid=user_uuid, **food_va.model_dump())
-        self.food_collection.insert_one(new_food.model_dump())
+        food_dict = new_food.model_dump()
+        cleaned_food = delete_null_keys_from_dict(food_dict)
+        self.food_collection.insert_one(cleaned_food)
         return new_food.uuid
 
     def get_food(self, user_uuid: FoodUserUUID, food_uuid: FoodUUID) -> Optional[Food]:
