@@ -16,7 +16,11 @@ class FirebaseNotificationClient(NotificationClient):
 
     def send_notification(self, message: NotificationMessage, token: Token) -> None:
         firebase_message = messaging.Message(
-            notification=messaging.Notification(title=message.title, body=message.text),
+            data={"title": message.title, "body": message.text},
+            notification=messaging.Notification(
+                title=message.title,
+                body=message.text,
+            ),
             token=token,
         )
         response = messaging.send(firebase_message)
