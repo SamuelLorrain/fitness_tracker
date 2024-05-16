@@ -124,7 +124,7 @@ export const api = createApi({
     sendTestNotification: builder.mutation({
       query: () => ({
         url: "/notification/send-test",
-        method: "GET",
+        method: "POST",
       }),
     }),
     getStats: builder.query({
