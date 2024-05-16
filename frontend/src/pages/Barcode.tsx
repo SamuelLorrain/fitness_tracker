@@ -112,7 +112,10 @@ const Barcode: React.FC = () => {
         onReturn={() => history.push("/journal/add-entry")}
       >
         {hasCameraPermission ? (
+          <>
           <BarcodeScanner setBarcodeValue={setBarcodeValue} />
+          <div>Please scan a barcode</div>
+          </>
         ) : (
           <IonButton expand="full" onClick={grantCameraPermission}>
             grant camera permission
