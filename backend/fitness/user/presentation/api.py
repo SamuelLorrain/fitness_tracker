@@ -62,12 +62,3 @@ def set_user_water_notification(
         water_request.notification_enabled,
         water_request.notification_delta_hours,
     )
-
-
-@user_router.get("/water-notification/test", status_code=status.HTTP_204_NO_CONTENT)
-def test_user_water_notification(
-    auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
-) -> None:
-    configuration = UserConfiguration()
-    service = configuration.user_service
-    service.test_user_water_notification(auth_pass_key.uuid)
