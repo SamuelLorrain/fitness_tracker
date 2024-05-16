@@ -1,5 +1,5 @@
 import Basis from "../components/Basis";
-import { IonInput, IonButton } from "@ionic/react";
+import { IonInput, IonButton, IonList, IonItem } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,7 +23,7 @@ const AccountInformationForm: React.FC = () => {
       first_name: user.first_name,
       last_name: user.last_name,
       email: user.email,
-    },
+    } as AccountInformations,
     validationSchema: Yup.object({
       first_name: Yup.string().required("A first name must be provided"),
       last_name: Yup.string().required("A last name must be provided"),
@@ -31,7 +31,7 @@ const AccountInformationForm: React.FC = () => {
     }),
     onSubmit: async (data) => {
       await mutateSetUserInfo(data).unwrap();
-      await dispatch(setUserInfos(data));
+      dispatch(setUserInfos(data));
       history.push("/settings");
     },
   });
@@ -39,38 +39,48 @@ const AccountInformationForm: React.FC = () => {
   return (
     <Basis name="Settings" onReturn={() => history.push("/settings")}>
       <form onSubmit={formik.handleSubmit}>
-        <IonInput
-          className={`${formik.errors.first_name && "ion-invalid"} ${
-            formik.touched.first_name && "ion-touched"
-          } `}
-          label="First name"
-          value={formik.values.first_name}
-          errorText={formik.errors.first_name}
-          onIonChange={(e) =>
-            formik.setFieldValue("first_name", e.detail.value)
-          }
-          onBlur={(e) => formik.setFieldTouched("first_name", true)}
-        />
-        <IonInput
-          className={`${formik.errors.last_name && "ion-invalid"} ${
-            formik.touched.last_name && "ion-touched"
-          } `}
-          label="Last name"
-          value={formik.values.last_name}
-          errorText={formik.errors.last_name}
-          onIonChange={(e) => formik.setFieldValue("last_name", e.detail.value)}
-          onBlur={(e) => formik.setFieldTouched("last_name", true)}
-        />
-        <IonInput
-          className={`${formik.errors.email && "ion-invalid"} ${
-            formik.touched.email && "ion-touched"
-          } `}
-          label="Email"
-          value={formik.values.email}
-          errorText={formik.errors.email}
-          onIonChange={(e) => formik.setFieldValue("email", e.detail.value)}
-          onBlur={(e) => formik.setFieldTouched("email", true)}
-        />
+        <IonList>
+          <IonItem>
+            <IonInput
+              className={`${formik.errors.first_name && "ion-invalid"} ${
+                formik.touched.first_name && "ion-touched"
+              } `}
+              label="First name"
+              value={formik.values.first_name}
+              errorText={formik.errors.first_name}
+              onIonChange={(e) =>
+                formik.setFieldValue("first_name", e.detail.value)
+              }
+              onBlur={(e) => formik.setFieldTouched("first_name", true)}
+            />
+          </IonItem>
+          <IonItem>
+            <IonInput
+              className={`${formik.errors.last_name && "ion-invalid"} ${
+                formik.touched.last_name && "ion-touched"
+              } `}
+              label="Last name"
+              value={formik.values.last_name}
+              errorText={formik.errors.last_name}
+              onIonChange={(e) =>
+                formik.setFieldValue("last_name", e.detail.value)
+              }
+              onBlur={(e) => formik.setFieldTouched("last_name", true)}
+            />
+          </IonItem>
+          <IonItem>
+            <IonInput
+              className={`${formik.errors.email && "ion-invalid"} ${
+                formik.touched.email && "ion-touched"
+              } `}
+              label="Email"
+              value={formik.values.email}
+              errorText={formik.errors.email}
+              onIonChange={(e) => formik.setFieldValue("email", e.detail.value)}
+              onBlur={(e) => formik.setFieldTouched("email", true)}
+            />
+          </IonItem>
+        </IonList>
         <IonButton type="submit" expand="full" disabled={isLoading}>
           Change
         </IonButton>

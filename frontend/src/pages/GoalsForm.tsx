@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Basis from "../components/Basis";
-import { IonInput, IonButton } from "@ionic/react";
+import { IonInput, IonButton, IonList, IonItem } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useFormik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
@@ -115,46 +115,62 @@ const GoalsForm: React.FC = () => {
         setup goals automatically
       </IonButton>
       <form onSubmit={formik.handleSubmit}>
-        <IonInput
-          className={`${formik.errors.calories && "ion-invalid"} ${
-            formik.touched.calories && "ion-touched"
-          } `}
-          label="calories per day"
-          value={formik.values.calories}
-          errorText={formik.errors.calories}
-          onIonChange={(e) => formik.setFieldValue("calories", e.detail.value)}
-          onBlur={(e) => formik.setFieldTouched("calories", true)}
-        />
-        <IonInput
-          className={`${formik.errors.proteins && "ion-invalid"} ${
-            formik.touched.proteins && "ion-touched"
-          } `}
-          label="proteins per day"
-          value={formik.values.proteins}
-          errorText={formik.errors.proteins}
-          onIonChange={(e) => formik.setFieldValue("proteins", e.detail.value)}
-          onBlur={(e) => formik.setFieldTouched("proteins", true)}
-        />
-        <IonInput
-          className={`${formik.errors.carbs && "ion-invalid"} ${
-            formik.touched.carbs && "ion-touched"
-          } `}
-          label="carbs per day"
-          value={formik.values.carbs}
-          errorText={formik.errors.carbs}
-          onIonChange={(e) => formik.setFieldValue("carbs", e.detail.value)}
-          onBlur={(e) => formik.setFieldTouched("carbs", true)}
-        />
-        <IonInput
-          className={`${formik.errors.lipids && "ion-invalid"} ${
-            formik.touched.lipids && "ion-touched"
-          } `}
-          label="lipids per day"
-          value={formik.values.lipids}
-          errorText={formik.errors.lipids}
-          onIonChange={(e) => formik.setFieldValue("lipids", e.detail.value)}
-          onBlur={(e) => formik.setFieldTouched("lipids", true)}
-        />
+        <IonList>
+          <IonItem>
+            <IonInput
+              className={`${formik.errors.calories && "ion-invalid"} ${
+                formik.touched.calories && "ion-touched"
+              } `}
+              label="calories per day"
+              value={formik.values.calories}
+              errorText={formik.errors.calories}
+              onIonChange={(e) =>
+                formik.setFieldValue("calories", e.detail.value)
+              }
+              onBlur={(e) => formik.setFieldTouched("calories", true)}
+            />
+          </IonItem>
+          <IonItem>
+            <IonInput
+              className={`${formik.errors.proteins && "ion-invalid"} ${
+                formik.touched.proteins && "ion-touched"
+              } `}
+              label="proteins per day"
+              value={formik.values.proteins}
+              errorText={formik.errors.proteins}
+              onIonChange={(e) =>
+                formik.setFieldValue("proteins", e.detail.value)
+              }
+              onBlur={(e) => formik.setFieldTouched("proteins", true)}
+            />
+          </IonItem>
+          <IonItem>
+            <IonInput
+              className={`${formik.errors.carbs && "ion-invalid"} ${
+                formik.touched.carbs && "ion-touched"
+              } `}
+              label="carbs per day"
+              value={formik.values.carbs}
+              errorText={formik.errors.carbs}
+              onIonChange={(e) => formik.setFieldValue("carbs", e.detail.value)}
+              onBlur={(e) => formik.setFieldTouched("carbs", true)}
+            ></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonInput
+              className={`${formik.errors.lipids && "ion-invalid"} ${
+                formik.touched.lipids && "ion-touched"
+              } `}
+              label="lipids per day"
+              value={formik.values.lipids}
+              errorText={formik.errors.lipids}
+              onIonChange={(e) =>
+                formik.setFieldValue("lipids", e.detail.value)
+              }
+              onBlur={(e) => formik.setFieldTouched("lipids", true)}
+            />
+          </IonItem>
+        </IonList>
         {shouldUpdate ? (
           <IonButton
             type="submit"
