@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from uuid import UUID
 
 from fitness.authentication.domain.entities import AuthPassKey
 from fitness.commons.exceptions import EntityDoesNotExistsException
@@ -19,15 +20,18 @@ class NotificationService:
     def set_token(self, auth_pass_key: AuthPassKey, token: Token) -> None:
         self.notification_repository.set_token(auth_pass_key.uuid, token)
 
-    def send_test_notification(self, auth_pass_key: AuthPassKey) -> None:
-        token = self.notification_repository.get_token(auth_pass_key.uuid)
+    def send_notification(self, user_uuid: UUID, title: str, text: str) -> None:
+        token = self.notification_repository.get_token(user_uuid)
         if token is None:
             raise EntityDoesNotExistsException
         self.notification_client.send_notification(
-            NotificationMessage(
-                title="Test notification", text="This is a test notification"
-            ),
+            NotificationMessage(title=title, text=text),
             token,
+        )
+
+    def send_test_notification(self, auth_pass_key: AuthPassKey) -> None:
+        self.send_notification(
+            auth_pass_key.uuid, "Test notification", "This is a test notification"
         )
 
     def schedule_notifications(self) -> None:
