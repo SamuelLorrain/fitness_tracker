@@ -14,7 +14,7 @@ export const api = createApi({
     baseUrl: `${import.meta.env.VITE_BACKEND_DOMAIN}`,
     prepareHeaders,
   }),
-  tagTypes: ["Entry"],
+  tagTypes: ["Entry", "Report"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
@@ -87,7 +87,14 @@ export const api = createApi({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Entry"],
+      invalidatesTags: ["Entry", "Report"],
+    }),
+    deleteEntry: builder.mutation({
+      query: ({date, uuid}) => ({
+        url: `/entry/${date}/${uuid}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Entry", "Report"],
     }),
     listEntry: builder.query({
       query: (date) => {
@@ -131,8 +138,16 @@ export const api = createApi({
       query: (data) => ({
         url: `/report/?mode=${data.mode}&aggregate=${data.aggregate}`,
         method: "GET",
+        providesTags: ["Report"]
       }),
     }),
+    triggerDebug: builder.mutation({
+      query: (data) => ({
+        url: '/debug',
+        method: 'POST',
+        body: data
+      })
+    })
   }),
 });
 
@@ -144,6 +159,7 @@ export const {
   useCreateFoodMutation,
   useGetFoodQuery,
   useCreateEntryMutation,
+  useDeleteEntryMutation,
   useListEntryQuery,
   useSetUserInfoMutation,
   useSetUserGoalsMutation,
@@ -152,4 +168,5 @@ export const {
   useUpdateWaterNotificationMutation,
   useSendTestNotificationMutation,
   useGetStatsQuery,
+  useTriggerDebugMutation
 } = api;
