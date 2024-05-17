@@ -20,7 +20,7 @@ const formatCard = (entry) => {
 
 const JournalCard = ({ entry }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [deleteMutate, {isLoading, error}] = useDeleteEntryMutation();
+  const [deleteMutate, { isLoading, error }] = useDeleteEntryMutation();
   const { messageToast } = useToast();
   const timestamp = useSelector((state) => state.user.currentTimestamp);
   const date = parse(String(timestamp), "t", new Date());
@@ -33,32 +33,34 @@ const JournalCard = ({ entry }) => {
         header={`Do you want to delete the entry ? "${formatCard(entry)}"`}
         buttons={[
           {
-            text: 'Delete',
-            role: 'destructive',
+            text: "Delete",
+            role: "destructive",
             data: {
-              action: 'delete',
+              action: "delete",
             },
           },
           {
-            text: 'Cancel',
-            role: 'cancel',
+            text: "Cancel",
+            role: "cancel",
             data: {
-              action: 'cancel',
+              action: "cancel",
             },
           },
         ]}
         onDidDismiss={async (e) => {
-          if(e.detail.role === "destructive") {
+          if (e.detail.role === "destructive") {
             try {
-              await deleteMutate({date: format(date, "yyyy-MM-dd"),uuid:entry.uuid});
+              await deleteMutate({
+                date: format(date, "yyyy-MM-dd"),
+                uuid: entry.uuid,
+              });
               messageToast("Entry successfully deleted");
             } catch {
               messageToast("Error while deleting the entry");
             }
           }
           setIsOpen(false);
-        }
-      }
+        }}
       ></IonActionSheet>
     </IonItem>
   );

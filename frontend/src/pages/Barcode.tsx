@@ -4,7 +4,10 @@ import { useHistory } from "react-router-dom";
 import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
 import { IonButton, IonSpinner } from "@ionic/react";
 import { initCameras } from "../state/hardwareSlice";
-import { useGetFoodBarcodeMutation, useTriggerDebugMutation } from "../state/api";
+import {
+  useGetFoodBarcodeMutation,
+  useTriggerDebugMutation,
+} from "../state/api";
 import { useDispatch, useSelector } from "react-redux";
 import AddEntryForm from "./AddEntryForm";
 import { useToast } from "../hooks/useToast";
