@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import {
   useSendTestNotificationMutation,
+  useTriggerDebugMutation,
   useUpdateWaterNotificationMutation,
 } from "../state/api";
 import { useToast } from "../hooks/useToast";
@@ -23,6 +24,7 @@ const NotificationsForm: React.FC = () => {
     useUpdateWaterNotificationMutation();
   const [mutateSendTest, { isLoading: isLoadingTest }] =
     useSendTestNotificationMutation();
+  const [mutateDebug] = useTriggerDebugMutation();
   const { messageToast, toast } = useToast();
 
   const tryEnableNotifications = async () => {
@@ -46,6 +48,7 @@ const NotificationsForm: React.FC = () => {
       await mutateSendTest({}).unwrap();
       messageToast("You will receive a notification soon");
     } catch (e) {
+      await mutateDebug(e);
       toast(e);
     }
   };
