@@ -6,7 +6,7 @@ import {
 } from "@ionic/react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useLoginMutation, useUserInfoMutation } from "../state/api";
+import { useLoginMutation, useTriggerDebugMutation, useUserInfoMutation } from "../state/api";
 import { initUser, setUserInfos } from "../state/userSlice";
 import { PersistenceSingleton } from "../state/persistence";
 import { setupPushNotifications } from "../utils/push_notifications_utils";
@@ -17,6 +17,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const [mutateLogin, { isLoading }] = useLoginMutation();
   const [mutateUserInfo] = useUserInfoMutation();
+  const [mutateDebug, { isLoadingTriggerDebug }] = useTriggerDebugMutation();
 
   const onLogin = async () => {
     try {
@@ -30,6 +31,7 @@ const Login = () => {
         setupPushNotifications();
       }
     } catch (e) {
+      mutateDebug(e);
       console.log("error", JSON.stringify(e));
     }
   };
