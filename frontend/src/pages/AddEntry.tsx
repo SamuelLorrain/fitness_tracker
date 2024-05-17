@@ -48,7 +48,6 @@ const FoodCard: React.FC = ({ food }) => {
 };
 
 const FoodList: React.FC = ({ search }) => {
-  const [skip, setSkip] = useState(true);
   const [data, setData] = useState([]);
   const [mutateSearchFood, { isLoading }] = useSearchFoodMutation();
 
