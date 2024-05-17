@@ -1,0 +1,112 @@
+
+# Process de déploiement de l'app
+
+
+=> Utiliser un tag git ?
+=> Quand on a le bon tag git, je veux pouvoir push et installer
+   mon code sur un serveur facilement, automatiquement.
+=> En gros on peut lancer un script pour juste faire ça quoi
+   et après ça doit fonctionner direct lol
+
+
+- Gérer les secrets du docker compose
+- Gérer les .env front et back
+
+- gérer les logs et des métriques
+
+
+- Gérer le front cdn + s3 ?
+- Gérer les apk etc. ?
+
+
+- Voir comment faire pour l'envoi de notifications, une nouvelle fois
+
+
+===== infratructure / app running
+
+*elastic load balancing* --> load entre plusieurs instances ec2
+*api gateway* => authorization/throttling etc.
+*cloud watch* => métriques
+*coud trail* => qui fait quoi (monitoring)
+*auto-scale* => service pour créer automatiquement des instances en fonction d'une métrique
+
+*elastic beanstalk* => couche d'abstraction sur ec2 et auto-scale
+                       pour déployer des choses automatiquement en fonction
+                       du type d'application. "PaaS"
+
+*lightsail* => comme *elastic beanstalk*, mais plus simple et pour des
+               frameworks spe comme wordpress ou drupal. Tourne sur ec2
+
+*lambda* => serverless, en gros on s'en fout de comment le truc existe
+            on créé un event qui décide quand le code va run, on ne paye
+            qu'à l'utilisation. Le scaling est automatique
+
+*serverless repo* => du code serverless pre-configuré
+*outpost* => utiliser l'api aws sur une infrasructure existante (genre des serveurs on-premise)
+*snow* => mini infrastructure aws dans un environnement difficile (genre dans la neige) quoi
+
+*elastic container registry* => un registre de containers dockers (comme docker hub mais privé)
+*elastic container service* => une surcouche d'ec2 pour faire tourner des images Docker, permet aussi
+                               de lier des images docker à un load balancer par exemple...
+*elastic kubernetes service* => un peu comme ecs mais pour kubernetes
+*fargate* => permet de fiare en sorte que les containers fonctionnent comme des fonctions serverless
+*app runner* => un truc qui run automatiquement une app ? (un peu comme beanstalk mais plus récent, on ne voit rien de bas niveau)
+*app sync* => graphql as a service
+
+======= storage
+
+*s3* => general purpose file storage
+*glacier* => pour les archives
+*elastic block storage* => du storage qui va vite, mais plus de configuration
+*elaltic file system* => fully managed file storage (performant et couteux)
+
+====== db
+
+*simple db* => simple nosql db (plus trop utilisé)
+*dynamo db* => document database qui scale, fast, cheap
+*document db* => document database compatible avec un subset de mongodb
+*elastic search/open search* => full text search
+*rds* => fully managed sql db
+*aurora* => proprietary sql db claim to be faster & lower cost (+ aurora serverless)
+*neptune* => graph based db
+*elastic cache* => redis
+*timestream* => time series data
+*quantum ledger* => un peu comme la blockchain
+
+======== data analytics
+
+*redshift* => data warehouse structurée
+*lake formation* => data warehouse non structuré
+*kinesis* => real time data visualisation
+*elastic map reduce (emr)* => utilisation avec kinesis
+*athena*
+*msk* => kafka
+*glue* => serverless pour automatiser les trucs au dessus
+*quick sight* => dashboarding
+
+======= machine learning
+
+data exchange
+sagemaker
+rekognition
+lex
+deep racer
+
+=====
+
+iam
+cognito => comme auth0
+vpc => vpn
+
+simple email service => pareil pour les emails
+cloud formation/cloud development kit => comme terraform
+amplify => aide au deploiement frontend
+
+
+===== event coordination
+
+simple notification service (sns) => messaging
+simple queues service (sns) => queues
+event bridge => un peu comme sns mais sur des evenements d'infrascruture, aussi des evenements de 3rd parties
+step functions => workflows
+
