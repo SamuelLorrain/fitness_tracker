@@ -173,3 +173,22 @@ class MongoDBEntryRepository(EntryRepository):
             raise UnknownUserException
         db_user["water_latest_entry_date"] = date_time
         self.user_collection.update_one({"uuid": user_uuid}, {"$set": db_user})
+
+    def delete_entry(self, user_uuid: UUID, entry_uuid: UUID, date: date) -> None:
+        db_journal = self.journal_collection.find_one(
+            {
+                "user_uuid": user_uuid,
+                "date": datetime.combine(date, datetime.min.time())
+            }
+        )
+        print(len(db_journal["entries"]))
+        entries = [entry for entry in db_journal["entries"] if entry["uuid"] != entry_uuid]
+        print(len(entries))
+        db_journal["entries"] = entries
+        self.journal_collection.update_one(
+            {
+                "user_uuid": user_uuid,
+                "date": datetime.combine(date, datetime.min.time())
+            },
+            {"$set": db_journal}
+        )

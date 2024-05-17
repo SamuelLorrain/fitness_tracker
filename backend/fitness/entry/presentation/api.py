@@ -36,6 +36,20 @@ def create_entry(
     response.headers["Location"] = f"{request.url}/{new_uuid}"
 
 
+@entry_router.delete("/entry/{date}/{entry_uuid}")
+def delete_entry(
+    auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
+    date: date,
+    entry_uuid: UUID,
+) -> None:
+    configuration = EntryConfiguration()
+    configuration.entry_service.delete_entry(
+        auth_pass_key.uuid,
+        entry_uuid,
+        date,
+    )
+
+
 @entry_router.get("/entry/{date}/{entry_uuid}")
 def get_entry(
     auth_pass_key: Annotated[AuthPassKey, Depends(auth_dep)],
