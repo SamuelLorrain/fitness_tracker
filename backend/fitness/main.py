@@ -9,6 +9,8 @@ from fitness.food.presentation.api import food_router
 from fitness.notification.presentation.api import notification_router
 from fitness.report.presentation.api import report_router
 from fitness.user.presentation.api import user_router
+from fitness.debug.presentation.api import debug_router
+
 
 app = FastAPI()
 app.add_middleware(
@@ -34,3 +36,4 @@ app.include_router(entry_router)
 app.include_router(user_router)
 app.include_router(notification_router)
 app.include_router(report_router)
+app.include_router(debug_router)
