@@ -23,4 +23,4 @@ class AuthPassKey(BaseModel):
     uuid: UUID
     email: EmailStr
     expiration: datetime
-    permissions: list[Permission]
+    permissions: list[Permission] = Field(default_factory=lambda: [])
