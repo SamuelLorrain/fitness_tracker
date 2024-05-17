@@ -4,13 +4,12 @@ from fastapi.responses import JSONResponse
 
 from fitness.authentication.presentation.api import auth_router
 from fitness.commons.exceptions import CustomException
+from fitness.debug.presentation.api import debug_router
 from fitness.entry.presentation.api import entry_router
 from fitness.food.presentation.api import food_router
 from fitness.notification.presentation.api import notification_router
 from fitness.report.presentation.api import report_router
 from fitness.user.presentation.api import user_router
-from fitness.debug.presentation.api import debug_router
-
 
 app = FastAPI()
 app.add_middleware(
