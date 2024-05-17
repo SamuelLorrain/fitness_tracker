@@ -32,3 +32,8 @@ class EntryRepository(Protocol):
     def update_water_latest_entry_datetime(
         self, user_uuid: UUID, date_time: datetime
     ) -> None: ...  # pragma: no cover
+
+
+    def delete_entry(
+        self, user_uuid: UUID, entry_uuid: UUID, date: date
+    ) -> None: ...  # pragma: no cover

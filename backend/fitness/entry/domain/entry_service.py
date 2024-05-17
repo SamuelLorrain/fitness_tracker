@@ -66,5 +66,5 @@ class EntryService:
             )
         )
 
-    # def delete_entry(self, user_uuid: UUID, entry_uuid: UUID, date: date):
-    #     return self.entry_repository.delete_entry()
+    def delete_entry(self, user_uuid: UUID, entry_uuid: UUID, date: date):
+        return self.entry_repository.delete_entry(user_uuid, entry_uuid, date)
