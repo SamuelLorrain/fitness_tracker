@@ -178,17 +178,19 @@ class MongoDBEntryRepository(EntryRepository):
         db_journal = self.journal_collection.find_one(
             {
                 "user_uuid": user_uuid,
-                "date": datetime.combine(date, datetime.min.time())
+                "date": datetime.combine(date, datetime.min.time()),
             }
         )
         print(len(db_journal["entries"]))
-        entries = [entry for entry in db_journal["entries"] if entry["uuid"] != entry_uuid]
+        entries = [
+            entry for entry in db_journal["entries"] if entry["uuid"] != entry_uuid
+        ]
         print(len(entries))
         db_journal["entries"] = entries
         self.journal_collection.update_one(
             {
                 "user_uuid": user_uuid,
-                "date": datetime.combine(date, datetime.min.time())
+                "date": datetime.combine(date, datetime.min.time()),
             },
-            {"$set": db_journal}
+            {"$set": db_journal},
         )

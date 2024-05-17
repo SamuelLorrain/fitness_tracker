@@ -33,7 +33,6 @@ class EntryRepository(Protocol):
         self, user_uuid: UUID, date_time: datetime
     ) -> None: ...  # pragma: no cover
 
-
     def delete_entry(
         self, user_uuid: UUID, entry_uuid: UUID, date: date
     ) -> None: ...  # pragma: no cover
