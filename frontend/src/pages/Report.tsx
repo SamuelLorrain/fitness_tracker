@@ -75,10 +75,11 @@ const Report: React.FC = () => {
   const [aggregateMode, setAggregateMode] = useState<StatsAggregateMode>(
     StatsAggregateMode.AGGREGATE_DAILY
   );
-  const { data, isLoading, isFetching } = useGetStatsQuery({
+  const { data, isLoading, isFetching, refetch } = useGetStatsQuery({
     mode: statsMode,
     aggregate: aggregateMode,
   });
+
   const [parsedData, setParsedData] = useState<
     NutritionBasicsWithDate[] | null
   >(null);
@@ -87,6 +88,10 @@ const Report: React.FC = () => {
   const [displayWeight, setDisplayWeight] = useState<boolean>(true);
   const graphRef = useRef<null | HTMLDivElement>(null);
   const aggregateRef = useRef<null | HTMLIonSelectElement>(null);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   useEffect(() => {
     if (isLoading === false && data != null) {
@@ -115,7 +120,6 @@ const Report: React.FC = () => {
       )
       .join("");
     const csv = firstColumn + content;
-    console.log(csv);
     const element = document.createElement("a");
     element.setAttribute(
       "href",
