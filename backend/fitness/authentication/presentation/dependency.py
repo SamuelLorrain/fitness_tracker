@@ -10,6 +10,7 @@ from fitness.authentication.exceptions import (
     UnableToLoginException,
     UnauthorizedException,
 )
+import jwt
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
@@ -37,7 +38,10 @@ class SimpleAuthorisationDependency(AuthorisationDependency):
         self.token = token
         if self.token is None:
             return None
-        auth_pass_key = self.jwt_auth_formatter.deserialize(self.token)
+        try:
+            auth_pass_key = self.jwt_auth_formatter.deserialize(self.token)
+        except jwt.DecodeError:
+            raise UnableToLoginException
         if self.auth_service.verify(auth_pass_key):
             return auth_pass_key
         raise UnableToLoginException
