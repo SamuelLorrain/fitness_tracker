@@ -90,7 +90,7 @@ export const api = createApi({
       invalidatesTags: ["Entry", "Report"],
     }),
     deleteEntry: builder.mutation({
-      query: ({date, uuid}) => ({
+      query: ({ date, uuid }) => ({
         url: `/entry/${date}/${uuid}`,
         method: "DELETE",
       }),
@@ -138,16 +138,16 @@ export const api = createApi({
       query: (data) => ({
         url: `/report/?mode=${data.mode}&aggregate=${data.aggregate}`,
         method: "GET",
-        providesTags: ["Report"]
+        providesTags: ["Report"],
       }),
     }),
     triggerDebug: builder.mutation({
       query: (data) => ({
-        url: '/debug',
-        method: 'POST',
-        body: data
-      })
-    })
+        url: "/debug",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -168,5 +168,5 @@ export const {
   useUpdateWaterNotificationMutation,
   useSendTestNotificationMutation,
   useGetStatsQuery,
-  useTriggerDebugMutation
+  useTriggerDebugMutation,
 } = api;

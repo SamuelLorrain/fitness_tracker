@@ -6,7 +6,11 @@ import {
 } from "@ionic/react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useLoginMutation, useTriggerDebugMutation, useUserInfoMutation } from "../state/api";
+import {
+  useLoginMutation,
+  useTriggerDebugMutation,
+  useUserInfoMutation,
+} from "../state/api";
 import { initUser, setUserInfos } from "../state/userSlice";
 import { PersistenceSingleton } from "../state/persistence";
 import { setupPushNotifications } from "../utils/push_notifications_utils";
