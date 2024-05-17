@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Html5Qrcode, Html5QrcodeScannerState } from "html5-qrcode";
 import { IonButton, IonSpinner } from "@ionic/react";
 import { initCameras } from "../state/hardwareSlice";
-import { useGetFoodBarcodeMutation } from "../state/api";
+import { useGetFoodBarcodeMutation, useTriggerDebugMutation } from "../state/api";
 import { useDispatch, useSelector } from "react-redux";
 import AddEntryForm from "./AddEntryForm";
 import { useToast } from "../hooks/useToast";
@@ -68,13 +68,15 @@ const Barcode: React.FC = () => {
   const [barcodeValue, setBarcodeValue] = useState(null);
   const [mutateFoodBarcode, { isLoadingFoodBarcode }] =
     useGetFoodBarcodeMutation();
+  const [mutateDebug, { isLoadingTriggerDebug }] = useTriggerDebugMutation();
 
   const grantCameraPermission = () => {
     Html5Qrcode.getCameras()
       .then((cameras) => {
         dispatch(initCameras(cameras));
       })
-      .catch((err) => {
+      .catch(async (err) => {
+        await mutateDebug(err);
         toast(err);
       });
   };
