@@ -1,4 +1,9 @@
-import { IonItem } from "@ionic/react";
+import { IonActionSheet, IonItem } from "@ionic/react";
+import { useState } from "react";
+import { useDeleteEntryMutation } from "../state/api";
+import { useToast } from "../hooks/useToast";
+import { useSelector } from "react-redux";
+import { format, parse } from "date-fns";
 
 const formatCard = (entry) => {
   switch (entry.entry_type) {
@@ -14,9 +19,47 @@ const formatCard = (entry) => {
 };
 
 const JournalCard = ({ entry }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [deleteMutate, {isLoading, error}] = useDeleteEntryMutation();
+  const { messageToast } = useToast();
+  const timestamp = useSelector((state) => state.user.currentTimestamp);
+  const date = parse(String(timestamp), "t", new Date());
+
   return (
-    <IonItem>
+    <IonItem onClick={() => setIsOpen(true)}>
       <div>{formatCard(entry)}</div>
+      <IonActionSheet
+        isOpen={isOpen}
+        header={`Do you want to delete the entry ? "${formatCard(entry)}"`}
+        buttons={[
+          {
+            text: 'Delete',
+            role: 'destructive',
+            data: {
+              action: 'delete',
+            },
+          },
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            data: {
+              action: 'cancel',
+            },
+          },
+        ]}
+        onDidDismiss={async (e) => {
+          if(e.detail.role === "destructive") {
+            try {
+              await deleteMutate({date: format(date, "yyyy-MM-dd"),uuid:entry.uuid});
+              messageToast("Entry successfully deleted");
+            } catch {
+              messageToast("Error while deleting the entry");
+            }
+          }
+          setIsOpen(false);
+        }
+      }
+      ></IonActionSheet>
     </IonItem>
   );
 };
