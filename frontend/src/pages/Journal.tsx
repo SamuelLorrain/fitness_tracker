@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import Basis from "../components/Basis";
+import { useHistory } from "react-router-dom";
 import { useListEntryQuery } from "../state/api";
 import {
   IonButton,
@@ -12,19 +11,18 @@ import {
   IonList,
 } from "@ionic/react";
 import { IonCard, IonCardContent, IonProgressBar } from "@ionic/react";
-import { IonGrid, IonRow, IonCol } from "@ionic/react";
+import { IonGrid, IonRow } from "@ionic/react";
 import { formatDay } from "../utils/date_utils";
 import { parse } from "date-fns";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { safeDiv } from "../utils/math_utils";
 import JournalCard from "../components/JournalCard";
 import JournalDateButtons from "../components/JournalDateButtons";
 
 const useJournal = () => {
-  const dispatch = useDispatch();
   const timestamp = useSelector((state) => state.user.currentTimestamp);
   const date = parse(String(timestamp), "t", new Date());
-  const { data, error, isLoading } = useListEntryQuery(formatDay(date));
+  const { data, isLoading } = useListEntryQuery(formatDay(date));
   const [entries, setEntries] = useState(null); // used to trigger the rerender of the entries
   const [foodEntries, setFoodEntries] = useState(null);
 
@@ -203,7 +201,6 @@ const Journal: React.FC = () => {
   const history = useHistory();
   const {
     entries,
-    isLoading,
     sumTodayCalories,
     sumTodayLipids,
     sumTodayProteins,
