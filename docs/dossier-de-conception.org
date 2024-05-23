@@ -1,0 +1,144 @@
+#+begin_export latex
+  \renewcommand{\contentsname}{Table des matières}
+  \clearpage \tableofcontents \clearpage
+#+end_export
+
+* Lexique
+
+* Introduction
+** Objectif du document
+
+   L'objectif du document est de présenter les choix et la conception de l'application *Fitness Tracker*
+   en réponse au cahier des charges précédemment établis.
+
+** Rappel du projet
+
+   Le projet vise à développer une application de suivi de bien-être
+   et sportif. Les principales fonctionnalités consistent à rentrer des
+   données de nutrition, ou d'autres données relatives aux sport et
+   et de suivre l'évolution de certaines tendances dans le temps.
+
+   L'application doit être multi-platforme. Elle est composée à
+   la fois d'un *front end*, application web hybride et un *back end*,
+   une *API* chargée de stocker et gérer les données ainsi entrées.
+
+** Environnement de développement
+
+   | Réalisation               | Outils                                                             |
+   |---------------------------+--------------------------------------------------------------------|
+   | Application serveur       | ~Python 3.11~;                                                     |
+   |                           | ~FastAPI 0.110~, un caneva web specialisé dans la création d'API;  |
+   |                           | ~mypy 1.9~, un outil de typage statique pour Python;               |
+   |---------------------------+--------------------------------------------------------------------|
+   | Application mobile et web | ~Ionic/React~, un canvas de création d'interface mobile utilisant  |
+   |                           | la bibliothèque ~React~ comme moteur d'interface graphique;        |
+   |                           | ~Capacitor~, un environnement d'exécution permettant d'utiliser    |
+   |                           | les applications web comme des applications mobiles natives,       |
+   |                           | ~Capacitor~ est un successeur de ~Cordova~ et ~PhoneGap~.;         |
+   |                           | Et inclut des plugins pour des applications natives comme          |
+   |                           | la lecture de code bar.                                            |
+   |                           | ~Redux~, ~Redux-Toolkit~ et ~RTK-Query~, des outils de             |
+   |                           | gestion d'état global de l'application.                            |
+   |---------------------------+--------------------------------------------------------------------|
+   | Applications natives      | ~Android Studio~ pour la partie ~Android~;                         |
+   |                           | ~XCode~ pour la partie ~Ios~;                                      |
+   |                           | De véritables Iphones et smartphones android vont être utilisés    |
+   |                           | durant le développement. Egalement, utilisation des émulateurs     |
+   |                           | présents dans les environnements de développements natifs.         |
+   |---------------------------+--------------------------------------------------------------------|
+   | Gestion de développement  | ~Git~ pour le developpement et ~Github~ pour l'hébergement du      |
+   |                           | code, ainsi que les pipelines de vérification.                     |
+   |---------------------------+--------------------------------------------------------------------|
+   | Gestion de projet         | ~Trello~ un outil de gestion de projet de type "board kanban"      |
+   |---------------------------+--------------------------------------------------------------------|
+   | Redaction de documents    | ~Latex~ et ~vim~, en utilisant un plugin ~Orgmode~ et ~pandoc~     |
+   |                           | pour la réalisation du document final (pdf)                        |
+   |---------------------------+--------------------------------------------------------------------|
+   | Redaction de diagrammes   | ~Whimsical~ un outil en ligne de réalisation de                    |
+   | UML                       | diagrammes                                                         |
+   |---------------------------+--------------------------------------------------------------------|
+
+* Vue d'ensemble
+** Architecture système et déploiement
+
+   L'application est aujourd'hui déployé dans sa majorité sur un serveur virtuel ~AWS EC2~.
+   Les composants de l'architecture serveur sont les suivant:
+
+   1. Mongo DB : Une base de donnée noSQL orientée document. C'est dans cette base de donnée
+      que sont stockées toutes les données de l'application.
+   2. Uvicorn : Un serveur ASGI (~Asynchronus Server Gateway interface~) qui agit comme un environnement
+      d'éxecution asynchrone pour Python. Ce serveur permet donc de faire tourner l'application Python
+      en mode Asynchrone
+   4. Firebase: Un service utilisé pour les notifications push de l'application, utilise le ~Firebase Cloud Messaging~ (FCM)
+   5. Amazon EC2: Un service de serveur
+   6. Amazon S3
+   7. Docker et docker compose
+
+()[vue d'ensemble de l'architecture système]
+
+** Backend (API)
+
+
+** Frontend (application hybride)
+
+# POur chaque choix expliquer le pourquoi et les limites du choix
+* Conception
+** Concepts généraux
+*** Securité
+*** Separation of concerns
+
+** Backend
+*** DDD et Clean Architecture
+*** Models
+*** Services
+*** Repositories
+*** Presentation
+*** Tests
+
+** Frontend
+*** React
+*** Redux
+*** RTK-Query
+
+** DevOps
+
+* Ergonomie et design
+
+* API
+** Style d'architecture
+** Authentifaction et Securité
+*** OAuth2
+*** Connection et enregistrement
+*** Permissions
+*** Vérification et contrôle d'accès
+
+** Food
+*** create food
+*** list food
+*** get food
+*** delete food
+*** process food barcode
+
+** Entry
+*** create entry
+*** list entry
+*** get entry
+*** delete entry
+
+** User
+*** get current user infos
+*** set current user goals
+*** set current user basic infos
+*** set current user water notification
+
+** Notifications
+*** set notification token
+*** send test notification
+*** schedule notifications
+*** send notification to user
+
+** Report
+*** get stats
+
+** Debug
+*** post debug entry

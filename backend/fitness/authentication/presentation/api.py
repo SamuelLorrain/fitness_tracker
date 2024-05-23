@@ -47,7 +47,7 @@ def register(register_request: RegisterRequest) -> AuthenticationResponse:
     )
     token = jwt_formatter.serialize(pass_key)
 
-    return AuthenticationResponse(email=pass_key.email, access_token=token)
+    return AuthenticationResponse(access_token=token)
 
 
 @auth_router.get("/verify", status_code=status.HTTP_204_NO_CONTENT)
