@@ -44,8 +44,7 @@ CREATE THE LEXIQUE
    |                           | gestion d'état global de l'application.                            |
    |---------------------------+--------------------------------------------------------------------|
    | Applications natives      | ~Android Studio~ pour la partie ~Android~;                         |
-   |                           | ~XCode~ pour la partie ~Ios~;                                      |
-   |                           | De véritables Iphones et smartphones android vont être utilisés    |
+   |                           | De véritables smartphones android vont être utilisés               |
    |                           | durant le développement. Egalement, utilisation des émulateurs     |
    |                           | présents dans les environnements de développements natifs.         |
    |---------------------------+--------------------------------------------------------------------|
@@ -130,12 +129,12 @@ le développeur est responsable de la maintenance et de l'exploitation des donn�
    1. ~React~: Une bibliothèque de rendu "reactif". Permet de créer des interfaces graphiques complexes en ~HTMl~ et ~typescript~.
       Est également utilisée comme une couche d'abstraction au dessus d'~HTML~, grace au ~JSX~.
       Est aussi à la base d'un écosystèmes de bibliothèques.
-   2. ~Redux~: Une bibliothèque qui permet d'utiliser le pattern ~Flux~ pour gèrer l'état de l'application.
+   2. ~Redux~: Une bibliothèque qui permet d'utiliser le pattern ~Flux~ (une variation du pattern MVC[fn:: https://facebookarchive.github.io/flux/docs/in-depth-overview/]) pour gèrer l'état de l'application.
       L'état ainsi stocké dans ~Redux~ permet de rendre l'application plus prédictible car celui-ci est centralisé mis à jour et utilisé
       par un flux unidirectionnel. Nous détaillons ce point dans la suite du document.
    4. ~RTK-Query~: Un moteur de requète ~AJAX~ compatible avec ~Redux~. Gère le cache et l'invalidation de cache, ainsi que les états
       des requètes ("pending", "error" ,"loading" etc.)
-   4. ~Ionic~: A la fois une bibliothèque graphique de composant Reacts, utilisée pour répliquer le visuel des composants natif ~Android~
+   4. ~Ionic~: A la fois une bibliothèque graphique de composants ~React~, utilisée pour répliquer le visuel des composants natif ~Android~
       et ~Ios~.
    5. ~Capacitor~: Fournit une abstraction entre les composants ~Ionic~ et les applications natives ~Ios~ et ~Android~. Permet également
       d'utiliser des fonctionnalités natives des téléphones normalement inaccessibles à une application web. Certains plugins permettent
@@ -150,7 +149,7 @@ Les principes /SOLID/ contribuent de manière significative à l’élaboration
 de logiciels modulaires, évolutifs et maintenables.
 
 Dans le cadre de notre programme, l'application de ces principes
-nous a aidé à tester l'application grâce à *D*, l'injection de dépendance,
+nous a aidé à la mise en place de test unitaire grâce à *D*, l'injection de dépendance,
 qui permet de modifier une base de donnée en une version /in memory/
 permettant des tests rapides. Ou encore de tester en isolation les
 services et le domaine.
@@ -182,16 +181,17 @@ lorsque la base de code devient plus importante, en effet il n'y a que
 peu d'interfaces, et l'unique utilisation du principe *O* est dans
 l'élaboration des /Entries/ génériques. Nous en parlerons plus loin.
 
-*** inspiration REST
+*** Inspiration REST
 
 /REST/ (/REpresentational State Transfer/) est un style d'architecture visant
-à simplifier la communication client serveur en assignant une /URI/ (Unique Ressource Identifier/)
-à chaque ressource serveur, et à utiliser les verbes ~HTTP~ pour signifier l'intention
-du client par rapport à ces ressources. Le serveur doit quand à lui utiliser les code
+à simplifier la communication client serveur en assignant une /URI/ (/Unique Ressource Identifier/)
+à chaque ressource, et à utiliser les verbes ~HTTP~ pour signifier l'intention
+du client par rapport à ces ressources. Le serveur doit quant à lui utiliser les codes
 de retour ~HTTP~ pour signifier l'état du traitement de la demande du client.
-Aussi une architecture /REST/ doit être "discoverable".
+Aussi une architecture /REST/ doit être "découvrable" (/discoverable/).
 C'est à dire qu'un client doit avoir connaissance facilement du reste de l'application
 à partir d'une première requète. Grâce à l'utilisation d'hyperliens par exemple.
+Dans notre cas, le /backend/ agit comme le serveur et le /frontend/ comme le client.
 
 Notons que /REST/ n'est pas une norme, mais plutôt une série de principes.
 
@@ -202,13 +202,13 @@ accèdera toujours à la même ressource via la même /URI/.
 
 Nous n'allons pas utiliser totalement le style d'architecture /REST/, mais se concentrer
 seulement sur les /URI/ et les verbes et code de retour ~HTTP~, car, dans le cadre d'une /API/ les autres notions
-sont peut utilisées, au grand désarroi de l'auteur[fn:: https://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven].
+sont peut généralement peu utile et en pratique peut utilisées, au grand désarroi de l'auteur[fn:: https://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven].
 
 Pour garantir ces principes, nous avons besoin de plusieurs choses:
 
-1. Des identifiants uniques par ressource (/URI/). Nous utiliserons les /uuid4/, qui est un format d'identifiant unique généré aléatoirement.
+1. Des identifiants uniques par ressource (/URI/). Nous utiliserons les /UUID4/, qui est un format d'identifiant unique généré aléatoirement.
    La version 4 est privilégiée car elle utilise un générateur de nombre aléatoire plutôt que des caractéristiques du serveur
-   (comme son addresse MAC[fn:: https://datatracker.ietf.org/doc/html/rfc4122, voir la section "Identifier uniqueness considerations"])
+   (comme son adresse MAC[fn:: https://datatracker.ietf.org/doc/html/rfc4122, voir la section "Identifier uniqueness considerations"])
 2. Les verbes ~HTTP~ doivent correspondre à des actions précises:
 
    - *GET* permet de lister ou obtenir une ou des ressources
@@ -216,22 +216,90 @@ Pour garantir ces principes, nous avons besoin de plusieurs choses:
    - *PUT* permet de modifier une ressource
    - *DELETE* permet de supprimer une ressource
 
-Notons que nous avons décidé de ne pas utiliser *PATCH*, car, bien qu'il soit défini comme un moyen de modifier une partie d'une ressource,
-il implique également que le client sache comment doivent être considéré les parties non envoyées dans la requête *PATCH*. Cela peut porter
-à confusion, notamment quand les champs des ressources sont optionnels.
+   Nous avons décidé de ne pas utiliser *PATCH*, car, bien qu'il soit défini comme un moyen de modifier une partie d'une ressource,
+   il implique également que le client ait connaissance de la manière dont sont considérées les parties non transmises dans la requête *PATCH*. Cela peut porter
+   à confusion, notamment quand certains champs de la ressource sont optionnels.
 
-3. Les actions doivent être donner lieu à des opérations et des retours serveurs non-ambigues.
+3. Les actions doivent donner lieu à des opérations et des retours serveurs non-ambigus.
    Par exemple, la création d'une ressource ne doit pas retourner directement le contenu de la ressource créée mais
    uniquement l'/URI/ de la nouvelle donnée créée. A la fois pour des raisons de performance, et de séparation
    de responsabilité: un *POST* ne doit pas retourner les données à la manière d'un *GET*.
 
-Nous verrons dans le détail les différents /endpoints/ de l'/API/
+Nous verrons le détail les différents /endpoints/ de l'/API/ dans la suite du document.
 
 ** Backend
 *** Choix des bibliothèques
-- Mypy
-- Fastapi
+**** Python
+Le choix de ~Python~ comme language de programmation a été motivé par plusieurs points.
+La première idée était d'utiliser des bibliothèques de /machine learning/ et /data science/
+comme ~Panda~ et ~Scikit-learn~ pour créer une fonctionnalité de mesure automatique de calories
+à partir de photographies. ces bibliothèques sont disponible en ~Python~, et les documentations
+en ligne sur ce genre de sujet utilisent surtout ce langage. ~Python~ étant un des langages les plus utilisés en /data science/[fn:: https://www.dasca.org/world-of-data-science/article/which-programming-language-is-ideal-for-data-science-python-or-r ]
+Cependant il s'est trouvé que la quantité et la qualité des
+données requises pour une telle tâche n'a pas permit d'aboutir à un résultat pour le moment.
+
+~Python~ offre cependant certains avantages par rapport à d'autres languages.
+Comme c'est un langage interprété, le déploiement ne demande pas de phase de compilation.
+
+Un certain nombre de fonctionalitéds du langage simplifient aussi le développement
+comme par exemple les décorateurs[fn:: une version "statique" du pattern décorateur, que l'on
+peut implémenter à l'aide des annotations en ~Java~ par exemple.] ou
+son caractère multi-paradigme : à la fois orienté objet[fn:: avec des classes "simples" ou des "dataclasses",
+qui ont sont l'équivalent ~Python~ des ~records~ en ~Java~ ou ~C#~.],
+fonctionnel[fn:: en ~Python~, les fonctions sont considérés comme des "citoyens de premiere classe", on peut
+donc les utiliser comme des valeurs, et les passer en paramètre. De plus, la bibliothèque standard propose
+des fonctionalités typique d'un language fonctionnel comme des fonctions ~map~, ~filter~, ~reduce~, ~zip~, ~takewhile~...
+On peut également créer des listes en intention à la manière d'~Haskell~, ou encore faire de l'/itération paresseuse/ grâce aux ~generateurs~ ]
+et impératif.
+Les bibliothèques utilisés dans le projets fonctionnent constamment à travers cette approche multi-paradigme.
+
+La notion de typage optionel et incremental[fn:: https://peps.python.org/pep-0484/] permet de faciliter
+le développement tout en garantissant un sécurité des types (à l'inverse des langages dynamiques classiques).
+Le /Structural duck typing/, notion propre à ~Python~, remplace la notion d'interface dans un contexte de typage dynamique[fn:: https://peps.python.org/pep-0544/]
+
+Enfin, l'écosystème est adapté au developpement web incremental et rapide. De nombreuses bibliothèques et /frameworks/ existent
+pour nous aider à développer une /API/. Et il nous a semblé que ~Python~ privilégiait une approche "bibliothèque" plutôt qu'une
+approche "/framework/", ce qui permet de tester et éprouver des /design patterns/ qui n'auraient pas été prévu
+par tel ou tel /framework/.
+
+
+**** FastAPI
+Nous avons choisi ~FastAPI~ comme /framework/ web principal.
+Il est léger et spécialisé : il été conçu uniquement pour
+la création d'/API/, à l'inverse de la plupart des autres /frameworks/
+web qui proposent des écosystèmes logiciels complets (allant parfois
+du déploiement jusqu'au style de page[fn:: Par exemple ASP.NET]).
+
+~FastAPI~ inclu une validation des données et une serialisation/désérialisation par typage fort
+en utilisant la librairie ~Pydantic~. Ainsi, nous pouvons garantir que les entrées et sorties
+de l'application sont typés, évitant ainsi une classe entière d'erreurs.
+Nous avons aussi utilisé le système d'injection de dépendance intégré, les middleware,
+ainsi que les abstractions au dessus de systèmes d'authentification comme ~OAuth2~.
+Enfin, ~FastAPI~ génère automatiquement une documentation ~OpenAPI~, ce qui faisait
+parti de nos exigences fonctionnelles.
+
+**** Mypy
+
+~Mypy~ est un système de vérification statique de typage en ~Python~.
+Il permet de s'assurer de la cohérence des types de l'application sans la lancer.
+Par exemple, ~Mypy~ peut déterminer si une fonction qui retourne un ~int~, retourne, en
+effet un ~int~. ~Mypy~ fonctionne de concert avec ~FastAPI~ et ~Pydantic~.
+
+**** Autre bibliothèques
+
+Nous utilisons d'autres dépendances dans le projets:
+
+- ~requests~ un client ~HTTP~ pour permettre au serveur d'effectuer des requètes
+- ~py-jwt~ une bibliothèque d'encodage et décodage des tokens ~JWT~ (a voir dans la suite du document)
+- ~pymongo~ un driver ~MongoDB~ pour ~Python~, qui permet de connecter la base de donnée à l'application
+- ~isort~ et ~black~ des outils pour formatter le code de façon standard[fn:: https://peps.python.org/pep-0008/]
+- ~pytest~ et ~coverages~ des bibliothèques de test unitaire et de controle de couverture de tests.
+- d'autres bibliothèques auxilliaires pour quelques fonctionnalités optionnelles de ~Pydantic~ et l'accès à ~Firebase~
+
 *** DDD et Clean Architecture
+
+Pour ce projet,
+
 *** Domaine
  - Parler des Entries génériques
 *** Application
