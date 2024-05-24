@@ -3,11 +3,8 @@
 \clearpage \tableofcontents \clearpage
 #+end_export
 
-* Lexique
-
-CREATE THE LEXIQUE
-
 * Introduction
+
 ** Objectif du document
 
    L'objectif du document est de présenter les choix et la conception détaillée de l'application *Fitness Tracker*
@@ -30,10 +27,10 @@ CREATE THE LEXIQUE
    | Réalisation               | Outils                                                             |
    |---------------------------+--------------------------------------------------------------------|
    | Application serveur       | ~Python 3.11~;                                                     |
-   |                           | ~FastAPI 0.110~, un caneva web specialisé dans la création d'API;  |
+   |                           | ~FastAPI 0.110~, un /framework/ web specialisé dans la création d'/API/; |
    |                           | ~mypy 1.9~, un outil de typage statique pour Python;               |
    |---------------------------+--------------------------------------------------------------------|
-   | Application mobile et web | ~Ionic/React~, un canvas de création d'interface mobile utilisant  |
+   | Application mobile et web | ~Ionic/React~, un /framework/ de création d'interface mobile utilisant |
    |                           | la bibliothèque ~React~ comme moteur d'interface graphique;        |
    |                           | ~Capacitor~, un environnement d'exécution permettant d'utiliser    |
    |                           | les applications web comme des applications mobiles natives,       |
@@ -112,10 +109,11 @@ le développeur est responsable de la maintenance et de l'exploitation des donn�
       d'execution asynchrone et web pour ~Python~. Ce serveur permet donc de faire fonctionner l'application ~Python~
       en mode asynchrone.
    3. Une architecture en couche, inspirée par ~Clean Architecture~:
-      Il y a une couche ~Domain~, qui décrit les ~Entitées~ et ~Aggregats~ du systême, une couche de ~Persistence~,
-      utilisée pour séparer le stockage du reste de l'application. Une couche de ~Presentation~ qui permet de communiquer
-      avec l'extérieur, ainsi qu'une couche ~Application~ (ou Service) qui s'occupe de l'orchestration entre les autres
-      élements de l'application.
+      Il y a une couche ~Domaine~, qui décrit les ~Entitées~ et ~Aggregats~ du systême, une couche ~Infrastrucutre~,
+      utilisée pour les implémentations comme le stockage du reste de l'application.
+      Une couche de ~Presentation~ qui permet de communiquer avec l'extérieur, ainsi qu'une couche ~Application~ (ou Service)
+      qui s'occupe de l'orchestration entre les autres élements de l'application. Nous détaillons cette architecture
+      dans la suite du document.
 
 
 ** Frontend (application hybride)
@@ -126,7 +124,7 @@ le développeur est responsable de la maintenance et de l'exploitation des donn�
 #+ATTR_HTML: :height 300px
    [[./img/architecture_frontend.png]]
 
-   1. ~React~: Une bibliothèque de rendu "reactif". Permet de créer des interfaces graphiques complexes en ~HTMl~ et ~typescript~.
+   1. ~React~: Une bibliothèque de rendu "réactive". Permet de créer des interfaces graphiques complexes en ~HTMl~ et ~typescript~.
       Est également utilisée comme une couche d'abstraction au dessus d'~HTML~, grace au ~JSX~.
       Est aussi à la base d'un écosystèmes de bibliothèques.
    2. ~Redux~: Une bibliothèque qui permet d'utiliser le pattern ~Flux~ (une variation du pattern MVC[fn:: https://facebookarchive.github.io/flux/docs/in-depth-overview/]) pour gèrer l'état de l'application.
@@ -134,8 +132,8 @@ le développeur est responsable de la maintenance et de l'exploitation des donn�
       par un flux unidirectionnel. Nous détaillons ce point dans la suite du document.
    4. ~RTK-Query~: Un moteur de requète ~AJAX~ compatible avec ~Redux~. Gère le cache et l'invalidation de cache, ainsi que les états
       des requètes ("pending", "error" ,"loading" etc.)
-   4. ~Ionic~: A la fois une bibliothèque graphique de composants ~React~, utilisée pour répliquer le visuel des composants natif ~Android~
-      et ~Ios~.
+   4. ~Ionic~: A la fois une bibliothèque graphique de composants ~React~ répliquant le visuel des composants natif ~Android~ et ~Ios~ et
+      une abstraction pour effectuer certaines tâches liées à ~Capacitor~ (~inoic cli~)
    5. ~Capacitor~: Fournit une abstraction entre les composants ~Ionic~ et les applications natives ~Ios~ et ~Android~. Permet également
       d'utiliser des fonctionnalités natives des téléphones normalement inaccessibles à une application web. Certains plugins permettent
       notamment d'utiliser le /GPS/ du téléphone, ou encore les fonctionnalités de stockage.
@@ -289,32 +287,99 @@ effet un ~int~. ~Mypy~ fonctionne de concert avec ~FastAPI~ et ~Pydantic~.
 
 Nous utilisons d'autres dépendances dans le projets:
 
-- ~requests~ un client ~HTTP~ pour permettre au serveur d'effectuer des requètes
-- ~py-jwt~ une bibliothèque d'encodage et décodage des tokens ~JWT~ (a voir dans la suite du document)
-- ~pymongo~ un driver ~MongoDB~ pour ~Python~, qui permet de connecter la base de donnée à l'application
-- ~isort~ et ~black~ des outils pour formatter le code de façon standard[fn:: https://peps.python.org/pep-0008/]
-- ~pytest~ et ~coverages~ des bibliothèques de test unitaire et de controle de couverture de tests.
-- d'autres bibliothèques auxilliaires pour quelques fonctionnalités optionnelles de ~Pydantic~ et l'accès à ~Firebase~
+- ~requests~, un client ~HTTP~ pour permettre au serveur d'effectuer des requètes
+- ~py-jwt~, une bibliothèque d'encodage et décodage des tokens ~JWT~ (a voir dans la suite du document)
+- ~pymongo~, un driver ~MongoDB~ pour ~Python~, qui permet de connecter la base de donnée à l'application
+- ~isort~ et ~black~, des outils pour formatter le code de façon standard[fn:: https://peps.python.org/pep-0008/]
+- ~pytest~ et ~coverage~, des bibliothèques de test unitaire et de controle de couverture de tests.
+- d'autres bibliothèques auxilliaires pour quelques fonctionnalités optionnelles de ~Pydantic~ et l'accès à ~Firebase~.
 
-*** DDD et Clean Architecture
+*** Clean Architecture
 
-Pour ce projet,
+Le /backend/ été conçu en suivant les principes de la /Clean Architecure/. C'est
+une des différentes façons d'implémenter /SOLID/ dans un context d'application utilisateur (par opposition à une bibliothèque).
+Le principe est de séparer l'application en plusieurs couches distinctes et indépendantes, et de ne permettre qu'un petit ensemble de
+communication entre ces couches. Cette structure permet d'isoler la logique métier des interfaces utilisateurs et des infrastructures.
+
+Concrètement, /Clean Architecture/ défini 4 couches: /Domaine/, /Présentation/, /Application/, /Infrastructure/, ayant
+chacune un rôle distinct.
+
+- La couche /Domaine/ contient les /Entitées/ et /Aggregats/, soit, les objets domaine de l'application. Dans notre cas,
+  un /User/ ou encore une nourriture (/Food/) est une /Entitité/.
+  Ce sont des classes "simples", sans référence à la base de donnée où à quelconque technologie ou entrée/sortie particulière.
+
+- La couche /Présentation/ est dédiée à l'interface entre l'application et l'extérieur. Il s'agit dans notre cas de
+  la partie de l'application qui s'occupe des /Contrats/ des requètes et réponses ~HTTP~ (leur format) ainsi que les
+  règles de validation associées. C'est la seule couche de l'application qui fait directement référence à ~FastAPI~.
+
+- La couche /Application/ ou /Service/ a pour fonction de décrire des opérations concrètes sur les /Entitées/, et de
+  faire le lien entre plusieurs couches. Par exemple, c'est cette couche qui détermine si telle action doit utiliser
+  telle méthode d'un /Repository/.
+  Pour garantir une approche /SOLID/, elle ne fait pas directement référence aux implémentations, mais uniquement aux
+  interfaces qui sont implémentées dans la couche /Infrastructures/.
+  Les interfaces sont d'ailleurs déclarées dans la couche application.
+
+- La couche /Infrastructure/ contient les implémentations des interfaces. Les autres couches ne font jamais de référence
+  directes à cette couche. C'est un système de configuration (liée à de l'injection de dépendance) qui s'occupe
+  de dispatcher la bonne implémentation pour le cas d'utilisation ou l'environnement voulu.
+  Dans notre cas, la couche infrastructure implémente principalement les /Repositories/ ainsi que les méthodes d'authentification:
+  La classe qui s'occupe de sérializer et désérializer les ~JWT~ en class d'authentification /AuthPassKey/, est une implémentation
+  concrète de la classe /AuthFormatter/ (/JWTAuthFormatter/).
+
+- Des classes de /Configuration/ sont également utilisées pour créer de l'injection de dépendances (soit, définir quelle implémentation
+  doit implémenter telle interface dans tel contexte). D'ailleurs, la configuration n'a pas besoin de déterminer
+  statiquement quelle implémentation doit être utilisé dans tel cas, mais peut utiliser une /Factory/ pour déterminer dynamiquement
+  quelle classe doit être utilisée dans un cas d'utilisation précis (voir le /design pattern/ /Strategy/)
+
+  MONTRER UN EXEMPLE DE MODULE DE L'APPLICATION À L'AIDE D'UN DIAGRAMME UML
+  ==> a la fois un diagramme UML et un diagramme de séquence
 
 *** Domaine
- - Parler des Entries génériques
-*** Application
-*** Persistence
+Voici une vue d'ensemble des entitées et aggrégats de l'application:
+
+#+CAPTION: Entitées et aggregats
+[[./img/domaine.png]]
+
+ATTENTION JE CROIS QU'IL FAUT MODIFIER LE SCHEMA POUR SEPARER LES COMPOSITIONS ET AGGREGATIONS
+OK BON C'EST SURTOUT ILLISIBLE, ON VA FAIRE PLUSIEURS PARTIES:
+
+1. Nutrition
+
+2. User
+
+3. Entries
+
+Comme nous pouvons le voir, la majorité des classes sont liés entre elles par
+de la composition ou de l'aggregation.
+Aussi, les différents types d'entrées sont des implémentations différents
+de l'interface /Entry/, ce qui permet d'en rajouter à la volée dans l'application.
+Et ainsi rendre celle-ci facilement extensible.
+Le domaine étant "plat", sans notion d'héritage la modularité est conservée au maximum.
+
+*** Infrastructure
+- Différence entre le mapping et
 *** Presentation
+**** Authentifaction et Securité
+***** OAuth2
+***** Connection et enregistrement
+***** Permissions
+***** Vérification et contrôle d'accès
+
 *** Tests
+
+*** Diagramme de séquence
+
+OU EST CE QU'ON DÉCRIT LES PATTERNS UTILISÉS ? JE PENSE DANS LES SECTIONS
 
 ** Frontend
 *** Choix des bibliothèques
-*** React
-*** Redux
-*** RTK-Query
+**** React
+**** Ionic
+**** Redux
+**** RTK-Query
 
-** Diagramme de séquence
-** Navigation
+*** Navigation
+
 ** Infrastructure
 - Pourquoi docker par exemple
 - Pourquoi AWS etc.
@@ -334,12 +399,6 @@ nous mitigons ces points dans l'application.
 * Ergonomie et design
 
 * API
-** Style d'architecture
-** Authentifaction et Securité
-*** OAuth2
-*** Connection et enregistrement
-*** Permissions
-*** Vérification et contrôle d'accès
 
 ** Food
 *** create food
@@ -371,3 +430,98 @@ nous mitigons ces points dans l'application.
 
 ** Debug
 *** post debug entry
+
+* Lexique
+
+| Terme           | Définition                                                                      |
+|-----------------+---------------------------------------------------------------------------------|
+| API             | Signifie /Application Programming Interface/                                    |
+|                 | il s'agit d'une interface qui permet de faire                                   |
+|                 | communiquer plusieurs programmes entre eux. Les programmes                      |
+|                 | peuvent être rapproché ou distants.                                             |
+|-----------------+---------------------------------------------------------------------------------|
+| multi-platforme | Un logiciel est dis multi-platforme si il peux fonctionner                      |
+|                 | sur plusieurs plateforme, machines ou systèmes d'exploitations                  |
+|                 | différents.                                                                     |
+|-----------------+---------------------------------------------------------------------------------|
+| IHM             | Interface homme machine, décrit les interfaces permettants à                    |
+|                 | un utilisateur d'intéragir avec l'application.                                  |
+|-----------------+---------------------------------------------------------------------------------|
+| frontend        | La partie de l'application visible par l'utilisateur.                           |
+|                 | Elle comprends à la fois l'IHM et le système permettant à                       |
+|                 | cette partie de se connecter aux autres parties de                              |
+|                 | l'application.                                                                  |
+|-----------------+---------------------------------------------------------------------------------|
+| backend         |                                                                                 |
+|-----------------+---------------------------------------------------------------------------------|
+| framework       | Un /framework/ ou canevas en anglais est un ensemble de                         |
+|                 | bibliothèques logicielles permettant de faciliter la                            |
+|                 | programmation de certaines tâches. Souvent les /frameworks/                     |
+|                 | induisent une façon particulière de programmer                                  |
+|-----------------+---------------------------------------------------------------------------------|
+| bibliothèque    | Code pré-exis,ant permettant de régler un problème, ou                          |
+|                 | permettant d'implémenter certaines fonctionnalités. Ce code                     |
+|                 | est conçu pour être réutilisable entre plusieurs applications                   |
+|-----------------+---------------------------------------------------------------------------------|
+| environnement   | Un environnement d'execution ou /runtime/ en anglais est un                     |
+| d'execution     | programme qui fournit certaines fonctionnalités à un autre                      |
+|                 | programme pour être éxecuté. Dans le cas qui nous interesse                     |
+|                 | pendant ce document, l'environnement d'execution permet                         |
+|                 | spécifiquement de faire fonctionner du code asynchrone                          |
+|                 | en ~Python~.                                                                    |
+|-----------------+---------------------------------------------------------------------------------|
+| Plugin          | Un plugin est un partie optionnelle d'un programme                              |
+|                 | qui peut-être branché à un programme principale pour ajouter                    |
+|                 | des fonctionnalités. On parle également d'"architecture plugins"                |
+|                 | pour parler des architectures logicielles qui simplifie la                      |
+|                 | création de nouvelles fonctionnalités interchangeables dans.                    |
+|                 | un programme                                                                    |
+|-----------------+---------------------------------------------------------------------------------|
+| Emulateur       | Un émulateur est un programme qui se comporte comme une machine                 |
+|                 | particulière. Nous utiliserons notamment un émulateur                           |
+|                 | Android pour faire fonctionner notre programme comme si                         |
+|                 | il fonctionnait sur Android                                                     |
+|-----------------+---------------------------------------------------------------------------------|
+| Saas            | Sigle anglais signifiant /Software as a Service/ c'est un type                  |
+|                 | de programme qui n'est pas installé sur la machine d'un                         |
+|                 | utilisateur mais qui fonctionne de façon distante.                              |
+|-----------------+---------------------------------------------------------------------------------|
+| Serveur virtuel | Un serveur virtuel est une instance de serveur qui fonctionne sur un système    |
+|                 | d'exploitation hôte en partageant ses ressources matérielles.                   |
+|                 | Des logiciels appelés /hyperviseurs/ permettent de faire fonctionner            |
+|                 | plusieurs serveurs virtuels sur la même machine physique.                       |
+|-----------------+---------------------------------------------------------------------------------|
+| Container       | Un container est un environnement isolé du reste du système                     |
+|                 | d'exploitation. Un container permet de garantir qu'un                           |
+|                 | programme fonctionnera de la même façon quelque soit le système                 |
+|                 | d'exploitation qui fait fonctionner le container.                               |
+|                 | Un container /Docker/ est quant a lui un type spéciale de                       |
+|                 | container qui utilise le programme /Docker/ pour rendre                         |
+|                 | ce container réutilisable entre plusieurs installations                         |
+|                 | à l'aide d'un fichier de configuration appelé /Dockerfile/                      |
+|-----------------+---------------------------------------------------------------------------------|
+| Cache           | Le cache est une mémoire tampon qui est utilisée en informatique pour           |
+|                 | éviter de refaire un calcul ou de récupérer des données identiques plusieurs    |
+|                 | fois.                                                                           |
+|-----------------+---------------------------------------------------------------------------------|
+| Interface       | Dans le contexte de la programmation orientée objet, une interface est un       |
+|                 | élement d'architecture qui permet de définir les contrats que doit              |
+|                 | suivre un classe pour pouvoir implémenter l'interface.                          |
+|                 | Le but est généralement de créer des programmes modulaires dans lesquels        |
+|                 | plusieurs implémentation d'une interface existent. Par exemple, on peut définir |
+|                 | une interface "Séquence" qui comprends les méthodes "longueur" et "estVide".    |
+|                 | Les implémentations de cette interface devront toutes implémenter ces deux      |
+|                 | méthodes.                                                                       |
+|-----------------+---------------------------------------------------------------------------------|
+| type            | Un type défini des caractéristiques inhérentes à certains élements dans un      |
+|                 | programme. La notion de type peut être considéré comme une généralisation       |
+|                 | de la notion d'interface aux interfaces elles mêmes et aux types                |
+|                 | primitifs d'un langage.                                                         |
+|-----------------+---------------------------------------------------------------------------------|
+| implémentation  | Dans un contexte orienté objet, on parle de l'implémentation d'une interface.   |
+|                 | Une implémentation est une classe qui implémente les méthodes d'une interface   |
+|                 | donnée.                                                                         |
+|-----------------+---------------------------------------------------------------------------------|
+| design pattern  | Un /design pattern/ est une collection de classes agencée de façon précises     |
+|                 | entre elles dans le but de répondre à un problème connu et documenté.           |
+|                 | On dit que les design patterns ne sont pas inventé mais découverts.             |
