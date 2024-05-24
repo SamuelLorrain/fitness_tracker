@@ -1,26 +1,29 @@
 #+begin_export latex
-  \renewcommand{\contentsname}{Table des matières}
-  \clearpage \tableofcontents \clearpage
+\renewcommand{\contentsname}{Table des matières}
+\clearpage \tableofcontents \clearpage
 #+end_export
 
 * Lexique
 
+CREATE THE LEXIQUE
+
 * Introduction
 ** Objectif du document
 
-   L'objectif du document est de présenter les choix et la conception de l'application *Fitness Tracker*
-   en réponse au cahier des charges précédemment établis.
+   L'objectif du document est de présenter les choix et la conception détaillée de l'application *Fitness Tracker*
+   en réponse au cahier des charges précédemment établi. Ainsi que présenter certaines solutions
+   techniques aux problèmes rencontrés pendant le développement.
 
 ** Rappel du projet
 
    Le projet vise à développer une application de suivi de bien-être
    et sportif. Les principales fonctionnalités consistent à rentrer des
-   données de nutrition, ou d'autres données relatives aux sport et
+   données de nutrition, ou d'autres données relatives aux sport
    et de suivre l'évolution de certaines tendances dans le temps.
 
    L'application doit être multi-platforme. Elle est composée à
-   la fois d'un *front end*, application web hybride et un *back end*,
-   une *API* chargée de stocker et gérer les données ainsi entrées.
+   la fois d'un /frontend/, application web hybride et un /backend/,
+   Une /API/ est chargée de faire la communication entre les deux éléments.
 
 ** Environnement de développement
 
@@ -54,53 +57,211 @@
    | Redaction de documents    | ~Latex~ et ~vim~, en utilisant un plugin ~Orgmode~ et ~pandoc~     |
    |                           | pour la réalisation du document final (pdf)                        |
    |---------------------------+--------------------------------------------------------------------|
-   | Redaction de diagrammes   | ~Whimsical~ un outil en ligne de réalisation de                    |
+   | Redaction de diagrammes   | ~diagrams.net~ un outil en ligne de réalisation de        |
    | UML                       | diagrammes                                                         |
    |---------------------------+--------------------------------------------------------------------|
 
-* Vue d'ensemble
+* Vue d'ensemble de l'architecture
+
+L'application est séparée en 3 parties distinctes. L'/architecture système/ concerne
+les logiciels et matériels (ou matériels virtuels) nécessaires à l'hébergement et
+à la mise en production de l'application.
+Le /backend/ constitue la partie logique de l'application ainsi que la persistence des
+données utilisateur. Le /frontend/ est quant à lui responsable de l'interface homme machine
+permettant la réalisation des différentes taches de l'application.
+
+Une telle architecture peut être considérée comme un /Saas/, car l'application n'a pas
+besoin d'être installée pour que l'utilisateur ait la capacité de l'utiliser (dans sa version webapp),
+la version mobile du frontend ne servant qu'a accéder à certaines fonctionnalités non essentielles au
+fonctionnement et à améliorer les peformances[fn:: il n'y a pas besoin de télécharger le fichier js à chaque fois
+que l'on accède à l'application mobile].
+Comme la persistence des données est au niveau du /backend/, non accessible à l'utilisateur,
+le développeur est responsable de la maintenance et de l'exploitation des données sur l'application.
+
 ** Architecture système et déploiement
 
-   L'application est aujourd'hui déployé dans sa majorité sur un serveur virtuel ~AWS EC2~.
-   Les composants de l'architecture serveur sont les suivant:
+   L'application est aujourd'hui déployée dans sa majorité sur un serveur virtuel ~AWS EC2~.
+   Les composants de l'architecture système sont les suivant:
 
-   1. Mongo DB : Une base de donnée noSQL orientée document. C'est dans cette base de donnée
-      que sont stockées toutes les données de l'application.
-   2. Uvicorn : Un serveur ASGI (~Asynchronus Server Gateway interface~) qui agit comme un environnement
-      d'éxecution asynchrone pour Python. Ce serveur permet donc de faire tourner l'application Python
-      en mode Asynchrone
-   4. Firebase: Un service utilisé pour les notifications push de l'application, utilise le ~Firebase Cloud Messaging~ (FCM)
-   5. Amazon EC2: Un service de serveur
-   6. Amazon S3
-   7. Docker et docker compose
+#+CAPTION: Architecture système
+#+ATTR_HTML: :width 300px
+   [[./img/architecture_systeme.png]]
 
-()[vue d'ensemble de l'architecture système]
+   1. ~Mongo DB~ : Une base de donnée /NoSQL/ orientée document. Toutes les donneés de l'application y sont stockées;
+   2. ~Firebase~ : Un service utilisé pour les notifications push, utilise le ~Firebase Cloud Messaging~ (~FCM~);
+   3. ~Amazon EC2~ : Un service de serveur virtuel fonctionnant sur la distribution Linux ~Amazon Linux 2~.
+      Est utilisé pour lancer des /containers/ ~Docker~;
+   4. ~Amazon S3~ : Un service de stockage de fichier statique et d'hébergement de ces fichiers. Héberge l'application
+      web (un fichier ~index.html~ et un fichier ~index.js~)
+   5. ~Docker~ : Logiciel de /containerisation/ de l'application, est utilisé pour configurer et stocker les environnements
+      nécessaires à l'installation de l'application /backend/.
+   6. ~Docker compose~ : Décrit les interactions entre les différents /containers/ ainsi que les interactions avec
+      l'exterieur des /containers/, comme le stockage ou les ports réseaux.
 
-** Backend (API)
+** Backend
+
+   L'application ~backend~ est constituée de plusieurs éléments. Outre ceux déjà présentés,
+   celle-ci comprends:
+
+#+CAPTION: Architecture backend
+#+ATTR_HTML: :width 300px
+   [[./img/architecture_backend.png]]
+
+   1. ~FastAPI~: un framework web ~Python~, centré sur des fonctionnalités de validation d'entrée typées et
+      de sérialisation/désérialisation.
+   2. ~Uvicorn~ : Un serveur ASGI (~Asynchronus Server Gateway interface~) qui agit comme un environnement
+      d'execution asynchrone et web pour ~Python~. Ce serveur permet donc de faire fonctionner l'application ~Python~
+      en mode asynchrone.
+   3. Une architecture en couche, inspirée par ~Clean Architecture~:
+      Il y a une couche ~Domain~, qui décrit les ~Entitées~ et ~Aggregats~ du systême, une couche de ~Persistence~,
+      utilisée pour séparer le stockage du reste de l'application. Une couche de ~Presentation~ qui permet de communiquer
+      avec l'extérieur, ainsi qu'une couche ~Application~ (ou Service) qui s'occupe de l'orchestration entre les autres
+      élements de l'application.
 
 
 ** Frontend (application hybride)
 
-# POur chaque choix expliquer le pourquoi et les limites du choix
+   L'application ~frontend~ comprends quant à elle ces éléments:
+
+#+CAPTION: Architecture frontend
+#+ATTR_HTML: :height 300px
+   [[./img/architecture_frontend.png]]
+
+   1. ~React~: Une bibliothèque de rendu "reactif". Permet de créer des interfaces graphiques complexes en ~HTMl~ et ~typescript~.
+      Est également utilisée comme une couche d'abstraction au dessus d'~HTML~, grace au ~JSX~.
+      Est aussi à la base d'un écosystèmes de bibliothèques.
+   2. ~Redux~: Une bibliothèque qui permet d'utiliser le pattern ~Flux~ pour gèrer l'état de l'application.
+      L'état ainsi stocké dans ~Redux~ permet de rendre l'application plus prédictible car celui-ci est centralisé mis à jour et utilisé
+      par un flux unidirectionnel. Nous détaillons ce point dans la suite du document.
+   4. ~RTK-Query~: Un moteur de requète ~AJAX~ compatible avec ~Redux~. Gère le cache et l'invalidation de cache, ainsi que les états
+      des requètes ("pending", "error" ,"loading" etc.)
+   4. ~Ionic~: A la fois une bibliothèque graphique de composant Reacts, utilisée pour répliquer le visuel des composants natif ~Android~
+      et ~Ios~.
+   5. ~Capacitor~: Fournit une abstraction entre les composants ~Ionic~ et les applications natives ~Ios~ et ~Android~. Permet également
+      d'utiliser des fonctionnalités natives des téléphones normalement inaccessibles à une application web. Certains plugins permettent
+      notamment d'utiliser le /GPS/ du téléphone, ou encore les fonctionnalités de stockage.
+
 * Conception
 ** Concepts généraux
-*** Securité
-*** Separation of concerns
+
+*** SOLID
+
+Les principes /SOLID/ contribuent de manière significative à l’élaboration
+de logiciels modulaires, évolutifs et maintenables.
+
+Dans le cadre de notre programme, l'application de ces principes
+nous a aidé à tester l'application grâce à *D*, l'injection de dépendance,
+qui permet de modifier une base de donnée en une version /in memory/
+permettant des tests rapides. Ou encore de tester en isolation les
+services et le domaine.
+
+De la même façon le *S*, principe de responsabilité unique (/Separation of concern/), nous donne
+une ligne directrice dans l'élaboration des différentes classes utilisées
+dans notre programme. En effet, l'application de ce principe permet
+une architecture plus modulaire, car la responsabilité unique implique
+qu'une classe "n'ait qu'une seule raison de changer"[fn:: Martin, Robert C. (2003). Agile Software Development, Principles, Patterns, and Practices. . p. 95].
+Cela permet de garantir la réutilisation et la modularité du code
+en diminuant l'interdépendance entre les classes:
+si une classe n'a qu'une raison de changer, alors, modifier une classe
+revient à modifier une fonctionnalité. Chaque classe ayant un rôle
+précis dans l'application.
+
+Les 3 autres principes ont été moins utilisés durant l'élaboration
+du programme.
+
+Tout d'abord, *L*, le principe de substitution de Liskov est garanti
+par le caractère dynamique des classes. ~Mypy~, le logiciel de vérification
+de type statique de ~Python~ ne permet pas de créer des classes qui transgresserait
+ce principe[fn:: https://mypy.readthedocs.io/en/stable/common_issues.html#incompatible-overrides].
+Nous pouvons cependant noter que celui-ci apparait uniquement dans le cadre
+de l'héritage, et qu'il n'y en a pas dans notre programme.
+
+Les principes *O* Ouvert/fermé et *I*, Ségragation des interfaces, ne
+sont que peu utilisés. Ces principes s'imposent
+lorsque la base de code devient plus importante, en effet il n'y a que
+peu d'interfaces, et l'unique utilisation du principe *O* est dans
+l'élaboration des /Entries/ génériques. Nous en parlerons plus loin.
+
+*** inspiration REST
+
+/REST/ (/REpresentational State Transfer/) est un style d'architecture visant
+à simplifier la communication client serveur en assignant une /URI/ (Unique Ressource Identifier/)
+à chaque ressource serveur, et à utiliser les verbes ~HTTP~ pour signifier l'intention
+du client par rapport à ces ressources. Le serveur doit quand à lui utiliser les code
+de retour ~HTTP~ pour signifier l'état du traitement de la demande du client.
+Aussi une architecture /REST/ doit être "discoverable".
+C'est à dire qu'un client doit avoir connaissance facilement du reste de l'application
+à partir d'une première requète. Grâce à l'utilisation d'hyperliens par exemple.
+
+Notons que /REST/ n'est pas une norme, mais plutôt une série de principes.
+
+Le but de ce style d'architecture est de garantir une commmunication /stateless/, "sans état", entre
+le client et le serveur. C'est à dire que ni le client, ni le serveur n'ont besoin de conserver
+un état sur l'un ou l'autre pour communiquer. Il y a notamment la garantie que le client
+accèdera toujours à la même ressource via la même /URI/.
+
+Nous n'allons pas utiliser totalement le style d'architecture /REST/, mais se concentrer
+seulement sur les /URI/ et les verbes et code de retour ~HTTP~, car, dans le cadre d'une /API/ les autres notions
+sont peut utilisées, au grand désarroi de l'auteur[fn:: https://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven].
+
+Pour garantir ces principes, nous avons besoin de plusieurs choses:
+
+1. Des identifiants uniques par ressource (/URI/). Nous utiliserons les /uuid4/, qui est un format d'identifiant unique généré aléatoirement.
+   La version 4 est privilégiée car elle utilise un générateur de nombre aléatoire plutôt que des caractéristiques du serveur
+   (comme son addresse MAC[fn:: https://datatracker.ietf.org/doc/html/rfc4122, voir la section "Identifier uniqueness considerations"])
+2. Les verbes ~HTTP~ doivent correspondre à des actions précises:
+
+   - *GET* permet de lister ou obtenir une ou des ressources
+   - *POST* permet de créer une ressource
+   - *PUT* permet de modifier une ressource
+   - *DELETE* permet de supprimer une ressource
+
+Notons que nous avons décidé de ne pas utiliser *PATCH*, car, bien qu'il soit défini comme un moyen de modifier une partie d'une ressource,
+il implique également que le client sache comment doivent être considéré les parties non envoyées dans la requête *PATCH*. Cela peut porter
+à confusion, notamment quand les champs des ressources sont optionnels.
+
+3. Les actions doivent être donner lieu à des opérations et des retours serveurs non-ambigues.
+   Par exemple, la création d'une ressource ne doit pas retourner directement le contenu de la ressource créée mais
+   uniquement l'/URI/ de la nouvelle donnée créée. A la fois pour des raisons de performance, et de séparation
+   de responsabilité: un *POST* ne doit pas retourner les données à la manière d'un *GET*.
+
+Nous verrons dans le détail les différents /endpoints/ de l'/API/
 
 ** Backend
+*** Choix des bibliothèques
+- Mypy
+- Fastapi
 *** DDD et Clean Architecture
-*** Models
-*** Services
-*** Repositories
+*** Domaine
+ - Parler des Entries génériques
+*** Application
+*** Persistence
 *** Presentation
 *** Tests
 
 ** Frontend
+*** Choix des bibliothèques
 *** React
 *** Redux
 *** RTK-Query
 
-** DevOps
+** Diagramme de séquence
+** Navigation
+** Infrastructure
+- Pourquoi docker par exemple
+- Pourquoi AWS etc.
+
+** Securité
+
+Dans la mesure où l'application est un /Saas/ et que celle-ci traite des données personnelles, voire des données pouvant
+être considéré comme des données de santé, la sécurité des données et de l'application est un point d'une importance primordiale.
+
+Bien que nous puissons adopter plusieurs point de vue concernant la sécurité, nous privilégierons une approche pratique. Pour
+cela, nous allons nous concentrer sur le /TOP 10 OWASP/[fn:: https://owasp.org/www-project-top-ten/] considéré comme un
+standard de l'industrie[fn:: comme par exemple par le /MITRE/, https://cwe.mitre.org/data/definitions/1344.html], et allons voir comment
+nous mitigons ces points dans l'application.
+
+(Parle de tous le reste du chapitre, mais en se concentrant sur la sécurité)
 
 * Ergonomie et design
 
