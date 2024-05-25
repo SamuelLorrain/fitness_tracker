@@ -226,8 +226,13 @@ Pour garantir ces principes, nous avons besoin de plusieurs choses:
 Nous verrons le détail les différents /endpoints/ de l'/API/ dans la suite du document.
 
 ** Backend
+
+Le backend est un programme ~Python~ consistué de plusieurs modules : ~authentication~, ~commons~, ~debug~, ~entry~, ~food~,
+~notification~, ~report~ et ~user~.
+Le tout créé un système de gestion de données nutritives et de bien-être complet.
+
 *** Choix des bibliothèques
-**** Python
+**** ~Python~
 Le choix de ~Python~ comme language de programmation a été motivé par plusieurs points.
 La première idée était d'utiliser des bibliothèques de /machine learning/ et /data science/
 comme ~Panda~ et ~Scikit-learn~ pour créer une fonctionnalité de mesure automatique de calories
@@ -400,22 +405,168 @@ Le domaine étant "plat", sans notion d'héritage, la modularité est conservée
 
 *** Implémentations des repositories
 
-- Patterns MongoDB utilisés
+La plupart des objets domaines sont stockés tel quels dans la base de donnée, ~MongoDB~
+permettant de stocker directement des documents complexes dans un format rappelant le
+~JSON~[fn:: https://www.mongodb.com/docs/manual/reference/bson-types/].
+
+Nous pouvons noter l'utilisation de plusieurs design patterns propres aux
+base de données orienté document. En effet, contrairement aux base de données ~SQL~
+classiques, les base de données orienté document offre une plus grande flexibilité
+dans la manière dont les données sont stockées : la notion de schéma n'existe pas,
+et ces bases de données n'ont pas de contrainte d'intégrité[fn:: https://www.mongodb.com/docs/manual/data-modeling/data-consistency/].
+Un principe de base pour l'élaboration d'une base de donnée orienté document
+est de se baser sur les ~Access Patterns~ plutôt que sur un schéma, le
+principe est de stocker les données telles qu'on veut y accéder plutôt que
+de créer des requètes complexes. Même si cela implique une dénormalisation
+des données.
+
+**** Dénormalisation
+
+Dans notre cas, la dénormalisation est aussi liée au métier:
+Nous ne voulons pas qu'un utilisateur ait sont total calorique modifié si
+les informations nutritionnelles d'un produit changent. Par conséquent,
+les informations nutritionnelles d'une entrée sont répliquée, plutôt
+que d'être liées par une /foreign key/.
+
+**** /Extended reference/
+
+Il n'y a pas de table /NutritionComposition/ et une autre table /Vitamin/ par exemples.
+Toutes les classes aggrégées à /NutritionComposition/ sont stockées dans le même document.
+En base de donnée.
+
+**** /Bucket/
+
+Les objets de la classe /Entry/ ne sont jamais stockés tel quels
+dans la base de données, plutôt dans le champs /entries/ de l'entité
+/JournalRecord/. Le fait est que dans notre application, nous ne pouvons jamais accéder
+à une entrée sans passer d'abord par le jour où cette donnée est stockée[fn:: https://www.mongodb.com/blog/post/building-with-patterns-the-bucket-pattern].
 
 *** Authentifaction et Securité
-**** OAuth2
-**** Connection et enregistrement
-**** Permissions
+**** /OAuth2/ simplifié
+
+Dans la mesure où l'application est un /Saas/ et que celle-ci traite des données personnelles, voire des données pouvant
+être considéré comme des données de santé, la sécurité des données et de l'application est un point d'une importance primordiale.
+
+L'application utilise un /flow Oauth2/ simplifié[fn:: https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/].
+
+
 **** Vérification et contrôle d'accès
+
+
 **** Sérialisation/désérialisation des /JWT/ tokens
+
 
 *** Scanneur de code barre et l'/API/ distante OpenFoodFact
 
+#+CAPTION: Diagramme de séquence de la fonctionnalité de gestion de code barre
+[[./img/sequence_scanner.png]]
+
+La gestion de code-barre est régie par plusieurs réglès. Le programme ne va chercher
+des élements dans l'/API/ ouverte /OpenFoodFact/ uniquement si aucune nourriture n'est
+associée à ce code barre en base de donnée.
+L'entité /Food/ contient un champ /barcode/ pour conserver ce code barre.
+Le nombre de requètes est donc minimal.
+
 *** Notifications
+
+#+CAPTION: Diagramme de séquence du système de notification
+[[./img/sequence_notifications.png]]
+
+Le système de notification utilise le format /FCM/ qui est le format standard de ~Firebase~.
+Les messages sont envoyé à l'aide d'un /cron/.
+Toutes les heures, une requètes est envoyée à l'application à l'aide d'un compte de service,
+un compte en base de donnée, créée pour l'occasion et possédant des droits particuliers.
+
+En fonction de certaines règles métiers, l'utilisateur peut demander à être prévenu
+à une certaines fréquence. Si la notification doit être envoyée pendant la requète
+courante, alors le /NotificationService/ se connecte à ~Firebase~ (à l'aide de la classe
+/FirebaseNotificationClient/), et envoi une requète pour créer un message ~PUSH~.
+L'utilisateur reçoit ensuite la notification sur son téléphone ~Android~.
 
 *** /Entries/ génériques
 
+Nous avons vu plus haut qu'un utilisateur pouvait entrer de façon indifférenciée
+une prise de nourriture, d'eau ou encore une information de pesée.
+
+Le diagramme suivant montre les différents /design patterns/ mis en oeuvre
+pour la réalisation de cette tâche.
+
+#+CAPTION: Diagramme de classes du système d'entrée Générique
+[[./img/generic_entries.png]]
+
+A FAIRE
+
+en utilisant le pattern ~Factory~ et le pattern ~Strategy~, nous pouvons donc
+créer des Entrées génériques.
+Bien que nous ayons vu uniquement la partie création de ces entrées, le même
+principe est utiliser dans la création de statistique, avec le même
+souci de manipuler ces élements de façon générique.
+
 *** Injection de dépendances
+
+L'injection de dépendance joue un rôle important dans l'architecture du programme.
+Elle consiste à faire en sorte que des objets ne soient pas créé directement par
+les élements qui en ont besoin, mais à part. Couplé aux interfaces, ce /design pattern/
+permet de modifier l'implémentation d'une interface sans modifier le reste du programme.
+
+Concrètement, nous remplaçons ce code:
+
+#+BEGIN_SRC python
+def fun():
+    dependance : Dependance = Depedance()
+#+END_SRC
+
+Par:
+
+#+BEGIN_SRC python
+def fun(dependance: Dependance):
+    ...
+#+END_SRC
+
+Aussi, un système d'injection de dépendance permet d'enregistrer toutes les dépendances dans
+des classes de configuration et les utiliser à plusieurs endroit de notre programme.
+
+~FastAPI~ fourni un système d'injection de dépendance via la classe ~Depends()~. Nous utilisons
+cette classe pour gérer les dépendances de la couche présentation: en effet, certaines routes
+sont dépendantes du système d'authentification ou de permission (il ne sert à rien d'appeler
+la logique interne à une route si la dépendance n'existe pas).
+
+Si un utilisateur non autorisé n'est pas habilité à accéder à une route, alors la dépendance
+~AuthPassKey~ ne pourra être créée, et par conséquent, l'utilisateur recevra un message d'erreur.
+Il en est de même pour le système de contrôle d'accès, via des classes de ~Permission~ et de côntrole
+des permissions.
+
+Pour le reste de l'application, nous avons décidé d'utiliser de l'injection manuelle plutôt qu'un container
+de dépendance. Nous avons fait cela à cause du nombre limité de dépendances à injecter et par soucis
+de créer une couche /Application/ sans dépendance à aucune bibliothèque.
+
+Une classe de configuration existe ainsi par module. Ces classes sont construites de manière à
+créer un graphe de dépendance isolé.
+Par exemple, la couche métier du module ~notification~ a besoin de 3 élements, 3 dépendances.
+
+1. ~NotificationService~
+2. ~NotificationRepository~
+3. ~NotificationClient~
+
+Sur ces 3 modules, 2 d'entre eux sont des interfaces dont on peut décider de l'implémentation
+dans la classe de configuration. Par exemple, le ~Client~ peut être le client ~Firebase~ ou un client de test.
+
+Dans notre cas, le ~NotificationService~ a besoin des deux autres élements pour être créé (ils sont injectés au
+constructeur). Ainsi, la méthode pour accéder à l'instance de ~NotificationRepository~ appelle dans son corps
+les méthodes pour créer les ~NotificationRepository~ et ~NotificationClient~:
+
+#+BEGIN_SRC python
+class NotificationConfiguration:
+    def notification_service(self) -> NotificationService:
+        return NotificationService(self.notification_repository(), self.notification_client())
+#+END_SRC
+
+La classe de configuration contient uniquement des méthodes qui retournent de nouveaux objets. C'est donc
+une classe qui utilise le pattern ~Factory Method~, également, pour éviter de devoir recréer les
+objets, la classe utilise le pattern ~Singleton~. Un accès à cette classe donnera toujours la même instance.
+
+La classe est ensuite utilisé dans la couche présentation, qui se contente généralement d'appeler
+le /Service/ du module.
 
 *** Tests
 - In memory repository (exemple de code)
@@ -434,18 +585,6 @@ Le domaine étant "plat", sans notion d'héritage, la modularité est conservée
 
 - Pourquoi docker par exemple
 - Pourquoi AWS etc.
-
-** Securité
-
-Dans la mesure où l'application est un /Saas/ et que celle-ci traite des données personnelles, voire des données pouvant
-être considéré comme des données de santé, la sécurité des données et de l'application est un point d'une importance primordiale.
-
-Bien que nous puissons adopter plusieurs point de vue concernant la sécurité, nous privilégierons une approche pratique. Pour
-cela, nous allons nous concentrer sur le /TOP 10 OWASP/[fn:: https://owasp.org/www-project-top-ten/] considéré comme un
-standard de l'industrie[fn:: comme par exemple par le /MITRE/, https://cwe.mitre.org/data/definitions/1344.html], et allons voir comment
-nous mitigons ces points dans l'application.
-
-(Parle de tous le reste du chapitre, mais en se concentrant sur la sécurité)
 
 * Ergonomie et design
 
@@ -556,6 +695,7 @@ de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~[fn:: https://datatra
 |-------+----------------------------+-----------------------------------------------------------|
 | PUT   | ~/user/water-notification~ | Permet de modifier les caractéristiques des notifications |
 |       |                            | de l'utilisateur.                                         |
+|-------+----------------------------+-----------------------------------------------------------|
 
 ** Notifications
 
