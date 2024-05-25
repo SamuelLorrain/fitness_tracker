@@ -257,7 +257,7 @@ Le /Structural duck typing/, notion propre à ~Python~, remplace la notion d'int
 
 Enfin, l'écosystème est adapté au developpement web incremental et rapide. De nombreuses bibliothèques et /frameworks/ existent
 pour nous aider à développer une /API/. Et il nous a semblé que ~Python~ privilégiait une approche "bibliothèque" plutôt qu'une
-approche "/framework/", ce qui permet de tester et éprouver des /design patterns/ qui n'auraient pas été prévu
+approche "/framework/", ce qui permet de tester des /design patterns/ qui n'auraient pas été prévu
 par tel ou tel /framework/.
 
 
@@ -331,45 +331,95 @@ chacune un rôle distinct.
   statiquement quelle implémentation doit être utilisé dans tel cas, mais peut utiliser une /Factory/ pour déterminer dynamiquement
   quelle classe doit être utilisée dans un cas d'utilisation précis (voir le /design pattern/ /Strategy/)
 
-  MONTRER UN EXEMPLE DE MODULE DE L'APPLICATION À L'AIDE D'UN DIAGRAMME UML
-  ==> a la fois un diagramme UML et un diagramme de séquence
+#+CAPTION: Graphe de dépendance du module /food/ de l'application
+[[./img/example_clean_architecture_flow.png]]
+
+Ici, on peut voir plusieurs avantages de la /Clean Architecture/.
+Ce schéma représente un graphe de dépendance entre plusieurs élements du module /Food/, utilisé pour traiter
+les demandes de l'applications par rapport à la creation, listage et suppression de nourriture.
+Les flèches en pointillées représentent les dépendances entre les différentes classes et modules.
+
+On peut voir que la couche /Domaine/, et l'entitée /Food/ ne dépendent de rien, on peut ainsi modifier
+notre domaine sans avoir besoin de modifier le reste de l'application.
+La couche /Application/ quant à elle, comprends le /FoodCrudService/ et le /FoodRepository/, on
+peut voir que cette couche fait office d'orchestration et dépend de la couche /Domaine/.
+On remarque également que la classe /FoodRepository/ est une interface, implémentée de manière
+spécifique par une classe de la couche /Infrastructure/ (une classe de configuration s'occupe
+de choisir la bonne implémentation).
+Enfin, la couche /Présentation/ dépend uniquement de la couche /Application/. Le module /food.api/
+est dépendant des classes /Requests/, qui sont les contrats utilisé pour les diverses requètes.
+
+Une architecture comme celle-ci permet un couplage faible: la couche présentation peut changer
+(on peut envisager de modifier la /Présentation/ par une interface native ou un /CLI/ par exemple),
+de même l'implémentation spécifique de la base de donnée n'est pas déterminée, ce qui permet d'utiliser
+l'application sans base de donnée (par exemple avec les données stockés en /RAM/ ou dans un simple fichier).
+Egalement, on peut étendre la couche /Application/ (les fonctionnalités du logiciel) sans nécessairement
+modifier le /Domaine/.
+Enfin, les différentes parties de l'applications peuvent être testées de façon unitaire, en isolation des uns par rapport aux autres.
 
 *** Domaine
-Voici une vue d'ensemble des entitées et aggrégats de l'application:
+Voici une vue d'ensemble des entitées de l'application:
 
-#+CAPTION: Entitées et aggregats
-[[./img/domaine.png]]
+#+CAPTION: Entités liées à la nourriture
+[[./img/nutrition_domain.png]]
 
-ATTENTION JE CROIS QU'IL FAUT MODIFIER LE SCHEMA POUR SEPARER LES COMPOSITIONS ET AGGREGATIONS
-OK BON C'EST SURTOUT ILLISIBLE, ON VA FAIRE PLUSIEURS PARTIES:
+Les données liées à la nutrition sont modélisées en suivant des normes
+des qualités nutritionnelles du produit[fn:: réglement ~(UE) n°1169/2011~]. Le /Serving size/
+permet d'indiquer la mesure des informations nutritionnelles (généralement par 100 grammes)
 
-1. Nutrition
+#+CAPTION: Entités liées à la nourriture
+[[./img/domaine_food.png]]
 
-2. User
+Une nourriture contient des informations nutritionnelles, mais également
+d'autres données comme un nom, l'utilisateur qui a entré les données, ou encore
+des potentiels ingrédients.
 
-3. Entries
+#+CAPTION: Entités liées à l'utilisateur
+#+ATTR_LATEX: :scale 0.5
+[[./img/domain_user.png]]
+
+Les utilisateurs ont font également références aux
+informations nutritionnelles. En effet, il est aisé d'utiliser
+le même domaine pour décrire la nourriture, et, par exemple,
+combien de calories un utilisateur a décidé d'ingérer par jour.
+
+#+CAPTION: Entités liées aux entrées journal
+[[./img/domain_entry.png]]
+
+Une entité /Entry/ contient un /payload/ générique, on peut voir ici
+que les différents /payloads/ sont des implémentation d'une interface /Payload/
+Cela nous permettra de créer de nouveaux payloads, et de gérer tous les /payloads/
+de façon générique dans l'application.
 
 Comme nous pouvons le voir, la majorité des classes sont liés entre elles par
 de la composition ou de l'aggregation.
 Aussi, les différents types d'entrées sont des implémentations différents
 de l'interface /Entry/, ce qui permet d'en rajouter à la volée dans l'application.
 Et ainsi rendre celle-ci facilement extensible.
-Le domaine étant "plat", sans notion d'héritage la modularité est conservée au maximum.
+Le domaine étant "plat", sans notion d'héritage, la modularité est conservée au maximum.
 
-*** Infrastructure
-- Différence entre le mapping et
-*** Presentation
-**** Authentifaction et Securité
-***** OAuth2
-***** Connection et enregistrement
-***** Permissions
-***** Vérification et contrôle d'accès
+*** Implémentations des repositories
+
+- Patterns MongoDB utilisés
+
+*** Authentifaction et Securité
+**** OAuth2
+**** Connection et enregistrement
+**** Permissions
+**** Vérification et contrôle d'accès
+**** Sérialisation/désérialisation des /JWT/ tokens
+
+*** Scanneur de code barre et l'/API/ distante OpenFoodFact
+
+*** Notifications
+
+*** /Entries/ génériques
+
+*** Injection de dépendances
 
 *** Tests
+- In memory repository (exemple de code)
 
-*** Diagramme de séquence
-
-OU EST CE QU'ON DÉCRIT LES PATTERNS UTILISÉS ? JE PENSE DANS LES SECTIONS
 
 ** Frontend
 *** Choix des bibliothèques
@@ -381,6 +431,7 @@ OU EST CE QU'ON DÉCRIT LES PATTERNS UTILISÉS ? JE PENSE DANS LES SECTIONS
 *** Navigation
 
 ** Infrastructure
+
 - Pourquoi docker par exemple
 - Pourquoi AWS etc.
 
@@ -400,36 +451,159 @@ nous mitigons ces points dans l'application.
 
 * API
 
+Voici la description de l'/API/, notons que les /endpoints/ de type *POST* retournent l'/UUID/
+de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~[fn:: https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics#section-9.3.3
+"/If one or more resources has been created on the origin server as a result of successfully processing a POST request, the origin server SHOULD send a 201 (Created) response containing a Location header field that provides an identifier for the primary resource created/"]
+
+** Codes de retour
+
+| Code de retour | Description                                                     |
+|----------------+-----------------------------------------------------------------|
+|            200 | Retour quand une requètes s'est déroulée comme prévue           |
+|----------------+-----------------------------------------------------------------|
+|            201 | Retour quand une nouvelle ressource a été créée                 |
+|----------------+-----------------------------------------------------------------|
+|            204 | Retour quand une ressource a été modifiée                       |
+|----------------+-----------------------------------------------------------------|
+|            400 | Retour lorsque la requète ~HTTP~ est invalide, comme par exemple|
+|                | un mauvais format déclaré (~Content-Type~) ou encore si aucun   |
+|                | /payload/ n'a été envoyé à un /endpoint/ qui demande un payload.|
+|----------------+-----------------------------------------------------------------|
+|            403 | L'utilisateur essaye d'accéder à un /endpoint/ dont il n'a pas  |
+|                | la permission. Ou alors, l'utilisateur n'est pas connecté.      |
+|----------------+-----------------------------------------------------------------|
+|            404 | Retour si la ressource demandée n'existe pas.                   |
+|----------------+-----------------------------------------------------------------|
+|            409 | Renvoyé lorsqu'on essaye de créer une entitée qui existe        |
+|                | déjà. Dans notre application, cette valeur de retour            |
+|                | n'est renvoyée uniquement si on essaye de créer un utilisateur  |
+|                | avec une adresse email déjà existante.                          |
+|----------------+-----------------------------------------------------------------|
+|            422 | Erreur de validation, le payload entré n'est pas correct.       |
+|                | La description de l'erreur est également renvoyée.              |
+|----------------+-----------------------------------------------------------------|
+|            500 | Erreur serveur inconnue.                                        |
+|----------------+-----------------------------------------------------------------|
+
+** Authentification
+
+| Verbe | URI                 | Description                                                                                              |
+|-------+---------------------+----------------------------------------------------------------------------------------------------------|
+| POST  | ~/auth/login~       | Permet de se connecter à l'application. Le endpoint utilise la norme                                     |
+|       |                     | de flux de mot de passe Oauth2[fn:: https://www.oauth.com/oauth2-servers/access-tokens/password-grant/]. |
+|       |                     | Le endpoint retourne un token ~JWT~.                                                                     |
+|-------+---------------------+----------------------------------------------------------------------------------------------------------|
+| POST  | ~/auth/register~    | Ce /endpoint/ permet de créer un nouvel utilisateur.                                                     |
+|       |                     | Retourne également un ~JWT~ valide.                                                                      |
+|-------+---------------------+----------------------------------------------------------------------------------------------------------|
+| GET   | ~/auth/verify~      | Ce /endpoint/ permet de vérifier la validité d'un token. Il ne fait que retourner                        |
+|       |                     | 200 si le token est valide et 403 is il est invalide.                                                    |
+|-------+---------------------+----------------------------------------------------------------------------------------------------------|
+| POST  | ~/auth/permissions~ | Permet de modifier les permissions d'un utilisateur. Seuls les utilisateurs                              |
+|       |                     | ayant la permission "~change_permission~" peuvent modifier celles-ci.                                    |
+|-------+---------------------+----------------------------------------------------------------------------------------------------------|
+
 ** Food
-*** create food
-*** list food
-*** get food
-*** delete food
-*** process food barcode
+
+| Verbe  | URI                 | Description                                                            |
+|--------+---------------------+------------------------------------------------------------------------|
+| GET    | ~/food/~            | Liste les entités /Food/ disponibles. Un argument optionel permet de   |
+|        |                     | chercher les entitées par leur nom.                                    |
+|        |                     | Les entitées ainsi retournées sont une version tronquée de l'entitée   |
+|        |                     | /Food/ par soucis de performance.                                      |
+|--------+---------------------+------------------------------------------------------------------------|
+| GET    | ~/food/{food_uuid}~ | Permet d'obtenir une entitée /Food/ par sont ~UUID~.                   |
+|--------+---------------------+------------------------------------------------------------------------|
+| POST   | ~/food/~            | /Endpoint/ pour créer une nouvelle entitée de type /Food/.             |
+|--------+---------------------+------------------------------------------------------------------------|
+| DELETE | ~/food/{food_uuid}~ | Permet de supprimer une entitée /Food/, les utilisateurs ne peuvent    |
+|        |                     | supprimer uniquement les entitées qu'ils ont créés.                    |
+|--------+---------------------+------------------------------------------------------------------------|
+| POST   | ~/food/barcode~     | Permet de créer une nourriture à partir d'un code barre.               |
+|        |                     | Nous avons vu le fonctionnement particulier de ce /endpoint/ plus haut |
+|        |                     | dans ce document.                                                      |
+|--------+---------------------+------------------------------------------------------------------------|
+
 
 ** Entry
-*** create entry
-*** list entry
-*** get entry
-*** delete entry
+
+| Verbe  | URI                          | Description                                            |
+|--------+------------------------------+--------------------------------------------------------|
+| GET    | ~/entry/{date}/{entry_uuid}~ | Permet de récupérer une entrée de journal en utilisant |
+|        |                              | son ~UUID~ et une date.                                |
+|--------+------------------------------+--------------------------------------------------------|
+| GET    | ~/entry/{date}~              | List les entrées de journal pour une date donnée.      |
+|--------+------------------------------+--------------------------------------------------------|
+| POST   | ~/entry~                     | Permet de créer une entrée de journal. L'entrée peut   |
+|        |                              | être de plusieurs type, comme nous l'avons vu plus     |
+|        |                              | haut dans le document.                                 |
+|--------+------------------------------+--------------------------------------------------------|
+| DELETE | ~/entry/{date}/{entry_uuid}~ | Permet de supprimer une entrée de journal.             |
+|--------+------------------------------+--------------------------------------------------------|
 
 ** User
-*** get current user infos
-*** set current user goals
-*** set current user basic infos
-*** set current user water notification
+
+| Verbe | URI                        | Description                                               |
+|-------+----------------------------+-----------------------------------------------------------|
+| GET   | ~/user/~                   | Permet de récupérer les informations de l'utilisateur     |
+|       |                            | connecté.                                                 |
+|-------+----------------------------+-----------------------------------------------------------|
+| PUT   | ~/user/~                   | Permet de modifier les informations de l'utilisateur      |
+|       |                            | connecté.                                                 |
+|-------+----------------------------+-----------------------------------------------------------|
+| PUT   | ~/user/goals~              | Permet de modifier les informations de l'entité /Goal/    |
+|       |                            | associé à l'utilisateur.                                  |
+|-------+----------------------------+-----------------------------------------------------------|
+| PUT   | ~/user/water-notification~ | Permet de modifier les caractéristiques des notifications |
+|       |                            | de l'utilisateur.                                         |
 
 ** Notifications
-*** set notification token
-*** send test notification
-*** schedule notifications
-*** send notification to user
+
+| Verbe | URI                       | Description                                                |
+|-------+---------------------------+------------------------------------------------------------|
+| put   | ~/notification/token~     | Permet de modifier le token d'authentification pour        |
+|       |                           | l'utilisateur connecté. Cet /endpoint/ est appelé          |
+|       |                           | automatiquement par le /frontend/ si la connection         |
+|       |                           | avec ~Firebase~ a réussi et que l'utilisateur              |
+|       |                           | est sur Android. Le ~token~ est enfait un identifiant      |
+|       |                           | unique donné par ~Firebase~. Nous avons vu plus haut       |
+|       |                           | ce fonctionnement.                                         |
+|-------+---------------------------+------------------------------------------------------------|
+| post  | ~/notification/send-test~ | Permet d'envoyer une notification de test. Ne fonctionne   |
+|       |                           | qu'à la condition qu'un ~token~ existe pour l'utilisateur  |
+|       |                           | courant.                                                   |
+|-------+---------------------------+------------------------------------------------------------|
+| post  | ~/notification/schedule~  | /Endpoint/ de Service, est utilisé par le /backend/ pour   |
+|       |                           | envoyer les notifications à tous les utilisateurs.         |
+|       |                           | Nous avons également vu ce fonctionnement plus haut.       |
+|       |                           | L'utilisateur doit posséder la permission                  |
+|       |                           | "~schedule_notifications~"                                 |
+|-------+---------------------------+------------------------------------------------------------|
+| post  | ~/notification/send~      | /Endpoint/ de service, permet d'envoyer une notification à |
+|       |                           | un utilisateur. surtout utile pour des tests.              |
+|       |                           | L'utilisateur doit posséder la permission                  |
+|       |                           | "~send_notification_to_any_user~".                         |
+|-------+---------------------------+------------------------------------------------------------|
 
 ** Report
-*** get stats
+
+| Verbe | URI        | Description                                         |
+|-------+------------+-----------------------------------------------------|
+| GET   | ~/report/~ | /Enpoint/ pour récupérer des statistiques. La route |
+|       |            | prend plusieurs paramètres optionnels pour décider  |
+|       |            | quelle statistiques doivent être accédées.          |
+|-------+------------+-----------------------------------------------------|
 
 ** Debug
-*** post debug entry
+
+| Verbe | URI       | Description                                                             |
+|-------+-----------+-------------------------------------------------------------------------|
+| POST  | ~/debug/~ | Un /endpoint/ qui est utilisé par l'application /frontend/ pour envoyer |
+|       |           | certains messages au /backend/ ces messages sont visibles dans les logs |
+|       |           | du serveur. L'intéret est de pouvoir obtenir des informations de        |
+|       |           | debuggage lorsque certaines conditions ne permettent pas facilement d'y |
+|       |           | accéder.                                                                |
+|-------+-----------+-------------------------------------------------------------------------|
 
 * Lexique
 
@@ -440,30 +614,32 @@ nous mitigons ces points dans l'application.
 |                 | communiquer plusieurs programmes entre eux. Les programmes                      |
 |                 | peuvent être rapproché ou distants.                                             |
 |-----------------+---------------------------------------------------------------------------------|
-| multi-platforme | Un logiciel est dis multi-platforme si il peux fonctionner                      |
+| Multi-platforme | Un logiciel est dis multi-platforme si il peux fonctionner                      |
 |                 | sur plusieurs plateforme, machines ou systèmes d'exploitations                  |
 |                 | différents.                                                                     |
 |-----------------+---------------------------------------------------------------------------------|
 | IHM             | Interface homme machine, décrit les interfaces permettants à                    |
 |                 | un utilisateur d'intéragir avec l'application.                                  |
 |-----------------+---------------------------------------------------------------------------------|
-| frontend        | La partie de l'application visible par l'utilisateur.                           |
+| Frontend        | La partie de l'application visible par l'utilisateur.                           |
 |                 | Elle comprends à la fois l'IHM et le système permettant à                       |
 |                 | cette partie de se connecter aux autres parties de                              |
 |                 | l'application.                                                                  |
 |-----------------+---------------------------------------------------------------------------------|
-| backend         |                                                                                 |
+| Backend         | Partie de l'application qui n'est pas visible à l'utilisateur.                  |
+|                 | Elle comprends notamment le traitement et stockages des données et              |
+|                 | l'execution de la logique métier.                                               |
 |-----------------+---------------------------------------------------------------------------------|
-| framework       | Un /framework/ ou canevas en anglais est un ensemble de                         |
+| Framework       | Un /framework/ ou canevas en anglais est un ensemble de                         |
 |                 | bibliothèques logicielles permettant de faciliter la                            |
 |                 | programmation de certaines tâches. Souvent les /frameworks/                     |
 |                 | induisent une façon particulière de programmer                                  |
 |-----------------+---------------------------------------------------------------------------------|
-| bibliothèque    | Code pré-exis,ant permettant de régler un problème, ou                          |
+| Bibliothèque    | Code pré-exisant permettant de régler un problème, ou                           |
 |                 | permettant d'implémenter certaines fonctionnalités. Ce code                     |
 |                 | est conçu pour être réutilisable entre plusieurs applications                   |
 |-----------------+---------------------------------------------------------------------------------|
-| environnement   | Un environnement d'execution ou /runtime/ en anglais est un                     |
+| Environnement   | Un environnement d'execution ou /runtime/ en anglais est un                     |
 | d'execution     | programme qui fournit certaines fonctionnalités à un autre                      |
 |                 | programme pour être éxecuté. Dans le cas qui nous interesse                     |
 |                 | pendant ce document, l'environnement d'execution permet                         |
@@ -513,15 +689,16 @@ nous mitigons ces points dans l'application.
 |                 | Les implémentations de cette interface devront toutes implémenter ces deux      |
 |                 | méthodes.                                                                       |
 |-----------------+---------------------------------------------------------------------------------|
-| type            | Un type défini des caractéristiques inhérentes à certains élements dans un      |
+| Type            | Un type défini des caractéristiques inhérentes à certains élements dans un      |
 |                 | programme. La notion de type peut être considéré comme une généralisation       |
 |                 | de la notion d'interface aux interfaces elles mêmes et aux types                |
 |                 | primitifs d'un langage.                                                         |
 |-----------------+---------------------------------------------------------------------------------|
-| implémentation  | Dans un contexte orienté objet, on parle de l'implémentation d'une interface.   |
+| Implémentation  | Dans un contexte orienté objet, on parle de l'implémentation d'une interface.   |
 |                 | Une implémentation est une classe qui implémente les méthodes d'une interface   |
 |                 | donnée.                                                                         |
 |-----------------+---------------------------------------------------------------------------------|
-| design pattern  | Un /design pattern/ est une collection de classes agencée de façon précises     |
+| Design pattern  | Un /design pattern/ est une collection de classes agencée de façon précises     |
 |                 | entre elles dans le but de répondre à un problème connu et documenté.           |
 |                 | On dit que les design patterns ne sont pas inventé mais découverts.             |
+|-----------------+---------------------------------------------------------------------------------|
