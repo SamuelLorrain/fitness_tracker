@@ -449,12 +449,50 @@ Dans la mesure où l'application est un /Saas/ et que celle-ci traite des donné
 
 L'application utilise un /flow Oauth2/ simplifié[fn:: https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/].
 
+A Faire (expliquer pourquoi jwt c'est secure aussi quoi)
 
 **** Vérification et contrôle d'accès
 
+Le contrôle d'accès de l'application est produit par le système d'authentification et de dépendances.
+Nous avons utilisé le système de dépendance de ~FastAPI~ pour faire en sorte qu'a chaque fois qu'un utilisateur
+essaye d'accéder à une route protégé, une instance de la classe ~AuthPassKey~ doit être créée.
+Cette instance de classe utilise les tokens ~JWT~ ainsi que la base de donnée pour donner une
+représentation interne d'un utilisateur et de ses authorisations.
 
-**** Sérialisation/désérialisation des /JWT/ tokens
+Cette dépendance est appelée ~AuthorizationDependency~ et prend la forme d'une classe qui prend en paramètre
+une requète ~HTTP~ et retourne notre instance d'~AuthPassKey~.
 
+Dans le cas où la route demande une ~Permission~ spéciale, au lieu d'utiliser ~AuthorizationDependency~
+on utilise ~AuthorizationDependencyCreator~ qui est une fonction qui retourne une dépendance. Cette fonction
+prend en paramètre la permission requise pour effectuer cette action.
+
+#+CAPTION: Diagramme de classes pour la configuration de l'authentification
+[[./img/class_authorization.png]]
+
+On peut voir que les classes ~SimpleAuthorizationDependency~ et ~AuthorizationDependencyCreator~
+implémente l'interface ~AuthorizationDependency~. Cette interface dépend de toute les
+classes /Application/ de l'authentification.
+
+La classe ~oauth_scheme~ est une classe fournie par ~FastAPI~ qui permet de récupérer
+le token ~JWT~, ou un autre type de clée d'authentification, à partir d'une requète ~HTTP~.
+
+* Sérialisation/désérialisation des /JWT/ tokens
+
+Pour traiter les tokens ~JWT~ nous avons utilisé une classe appelée
+~JWTAuthFormatter~. Cette class implémente l'interface ~AuthFormatter~ et contient
+deux méthodes : ~serialize~ qui prend une ~AuthPassKey~ et retourne une chaine de
+caractère (le token ~JWT~) et ~deserialize~ qui faire l'inverse.
+
+La procédure pour sérializer un token consiste à extraite
+les champs (/Claims/) ~JWT~ de l'instance d'~AuthPassKey~.
+Puis d'encoder le token à l'aide d'une clée gardéé dans l'environnement.
+
+La procédure pour désérializer consiste à décoder le token à l'aide
+de la clée, ce qui nous donne des /Claims/ sous forme de
+~dict~ ~Python~ et de convertir cet objet en ~AuthPassKey~.
+
+Les tokens contiennent le nom du compte, une date d'expiration, un
+identifiant unique ainsi que les permissions auquelles a accès l'utilisateur.
 
 *** Scanneur de code barre et l'/API/ distante OpenFoodFact
 
@@ -491,7 +529,7 @@ une prise de nourriture, d'eau ou encore une information de pesée.
 Le diagramme suivant montre les différents /design patterns/ mis en oeuvre
 pour la réalisation de cette tâche.
 
-#+CAPTION: Diagramme de classes du système d'entrée Générique
+#+CAPTION: Diagramme de classes du système d'entrées génériques
 [[./img/generic_entries.png]]
 
 A FAIRE
@@ -526,7 +564,8 @@ def fun(dependance: Dependance):
 Aussi, un système d'injection de dépendance permet d'enregistrer toutes les dépendances dans
 des classes de configuration et les utiliser à plusieurs endroit de notre programme.
 
-~FastAPI~ fourni un système d'injection de dépendance via la classe ~Depends()~. Nous utilisons
+~FastAPI~ fourni un système d'injection de dépendance via la classe ~Depends()~[fn:: https://fastapi.tiangolo.com/tutorial/dependencies/].
+Nous utilisons
 cette classe pour gérer les dépendances de la couche présentation: en effet, certaines routes
 sont dépendantes du système d'authentification ou de permission (il ne sert à rien d'appeler
 la logique interne à une route si la dépendance n'existe pas).
@@ -563,35 +602,163 @@ class NotificationConfiguration:
 
 La classe de configuration contient uniquement des méthodes qui retournent de nouveaux objets. C'est donc
 une classe qui utilise le pattern ~Factory Method~, également, pour éviter de devoir recréer les
-objets, la classe utilise le pattern ~Singleton~. Un accès à cette classe donnera toujours la même instance.
+objets, la classe peut utiliser le pattern ~Singleton~.
+Un accès à cette une méthode de cette classe pourra donner la même instance si besoin.
 
 La classe est ensuite utilisé dans la couche présentation, qui se contente généralement d'appeler
 le /Service/ du module.
 
 *** Tests
-- In memory repository (exemple de code)
 
+La /Clean architecture/ nous permet de tester les différentes parties de l'application de manière isolée.
+En utilisant une classe de /Configuraiton/ spécialisée, ou en injectant directement les dépendances,
+nous pouvons créer des versions /Fake/ de certains éléments.
+
+Par exemple, pour nous permettre de tester les /Services/
+sans utiliser la base de donnée à plusieurs avantages, tout d'abord les
+tests sont beaucoup plus rapides. Ce n'est pas nécessaire sur ce type de projet. Mais des tests
+rapides permettent une meilleure expérience développeur. De plus, en utilisant des /Fake/ on
+peut garantir le fonctionnement d'une partie du code, sans que des parties externes, comme
+la base de donnée, où le réseau n'aient d'influence.
+De plus, nous pouvons commencer à créer des tests sur une partie de l'application sans que
+tout le flux ne soit programmé, ce qui incite à une meilleure couverture de code (tout peut être testé
+facilement et en isolation).
+
+Nous utilisons aussi un programme de couverture de code pour signaler quelle parties du code sont testées.
 
 ** Frontend
 *** Choix des bibliothèques
-**** React
-**** Ionic
-**** Redux
-**** RTK-Query
+**** ~Ionic~
+
+~Ionic~ est un /framework/ d'applications mobiles hybrides,
+permettant d'utiliser les technologies web pour créer des applications ~iOS~ et ~Android~ avec une seule base de code.
+~Ionic~ propose une bibliothèque de composants graphiques ayant un visuel natif, et permet
+également de s'interfacer avec les fonctionnalités natives du téléphone via ~Capacitor~.
+
+De plus, ~Ionic~ est "/framework web agnostic/", car on peut le faire fonctionner sur
+~React~, ~Angular~ ou encore ~Vue~, les 3 /framework/ web les plus utilisés aujourd'hui.
+
+Utiliser ~Ionic~ a donc paru être la meilleure option pour répondre au cahier des charges.
+Notons que d'autres /frameworks/ du même genre avait été envisagé, comme ~React Native~, ~Flutter~ ou encore ~Xamarin~.
+Nous avons choisi ~Ionic~ pour sa maturité et sa place dans l'environnement de développement mobile actuel[fn:: https://ionic.io/resources/articles/ionic-vs-react-native-a-comparison-guide].
+
+**** ~React~
+
+~React~ est une bibliothèque permettant de créer des interfaces web dynamiques avec
+des composants réutilisables.
+Nous avons choisi d'utiliser cette technologie car c'est aujourd'hui la bibliothèque
+la plus utilisée en développement web, ce qui implique qu'elle possède une grande
+communauté, et par conséquent, de nombreuses bibliothèques compatibles.
+
+**** ~Redux~
+
+~Redux~ est une bibliothèque de gestion d'état qui centralise l'état dans des /stores/.
+facilitant ainsi sa prévisibilité, et sa maintenabilité.
+
+#+CAPTION: Design pattern flux
+[[./img/pattern_flux.png]]
+
+~Redux~ Utilise le design pattern ~Flux~ qui consiste à avoir un d'état unidirectionnel,
+et à utiliser du /message passing/ pour la mise à jour de celui-ci. Il comprends plusieurs élements:
+
+- /Actions/ : Envoyés par des interactions utilisateur, ce sont des messages qui contiennent les informations modifier un état.
+- /Dispatcher/ : Centralise la gestion des actions et assure que telle action est envoyé au store correspondant.
+- /Stores/ : Contiennent et gèrent l'état spécifique de l'application.
+- /Views/ : Réagissent aux changements d'état des stores pour mettre à jour l'affichage.
+
+~Redux~ comprends aussi des extensions comme ~Redux-toolkit~ et ~RTK-Query~ qui permettent
+une gestion plus facile de l'état et des requètes ~Ajax~.
+
+Nous utilisons cette bibliothèque, ainsi que ces deux extensions, pour la gestion de l'état globale de l'application, car
+elle permet de simplifier grandement le partage d'état entre les différents composants ~React~.
+Notamment quand un même état doit être partagés entre plusieurs parties de l'application.
 
 *** Navigation
 
-** Infrastructure
+#+CAPTION: Graphique des différentes routes de l'application /frontend/
+[[./img/navigation.png]]
 
-- Pourquoi docker par exemple
-- Pourquoi AWS etc.
+* Infrastructure
+
+Nous avons voulu suivre, dans la mesure du possible la méthodologie /12 Factors/[fn:: https://12factor.net/].
+Qui est une méthodologie conçu pour l'hébergement dans un contexte de cloud computing. Le but est
+de créer une application robuste et résiliente, tout en facilitant le déploiement de futures versions.
+
+1. /Codebase/: la base de code doit posséder une un système de gestion de version. Nous utilisons ~Git~.
+   ainsi, les déploiement de l'applications sont numérotés par version de code (et identifié par un identifiant de /commit/).
+2. /Dependencies/: les dépendances de l'application doivent être explicites. Soit, il doit exister des fichiers et programmes
+   de gestion de dépendances et autres logiciels tiers. Nous utilions /poetry/ en backend, et /npm/ ou /gradle/ pour les
+   différentes parties du /frontend/ (application web et ~Android~)
+3. /Configuration/: Les fichiers de configurations propres à l'environnement doivent être stockés directement
+   dans celui-ci. Nous utilisons des fichiers /.env/ directement sur le serveur virtuel ou sur l'ordinateur
+   qui s'occupe du /build/ du programme ~Android~. Ce fichier n'est pas inclu dans le système de gestion de
+   version. Ainsi, les configurations spécifiques à un environnement en particulier sont isolés de la base
+   de code.
+4. /Backing service/: /12 Factors/ créé la notion de /backing service/, soit un service, local
+   ou distant, utilisé dans l'application et propose de traiter ses services comme des /ressources/
+   de l'application. Ils doivent être utilisés avec un couplage faire, et accédé via des url.
+   Nous faisons cela pour ~MongoDB~ ainsi que pour ~Firebase~. Ces deux services sont couplés
+   faiblement, grâce aux ~.env~ qui contiennent les adresses vers ces services, ainsi que
+   la programmation /SOLID/, c'est services sont des implémentations spécifiques de certaines
+   fonctionnalité de l'application.
+5. /Build, release, run/: Il faut séparer la phase de /build/ de la phase de /run/. Pour python,
+   qui est un langage interprété, la question ne se pose pas. Pour la partie /frontend/, il existe
+   deux builds différents, un pour ~Android~, l'autre pour le web. Ces build sont stockés
+   sur un serveur /S3/, et ne peuvent pas tourner "tel quel", sans environnement. Ainsi, les
+   deux phases sont séparées.
+6. /Processes/: L'application doit fonctionner en isolation dans son processus, et toutes
+   les données utilisés par l'application doivent être stockés dans un /backing service/
+   comme une base de donnée. Notre application étant composé d'un seul processus, et
+   n'utilisant pas d'état partagé, ce point ne nous concerne pas. Les comptes de
+   services utilisés pour envoyer des messages via ~Firebase~ sont bien stockés
+   dans une base de donnée (un /backing service/).
+7. /Port binding/: une application doit être capable de décidé comment ses
+   ports interagisssent avec l'extérieur. Ainsi, ce n'est pas à l'environnement
+   mais à l'application elle même d'être responsable de l'intéraction à travers
+   les ports. Cela garantit qu'il n'y aura pas quelque chose de spécifique
+   à configurer au niveau de l'environnement. Nous utilisons ~uvicorn~ qui
+   permet de choisir directement quel port doit utiliser l'application.
+8. /Concurrency/: Une application doit être capable d'évoluer (/scaling/)
+   horizontalement et verticalement. Nous avons choisis ~AWS~ et des
+   serveurs virtuels ~EC2~ pour cela, car ceux-ci ont la capacité de s'adapter
+   à une certaine charge. Notre deuxième choix était d'utiliser les ~Lambda~
+   d'~AWS~ qui permettent également au programme d'évoluer, mais d'une
+   façon encore plus automatique ("/serverless/").
+9. /Disposability/: Une application doit être capable de s'arréter
+   gracieusement[fn:: c'est à dire gérer les signaux de type ~SIGKILL~ ].
+   ~uvicorn~ nous permet de faire cela. Aussi, ~Docker~ est disposable,
+   car il utilise des containers immutables avec des fichiers de configuration.
+   Ainsi, même dans le cas catastrophique ou un serveur brûle, nous
+   pouvons recréer l'application en relancant la configuration ~Docker~[fn:: https://forums.docker.com/t/why-a-docker-container-is-considered-disposable/39407] .
+10. /Dev/prod parity/: cette partie concerne la façon dont une équipe doit
+    gérer les disparitées entre un environnement de production, et un environnement
+    de développement. Nous pensons qu'il n'est pas pertinent de s'attarder sur
+    ce point dans un projet d'une seule personne. Car ces différentes
+    peuvent être difficile à gérer dans un projet "dynamique" avec plusieurs
+    déploiements par jours, ce qui n'est pas le cas.
+11. /Logs/: les logs doivent être traité en mode /stream/, c'est à dire
+    qu'au lieu de les stocker dans un fichier, ils doivent-être envoyé aux
+    fichiers standard /stdout/ et /stderr/. Le but est de permettre aux
+    logiciels fourni par les services de cloud de les gérer. Par exemple,
+    ~GCP~ utilise ~Cloud logging~ et ~AWS~ utilise ~CloudWatch~. Nous
+    avons suivi cette convention dans notre programme.
+12. /Admin process/: il doit exister la possibilité d'executer des
+    tâches d'administrations sur le programme lorsqu'il tourne.
+    Nous pouvons faire celà à l'aide de la connection ~ssh~ du
+    serveur virtuel ~EC2~.
 
 * Ergonomie et design
+
+L'application utilisant ~Ionic~ comme composant graphique principal, nous avons
+souhaité rester au plus proche de ce que ces composants proposaient.
+
+#+CAPTION: vue "rapport" et "recherche de nourriture" de l'application
+[[./img/example_app_view.png]]
 
 * API
 
 Voici la description de l'/API/, notons que les /endpoints/ de type *POST* retournent l'/UUID/
-de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~[fn:: https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics#section-9.3.3
+de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~[fn:: https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics#section-9.3.3]
 "/If one or more resources has been created on the origin server as a result of successfully processing a POST request, the origin server SHOULD send a 201 (Created) response containing a Location header field that provides an identifier for the primary resource created/"]
 
 ** Codes de retour
