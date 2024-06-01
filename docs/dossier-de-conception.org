@@ -244,7 +244,7 @@ données requises pour une telle tâche n'a pas permit d'aboutir à un résultat
 ~Python~ offre cependant certains avantages par rapport à d'autres languages.
 Comme c'est un langage interprété, le déploiement ne demande pas de phase de compilation.
 
-Un certain nombre de fonctionalitéds du langage simplifient aussi le développement
+Un certain nombre de fonctionalités du langage simplifient aussi le développement
 comme par exemple les décorateurs[fn:: une version "statique" du pattern décorateur, que l'on
 peut implémenter à l'aide des annotations en ~Java~ par exemple.] ou
 son caractère multi-paradigme : à la fois orienté objet[fn:: avec des classes "simples" ou des "dataclasses",
@@ -369,7 +369,7 @@ Voici une vue d'ensemble des entitées de l'application:
 [[./img/nutrition_domain.png]]
 
 Les données liées à la nutrition sont modélisées en suivant des normes
-des qualités nutritionnelles du produit[fn:: réglement ~(UE) n°1169/2011~]. Le /Serving size/
+des qualités nutritionnelles du produit. Le /Serving size/
 permet d'indiquer la mesure des informations nutritionnelles (généralement par 100 grammes)
 
 #+CAPTION: Entités liées à la nourriture
@@ -403,7 +403,7 @@ de l'interface /Entry/, ce qui permet d'en rajouter à la volée dans l'applicat
 Et ainsi rendre celle-ci facilement extensible.
 Le domaine étant "plat", sans notion d'héritage, la modularité est conservée au maximum.
 
-*** Implémentations des repositories
+*** Implémentations des /Repositories/
 
 La plupart des objets domaines sont stockés tel quels dans la base de donnée, ~MongoDB~
 permettant de stocker directement des documents complexes dans un format rappelant le
@@ -418,7 +418,7 @@ Un principe de base pour l'élaboration d'une base de donnée orienté document
 est de se baser sur les ~Access Patterns~ plutôt que sur un schéma, le
 principe est de stocker les données telles qu'on veut y accéder plutôt que
 de créer des requètes complexes. Même si cela implique une dénormalisation
-des données.
+des données[fn:: https://www.youtube.com/watch?v=HaEPXoXVf2k - "AWS re:Invent 2018: Amazon DynamoDB Deep Dive: Advanced Design Patterns for DynamoDB (DAT401)"].
 
 **** Dénormalisation
 
@@ -448,8 +448,33 @@ Dans la mesure où l'application est un /Saas/ et que celle-ci traite des donné
 être considéré comme des données de santé, la sécurité des données et de l'application est un point d'une importance primordiale.
 
 L'application utilise un /flow Oauth2/ simplifié[fn:: https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/].
+Le principe est d'envoyer un nom d'utilisateur et un mot de passe sous un format particulier à l'application, qui
+va ensuite renvoyer un token ~JWT~ avec une validitée à durée limitée.
+L'utilisation de ce format garanti que l'application est compatible avec la norme ~Oauth2~, ce qui
+permettra d'étendre le système d'authentification à des ~IDP~ (/Identity Provider/). Pour par exemple,
+se connecter à l'application à l'aide d'un compte ~Google~.
 
-A Faire (expliquer pourquoi jwt c'est secure aussi quoi)
+Nous utilisons les tokens ~JWT~ (/Json Web Token/) pour l'authentification des utilisateurs.
+Ces tokens sont des chaines de caractères qui se présente sous un format ~json~, et contenant
+plusieurs informations à propos d'un utilisateur ainsi qu'une signature.
+La sécurité est assurée car chaque token est signé à l'aide d'une clée privée présente sur le serveur.
+Quand on envoi un token vers un serveur, celui-ci est en mesure de savoir si le token a été altéré
+à l'aide de la signature du token. Cependant, les informations présentes sur le token ne sont pas
+chiffré, il faut donc s'assurer que les informations écrites dans le token ne sont pas des
+informations sensibles.
+
+L'avantage de ce type d'authentification est qu'il ne demande pas de conserver un état particulier
+sur le serveur, contrairement aux cookies de session. Par conséquent, il simplifie l'utilisation
+d'une application sous forme d'/API/ : un client utilise une route de connection pour récupérer
+un token, et le token est valide dans qu'il n'est pas expiré, et non altéré.
+Cependant, il y a certains désavantages: c'est au client de conserver le token de façon à ce qu'il
+ne soit pas volé, en effet, si un token est volé, alors un pirate pourrait se faire passer pour un
+autre utilisateur, juste en utilisant le dis token.
+De plus, comme on ne conserve aucun état sur le serveur, il est difficile de créer un système
+de révocation (contrairement aux cookies de session).
+Cependant, les tokens ~JWT~ offrent une balance acceptable entre la sécurité et la flexibilité
+pour une application de notre type.
+Nous pourrons tout de même envisager un système de révocation à l'avenir.
 
 **** Vérification et contrôle d'accès
 
@@ -476,12 +501,12 @@ classes /Application/ de l'authentification.
 La classe ~oauth_scheme~ est une classe fournie par ~FastAPI~ qui permet de récupérer
 le token ~JWT~, ou un autre type de clée d'authentification, à partir d'une requète ~HTTP~.
 
-* Sérialisation/désérialisation des /JWT/ tokens
+**** Sérialisation/désérialisation des /JWT/ tokens
 
 Pour traiter les tokens ~JWT~ nous avons utilisé une classe appelée
 ~JWTAuthFormatter~. Cette class implémente l'interface ~AuthFormatter~ et contient
 deux méthodes : ~serialize~ qui prend une ~AuthPassKey~ et retourne une chaine de
-caractère (le token ~JWT~) et ~deserialize~ qui faire l'inverse.
+caractère (le token ~JWT~) et ~deserialize~ qui effectue l'action inverse.
 
 La procédure pour sérializer un token consiste à extraite
 les champs (/Claims/) ~JWT~ de l'instance d'~AuthPassKey~.
@@ -531,8 +556,6 @@ pour la réalisation de cette tâche.
 
 #+CAPTION: Diagramme de classes du système d'entrées génériques
 [[./img/generic_entries.png]]
-
-A FAIRE
 
 en utilisant le pattern ~Factory~ et le pattern ~Strategy~, nous pouvons donc
 créer des Entrées génériques.
@@ -678,7 +701,7 @@ Notamment quand un même état doit être partagés entre plusieurs parties de l
 #+CAPTION: Graphique des différentes routes de l'application /frontend/
 [[./img/navigation.png]]
 
-* Infrastructure
+** Infrastructure
 
 Nous avons voulu suivre, dans la mesure du possible la méthodologie /12 Factors/[fn:: https://12factor.net/].
 Qui est une méthodologie conçu pour l'hébergement dans un contexte de cloud computing. Le but est
@@ -758,8 +781,8 @@ souhaité rester au plus proche de ce que ces composants proposaient.
 * API
 
 Voici la description de l'/API/, notons que les /endpoints/ de type *POST* retournent l'/UUID/
-de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~[fn:: https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics#section-9.3.3]
-"/If one or more resources has been created on the origin server as a result of successfully processing a POST request, the origin server SHOULD send a 201 (Created) response containing a Location header field that provides an identifier for the primary resource created/"]
+de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~ :
+"/If one or more resources has been created on the origin server as a result of successfully processing a POST request, the origin server SHOULD send a 201 (Created) response containing a Location header field that provides an identifier for the primary resource created/"[fn:: https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics#section-9.3.3]
 
 ** Codes de retour
 
