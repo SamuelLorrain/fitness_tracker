@@ -8,18 +8,19 @@
 ** Objectif du document
 
    L'objectif du document est de présenter les choix et la conception détaillée de l'application *Fitness Tracker*
-   en réponse au cahier des charges précédemment établi. Ainsi que présenter certaines solutions
+   en réponse au cahier des charges précédemment établi. Nous nous efforçerons également à présenter certaines solutions
    techniques aux problèmes rencontrés pendant le développement.
 
 ** Rappel du projet
 
-   Le projet vise à développer une application de suivi de bien-être
-   et sportif. Les principales fonctionnalités consistent à rentrer des
-   données de nutrition, ou d'autres données relatives aux sport
+   Le projet vise à développer une application de suivi du bien-être
+   et de certaines variables liées au sport.
+   Les principales fonctionnalités consistent à rentrer des
+   données de nutrition ou d'autres données relatives aux sport
    et de suivre l'évolution de certaines tendances dans le temps.
 
    L'application doit être multi-platforme. Elle est composée à
-   la fois d'un /frontend/, application web hybride et un /backend/,
+   la fois d'un /frontend/, application hybride, et un /backend/, le moteur de l'application.
    Une /API/ est chargée de faire la communication entre les deux éléments.
 
 ** Environnement de développement
@@ -59,19 +60,19 @@
 
 * Vue d'ensemble de l'architecture
 
-L'application est séparée en 3 parties distinctes. L'/architecture système/ concerne
+L'application est séparée en trois parties distinctes. L'/architecture système/ concerne
 les logiciels et matériels (ou matériels virtuels) nécessaires à l'hébergement et
 à la mise en production de l'application.
 Le /backend/ constitue la partie logique de l'application ainsi que la persistence des
 données utilisateur. Le /frontend/ est quant à lui responsable de l'interface homme machine
-permettant la réalisation des différentes taches de l'application.
+permettant la réalisation des différentes tâches de l'application.
 
 Une telle architecture peut être considérée comme un /Saas/, car l'application n'a pas
-besoin d'être installée pour que l'utilisateur ait la capacité de l'utiliser (dans sa version webapp),
+besoin d'être installée pour que l'utilisateur puisse l'utiliser (dans sa version webapp),
 la version mobile du frontend ne servant qu'a accéder à certaines fonctionnalités non essentielles au
 fonctionnement et à améliorer les peformances[fn:: il n'y a pas besoin de télécharger le fichier js à chaque fois
 que l'on accède à l'application mobile].
-Comme la persistence des données est au niveau du /backend/, non accessible à l'utilisateur,
+Comme la persistence des données est située au niveau du /backend/, non accessible à l'utilisateur,
 le développeur est responsable de la maintenance et de l'exploitation des données sur l'application.
 
 ** Architecture système et déploiement
@@ -86,7 +87,7 @@ le développeur est responsable de la maintenance et de l'exploitation des donn�
    1. ~Mongo DB~ : Une base de donnée /NoSQL/ orientée document. Toutes les donneés de l'application y sont stockées;
    2. ~Firebase~ : Un service utilisé pour les notifications push, utilise le ~Firebase Cloud Messaging~ (~FCM~);
    3. ~Amazon EC2~ : Un service de serveur virtuel fonctionnant sur la distribution Linux ~Amazon Linux 2~.
-      Est utilisé pour lancer des /containers/ ~Docker~;
+      Est utilisé pour faire fonctionner des /containers/ ~Docker~;
    4. ~Amazon S3~ : Un service de stockage de fichier statique et d'hébergement de ces fichiers. Héberge l'application
       web (un fichier ~index.html~ et un fichier ~index.js~)
    5. ~Docker~ : Logiciel de /containerisation/ de l'application, est utilisé pour configurer et stocker les environnements
@@ -125,15 +126,15 @@ le développeur est responsable de la maintenance et de l'exploitation des donn�
    [[./img/architecture_frontend.png]]
 
    1. ~React~: Une bibliothèque de rendu "réactive". Permet de créer des interfaces graphiques complexes en ~HTMl~ et ~typescript~.
-      Est également utilisée comme une couche d'abstraction au dessus d'~HTML~, grace au ~JSX~.
-      Est aussi à la base d'un écosystèmes de bibliothèques.
+      Elle est également utilisée comme une couche d'abstraction au dessus d'~HTML~, grace au ~JSX~.
+      C'est aussi la base d'un écosystèmes de bibliothèques.
    2. ~Redux~: Une bibliothèque qui permet d'utiliser le pattern ~Flux~ (une variation du pattern MVC[fn:: https://facebookarchive.github.io/flux/docs/in-depth-overview/]) pour gèrer l'état de l'application.
-      L'état ainsi stocké dans ~Redux~ permet de rendre l'application plus prédictible car celui-ci est centralisé mis à jour et utilisé
+      L'état ainsi stocké dans ~Redux~ permet de rendre l'application plus prédictible car celui-ci est centralisé, mis à jour et utilisé
       par un flux unidirectionnel. Nous détaillons ce point dans la suite du document.
    4. ~RTK-Query~: Un moteur de requète ~AJAX~ compatible avec ~Redux~. Gère le cache et l'invalidation de cache, ainsi que les états
       des requètes ("pending", "error" ,"loading" etc.)
    4. ~Ionic~: A la fois une bibliothèque graphique de composants ~React~ répliquant le visuel des composants natif ~Android~ et ~Ios~ et
-      une abstraction pour effectuer certaines tâches liées à ~Capacitor~ (~inoic cli~)
+      une abstraction pour effectuer certaines tâches par l'intermédiaire de ~Capacitor~ (~inoic cli~).
    5. ~Capacitor~: Fournit une abstraction entre les composants ~Ionic~ et les applications natives ~Ios~ et ~Android~. Permet également
       d'utiliser des fonctionnalités natives des téléphones normalement inaccessibles à une application web. Certains plugins permettent
       notamment d'utiliser le /GPS/ du téléphone, ou encore les fonctionnalités de stockage.
@@ -163,7 +164,7 @@ si une classe n'a qu'une raison de changer, alors, modifier une classe
 revient à modifier une fonctionnalité. Chaque classe ayant un rôle
 précis dans l'application.
 
-Les 3 autres principes ont été moins utilisés durant l'élaboration
+Les trois autres principes ont été moins utilisés durant l'élaboration
 du programme.
 
 Tout d'abord, *L*, le principe de substitution de Liskov est garanti
@@ -171,7 +172,7 @@ par le caractère dynamique des classes. ~Mypy~, le logiciel de vérification
 de type statique de ~Python~ ne permet pas de créer des classes qui transgresserait
 ce principe[fn:: https://mypy.readthedocs.io/en/stable/common_issues.html#incompatible-overrides].
 Nous pouvons cependant noter que celui-ci apparait uniquement dans le cadre
-de l'héritage, et qu'il n'y en a pas dans notre programme.
+de l'héritage, et qu'il n'y en a que très peu dans notre programme.
 
 Les principes *O* Ouvert/fermé et *I*, Ségragation des interfaces, ne
 sont que peu utilisés. Ces principes s'imposent
@@ -188,19 +189,19 @@ du client par rapport à ces ressources. Le serveur doit quant à lui utiliser l
 de retour ~HTTP~ pour signifier l'état du traitement de la demande du client.
 Aussi une architecture /REST/ doit être "découvrable" (/discoverable/).
 C'est à dire qu'un client doit avoir connaissance facilement du reste de l'application
-à partir d'une première requète. Grâce à l'utilisation d'hyperliens par exemple.
+à partir d'une première requète, grâce à l'utilisation d'hyperliens par exemple.
 Dans notre cas, le /backend/ agit comme le serveur et le /frontend/ comme le client.
 
 Notons que /REST/ n'est pas une norme, mais plutôt une série de principes.
 
 Le but de ce style d'architecture est de garantir une commmunication /stateless/, "sans état", entre
 le client et le serveur. C'est à dire que ni le client, ni le serveur n'ont besoin de conserver
-un état sur l'un ou l'autre pour communiquer. Il y a notamment la garantie que le client
-accèdera toujours à la même ressource via la même /URI/.
+un état sur l'un ou l'autre pour communiquer. Par exemple, la notion d'/URI/ garantie que le client
+accèdera toujours à la même ressource via la même requète ~GET~.
 
 Nous n'allons pas utiliser totalement le style d'architecture /REST/, mais se concentrer
 seulement sur les /URI/ et les verbes et code de retour ~HTTP~, car, dans le cadre d'une /API/ les autres notions
-sont peut généralement peu utile et en pratique peut utilisées, au grand désarroi de l'auteur[fn:: https://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven].
+sont peut généralement peu utile et en pratique peu utilisées, au grand désarroi de l'auteur[fn:: https://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven].
 
 Pour garantir ces principes, nous avons besoin de plusieurs choses:
 
@@ -216,14 +217,14 @@ Pour garantir ces principes, nous avons besoin de plusieurs choses:
 
    Nous avons décidé de ne pas utiliser *PATCH*, car, bien qu'il soit défini comme un moyen de modifier une partie d'une ressource,
    il implique également que le client ait connaissance de la manière dont sont considérées les parties non transmises dans la requête *PATCH*. Cela peut porter
-   à confusion, notamment quand certains champs de la ressource sont optionnels.
+   à confusion, notamment quand certains champs sont optionnels.
 
 3. Les actions doivent donner lieu à des opérations et des retours serveurs non-ambigus.
    Par exemple, la création d'une ressource ne doit pas retourner directement le contenu de la ressource créée mais
-   uniquement l'/URI/ de la nouvelle donnée créée. A la fois pour des raisons de performance, et de séparation
+   uniquement l'/URI/ de celle-ci. A la fois pour des raisons de performance, et de séparation
    de responsabilité: un *POST* ne doit pas retourner les données à la manière d'un *GET*.
 
-Nous verrons le détail les différents /endpoints/ de l'/API/ dans la suite du document.
+Nous verrons le détail des différents /endpoints/ de l'/API/ dans la suite du document.
 
 ** Backend
 
@@ -244,7 +245,7 @@ données requises pour une telle tâche n'a pas permit d'aboutir à un résultat
 ~Python~ offre cependant certains avantages par rapport à d'autres languages.
 Comme c'est un langage interprété, le déploiement ne demande pas de phase de compilation.
 
-Un certain nombre de fonctionalités du langage simplifient aussi le développement
+Certaines fonctionalités du langage simplifient aussi le développement
 comme par exemple les décorateurs[fn:: une version "statique" du pattern décorateur, que l'on
 peut implémenter à l'aide des annotations en ~Java~ par exemple.] ou
 son caractère multi-paradigme : à la fois orienté objet[fn:: avec des classes "simples" ou des "dataclasses",
@@ -254,31 +255,31 @@ donc les utiliser comme des valeurs, et les passer en paramètre. De plus, la bi
 des fonctionalités typique d'un language fonctionnel comme des fonctions ~map~, ~filter~, ~reduce~, ~zip~, ~takewhile~...
 On peut également créer des listes en intention à la manière d'~Haskell~, ou encore faire de l'/itération paresseuse/ grâce aux ~generateurs~ ]
 et impératif.
-Les bibliothèques utilisés dans le projets fonctionnent constamment à travers cette approche multi-paradigme.
+Les bibliothèques utilisés dans le projets tirent parti de cette approche multi-paradigme, en exposant
+des classes ou des fonctions selon le besoin.
 
 La notion de typage optionel et incremental[fn:: https://peps.python.org/pep-0484/] permet de faciliter
 le développement tout en garantissant un sécurité des types (à l'inverse des langages dynamiques classiques).
-Le /Structural duck typing/, notion propre à ~Python~, remplace la notion d'interface dans un contexte de typage dynamique[fn:: https://peps.python.org/pep-0544/]
+Le /Structural duck typing/, notion propre à ~Python~, remplace la notion d'interface dans un contexte de typage dynamique.[fn:: https://peps.python.org/pep-0544/]
 
 Enfin, l'écosystème est adapté au developpement web incremental et rapide. De nombreuses bibliothèques et /frameworks/ existent
-pour nous aider à développer une /API/. Et il nous a semblé que ~Python~ privilégiait une approche "bibliothèque" plutôt qu'une
-approche "/framework/", ce qui permet de tester des /design patterns/ qui n'auraient pas été prévu
-par tel ou tel /framework/.
-
+pour nous aider à développer une /API/. Il nous a semblé que ~Python~ privilégiait une approche "bibliothèque" plutôt qu'une
+approche "/framework/", ce qui permet plus de liberté dans le chois des /design patterns/ et de l'architecture globale
+du logiciel.
 
 **** FastAPI
 Nous avons choisi ~FastAPI~ comme /framework/ web principal.
-Il est léger et spécialisé : il été conçu uniquement pour
+Ce /framework/ est léger et spécialisé : il été conçu uniquement pour
 la création d'/API/, à l'inverse de la plupart des autres /frameworks/
 web qui proposent des écosystèmes logiciels complets (allant parfois
-du déploiement jusqu'au style de page[fn:: Par exemple ASP.NET]).
+du déploiement jusqu'au style de page[fn:: Par exemple ~ASP.NET~, ~Spring~ ou ~Django~ ]).
 
-~FastAPI~ inclu une validation des données et une serialisation/désérialisation par typage fort
+~FastAPI~ inclu une fonctionnalité de validation des données et une serialisation/désérialisation par typage fort
 en utilisant la librairie ~Pydantic~. Ainsi, nous pouvons garantir que les entrées et sorties
-de l'application sont typés, évitant ainsi une classe entière d'erreurs.
+de l'application sont typés, évitant ainsi une classe entière d'erreurs[fn:: https://blog.acolyer.org/2017/09/19/to-type-or-not-to-type-quantifying-detectable-bugs-in-javascript/].
 Nous avons aussi utilisé le système d'injection de dépendance intégré, les middleware,
 ainsi que les abstractions au dessus de systèmes d'authentification comme ~OAuth2~.
-Enfin, ~FastAPI~ génère automatiquement une documentation ~OpenAPI~, ce qui faisait
+Enfin, ~FastAPI~ génère automatiquement une documentation ~OpenAPI~[fn:: https://fastapi.tiangolo.com/reference/openapi/docs/], ce qui faisait
 parti de nos exigences fonctionnelles.
 
 **** Mypy
@@ -304,7 +305,7 @@ Nous utilisons d'autres dépendances dans le projets:
 Le /backend/ été conçu en suivant les principes de la /Clean Architecure/. C'est
 une des différentes façons d'implémenter /SOLID/ dans un context d'application utilisateur (par opposition à une bibliothèque).
 Le principe est de séparer l'application en plusieurs couches distinctes et indépendantes, et de ne permettre qu'un petit ensemble de
-communication entre ces couches. Cette structure permet d'isoler la logique métier des interfaces utilisateurs et des infrastructures.
+communication entre ces couches. Cette structure permet d'isoler la logique métier des interfaces utilisateurs et des infrastructures [fn:: https://www.cosmicpython.com/book/introduction.html#_why_do_our_designs_go_wrong ].
 
 Concrètement, /Clean Architecture/ défini 4 couches: /Domaine/, /Présentation/, /Application/, /Infrastructure/, ayant
 chacune un rôle distinct.
@@ -333,7 +334,7 @@ chacune un rôle distinct.
 
 - Des classes de /Configuration/ sont également utilisées pour créer de l'injection de dépendances (soit, définir quelle implémentation
   doit implémenter telle interface dans tel contexte). D'ailleurs, la configuration n'a pas besoin de déterminer
-  statiquement quelle implémentation doit être utilisé dans tel cas, mais peut utiliser une /Factory/ pour déterminer dynamiquement
+  statiquement quelle implémentation doit être utilisée dans tel cas, mais peut utiliser une /Factory/ pour déterminer dynamiquement
   quelle classe doit être utilisée dans un cas d'utilisation précis (voir le /design pattern/ /Strategy/)
 
 #+CAPTION: Graphe de dépendance du module /food/ de l'application
@@ -352,13 +353,13 @@ On remarque également que la classe /FoodRepository/ est une interface, implém
 spécifique par une classe de la couche /Infrastructure/ (une classe de configuration s'occupe
 de choisir la bonne implémentation).
 Enfin, la couche /Présentation/ dépend uniquement de la couche /Application/. Le module /food.api/
-est dépendant des classes /Requests/, qui sont les contrats utilisé pour les diverses requètes.
+est dépendant des classes /Requests/, qui sont les contrats utilisés pour les diverses requètes.
 
-Une architecture comme celle-ci permet un couplage faible: la couche présentation peut changer
+Une architecture comme celle-ci permet un couplage faible: la couche /Présentation/ peut changer
 (on peut envisager de modifier la /Présentation/ par une interface native ou un /CLI/ par exemple),
 de même l'implémentation spécifique de la base de donnée n'est pas déterminée, ce qui permet d'utiliser
 l'application sans base de donnée (par exemple avec les données stockés en /RAM/ ou dans un simple fichier).
-Egalement, on peut étendre la couche /Application/ (les fonctionnalités du logiciel) sans nécessairement
+Également, on peut étendre la couche /Application/ (les fonctionnalités du logiciel) sans nécessairement
 modifier le /Domaine/.
 Enfin, les différentes parties de l'applications peuvent être testées de façon unitaire, en isolation des uns par rapport aux autres.
 
@@ -383,7 +384,7 @@ des potentiels ingrédients.
 #+ATTR_LATEX: :scale 0.5
 [[./img/domain_user.png]]
 
-Les utilisateurs ont font également références aux
+Les utilisateurs comprennent un but (/goal/)
 informations nutritionnelles. En effet, il est aisé d'utiliser
 le même domaine pour décrire la nourriture, et, par exemple,
 combien de calories un utilisateur a décidé d'ingérer par jour.
@@ -392,13 +393,13 @@ combien de calories un utilisateur a décidé d'ingérer par jour.
 [[./img/domain_entry.png]]
 
 Une entité /Entry/ contient un /payload/ générique, on peut voir ici
-que les différents /payloads/ sont des implémentation d'une interface /Payload/
+que les différents /payloads/ sont des implémentations d'une interface /Payload/
 Cela nous permettra de créer de nouveaux payloads, et de gérer tous les /payloads/
 de façon générique dans l'application.
 
-Comme nous pouvons le voir, la majorité des classes sont liés entre elles par
+Comme nous pouvons le voir, la majorité des classes sont liées entre elles par
 de la composition ou de l'aggregation.
-Aussi, les différents types d'entrées sont des implémentations différents
+Aussi, les différents types d'entrées sont des implémentations différentes
 de l'interface /Entry/, ce qui permet d'en rajouter à la volée dans l'application.
 Et ainsi rendre celle-ci facilement extensible.
 Le domaine étant "plat", sans notion d'héritage, la modularité est conservée au maximum.
@@ -415,7 +416,7 @@ classiques, les base de données orienté document offre une plus grande flexibi
 dans la manière dont les données sont stockées : la notion de schéma n'existe pas,
 et ces bases de données n'ont pas de contrainte d'intégrité[fn:: https://www.mongodb.com/docs/manual/data-modeling/data-consistency/].
 Un principe de base pour l'élaboration d'une base de donnée orienté document
-est de se baser sur les ~Access Patterns~ plutôt que sur un schéma, le
+est de se baser sur les ~Access Patterns~ (modèles d'accès) plutôt que sur un schéma, le
 principe est de stocker les données telles qu'on veut y accéder plutôt que
 de créer des requètes complexes. Même si cela implique une dénormalisation
 des données[fn:: https://www.youtube.com/watch?v=HaEPXoXVf2k - "AWS re:Invent 2018: Amazon DynamoDB Deep Dive: Advanced Design Patterns for DynamoDB (DAT401)"].
@@ -425,8 +426,8 @@ des données[fn:: https://www.youtube.com/watch?v=HaEPXoXVf2k - "AWS re:Invent 2
 Dans notre cas, la dénormalisation est aussi liée au métier:
 Nous ne voulons pas qu'un utilisateur ait sont total calorique modifié si
 les informations nutritionnelles d'un produit changent. Par conséquent,
-les informations nutritionnelles d'une entrée sont répliquée, plutôt
-que d'être liées par une /foreign key/.
+les informations nutritionnelles d'une entrée sont répliquées, plutôt
+que d'être liées par une /foreign key/ par exemple.
 
 **** /Extended reference/
 
@@ -442,7 +443,7 @@ dans la base de données, plutôt dans le champs /entries/ de l'entité
 à une entrée sans passer d'abord par le jour où cette donnée est stockée[fn:: https://www.mongodb.com/blog/post/building-with-patterns-the-bucket-pattern].
 
 *** Authentifaction et Securité
-**** /OAuth2/ simplifié
+* /OAuth2/ simplifié
 
 Dans la mesure où l'application est un /Saas/ et que celle-ci traite des données personnelles, voire des données pouvant
 être considéré comme des données de santé, la sécurité des données et de l'application est un point d'une importance primordiale.
@@ -455,47 +456,47 @@ permettra d'étendre le système d'authentification à des ~IDP~ (/Identity Prov
 se connecter à l'application à l'aide d'un compte ~Google~.
 
 Nous utilisons les tokens ~JWT~ (/Json Web Token/) pour l'authentification des utilisateurs.
-Ces tokens sont des chaines de caractères qui se présente sous un format ~json~, et contenant
+Ces tokens sont des chaines de caractères qui se présentent sous un format ~json~, et contenant
 plusieurs informations à propos d'un utilisateur ainsi qu'une signature.
 La sécurité est assurée car chaque token est signé à l'aide d'une clée privée présente sur le serveur.
 Quand on envoi un token vers un serveur, celui-ci est en mesure de savoir si le token a été altéré
 à l'aide de la signature du token. Cependant, les informations présentes sur le token ne sont pas
-chiffré, il faut donc s'assurer que les informations écrites dans le token ne sont pas des
+chiffrées, il faut donc s'assurer que les informations écrites dans le token ne sont pas des
 informations sensibles.
 
 L'avantage de ce type d'authentification est qu'il ne demande pas de conserver un état particulier
 sur le serveur, contrairement aux cookies de session. Par conséquent, il simplifie l'utilisation
 d'une application sous forme d'/API/ : un client utilise une route de connection pour récupérer
-un token, et le token est valide dans qu'il n'est pas expiré, et non altéré.
+un token, et le token est valide tant qu'il n'est pas expiré, et non altéré.
 Cependant, il y a certains désavantages: c'est au client de conserver le token de façon à ce qu'il
-ne soit pas volé, en effet, si un token est volé, alors un pirate pourrait se faire passer pour un
+ne soit pas volé. En effet, si un token est volé, alors un pirate pourrait se faire passer pour un
 autre utilisateur, juste en utilisant le dis token.
 De plus, comme on ne conserve aucun état sur le serveur, il est difficile de créer un système
 de révocation (contrairement aux cookies de session).
 Cependant, les tokens ~JWT~ offrent une balance acceptable entre la sécurité et la flexibilité
 pour une application de notre type.
-Nous pourrons tout de même envisager un système de révocation à l'avenir.
+Nous pourrions tout de même envisager un système de révocation à l'avenir.
 
 **** Vérification et contrôle d'accès
 
 Le contrôle d'accès de l'application est produit par le système d'authentification et de dépendances.
 Nous avons utilisé le système de dépendance de ~FastAPI~ pour faire en sorte qu'a chaque fois qu'un utilisateur
 essaye d'accéder à une route protégé, une instance de la classe ~AuthPassKey~ doit être créée.
-Cette instance de classe utilise les tokens ~JWT~ ainsi que la base de donnée pour donner une
-représentation interne d'un utilisateur et de ses authorisations.
+Cette instance de classe utilise les tokens ~JWT~ ainsi que certaines données pour construire une
+représentation interne d'un utilisateur et de ses autorisations.
 
 Cette dépendance est appelée ~AuthorizationDependency~ et prend la forme d'une classe qui prend en paramètre
 une requète ~HTTP~ et retourne notre instance d'~AuthPassKey~.
 
 Dans le cas où la route demande une ~Permission~ spéciale, au lieu d'utiliser ~AuthorizationDependency~
-on utilise ~AuthorizationDependencyCreator~ qui est une fonction qui retourne une dépendance. Cette fonction
+nous pouvons utiliser ~AuthorizationDependencyCreator~ qui est une fonction qui retourne une dépendance. Cette fonction
 prend en paramètre la permission requise pour effectuer cette action.
 
 #+CAPTION: Diagramme de classes pour la configuration de l'authentification
 [[./img/class_authorization.png]]
 
 On peut voir que les classes ~SimpleAuthorizationDependency~ et ~AuthorizationDependencyCreator~
-implémente l'interface ~AuthorizationDependency~. Cette interface dépend de toute les
+implémentent l'interface ~AuthorizationDependency~. Cette interface dépend de toute les
 classes /Application/ de l'authentification.
 
 La classe ~oauth_scheme~ est une classe fournie par ~FastAPI~ qui permet de récupérer
@@ -504,7 +505,7 @@ le token ~JWT~, ou un autre type de clée d'authentification, à partir d'une re
 **** Sérialisation/désérialisation des /JWT/ tokens
 
 Pour traiter les tokens ~JWT~ nous avons utilisé une classe appelée
-~JWTAuthFormatter~. Cette class implémente l'interface ~AuthFormatter~ et contient
+~JWTAuthFormatter~. Cette classe implémente l'interface ~AuthFormatter~ et contient
 deux méthodes : ~serialize~ qui prend une ~AuthPassKey~ et retourne une chaine de
 caractère (le token ~JWT~) et ~deserialize~ qui effectue l'action inverse.
 
@@ -524,8 +525,8 @@ identifiant unique ainsi que les permissions auquelles a accès l'utilisateur.
 #+CAPTION: Diagramme de séquence de la fonctionnalité de gestion de code barre
 [[./img/sequence_scanner.png]]
 
-La gestion de code-barre est régie par plusieurs réglès. Le programme ne va chercher
-des élements dans l'/API/ ouverte /OpenFoodFact/ uniquement si aucune nourriture n'est
+La gestion de code-barre est régie par plusieurs règles. Le programme ne va chercher
+des élements dans l'/API/ ouverte /OpenFoodFact/ à la condition qu'aucune nourriture ne soit
 associée à ce code barre en base de donnée.
 L'entité /Food/ contient un champ /barcode/ pour conserver ce code barre.
 Le nombre de requètes est donc minimal.
@@ -536,9 +537,9 @@ Le nombre de requètes est donc minimal.
 [[./img/sequence_notifications.png]]
 
 Le système de notification utilise le format /FCM/ qui est le format standard de ~Firebase~.
-Les messages sont envoyé à l'aide d'un /cron/.
+Les messages sont envoyés à l'aide d'un /cron/.
 Toutes les heures, une requètes est envoyée à l'application à l'aide d'un compte de service,
-un compte en base de donnée, créée pour l'occasion et possédant des droits particuliers.
+un compte en base de donnée créé pour l'occasion et possédant des droits particuliers.
 
 En fonction de certaines règles métiers, l'utilisateur peut demander à être prévenu
 à une certaines fréquence. Si la notification doit être envoyée pendant la requète
@@ -602,8 +603,8 @@ Pour le reste de l'application, nous avons décidé d'utiliser de l'injection ma
 de dépendance. Nous avons fait cela à cause du nombre limité de dépendances à injecter et par soucis
 de créer une couche /Application/ sans dépendance à aucune bibliothèque.
 
-Une classe de configuration existe ainsi par module. Ces classes sont construites de manière à
-créer un graphe de dépendance isolé.
+Il existe une classe de configuration par module. Ces classes sont construites de manière à
+créer un graphe de dépendances isolé.
 Par exemple, la couche métier du module ~notification~ a besoin de 3 élements, 3 dépendances.
 
 1. ~NotificationService~
@@ -628,7 +629,7 @@ une classe qui utilise le pattern ~Factory Method~, également, pour éviter de 
 objets, la classe peut utiliser le pattern ~Singleton~.
 Un accès à cette une méthode de cette classe pourra donner la même instance si besoin.
 
-La classe est ensuite utilisé dans la couche présentation, qui se contente généralement d'appeler
+La classe est ensuite utilisée dans la couche présentation, qui se contente généralement d'appeler
 le /Service/ du module.
 
 *** Tests
@@ -637,12 +638,13 @@ La /Clean architecture/ nous permet de tester les différentes parties de l'appl
 En utilisant une classe de /Configuraiton/ spécialisée, ou en injectant directement les dépendances,
 nous pouvons créer des versions /Fake/ de certains éléments.
 
-Par exemple, pour nous permettre de tester les /Services/
+Nous permettre de tester les /Services/
 sans utiliser la base de donnée à plusieurs avantages, tout d'abord les
 tests sont beaucoup plus rapides. Ce n'est pas nécessaire sur ce type de projet. Mais des tests
-rapides permettent une meilleure expérience développeur. De plus, en utilisant des /Fake/ on
-peut garantir le fonctionnement d'une partie du code, sans que des parties externes, comme
+rapides permettent une meilleure expérience développeur. De plus, l'utilisation des /Fake/
+garanti le fonctionnement d'une partie du code, sans que des parties externes, comme
 la base de donnée, où le réseau n'aient d'influence.
+
 De plus, nous pouvons commencer à créer des tests sur une partie de l'application sans que
 tout le flux ne soit programmé, ce qui incite à une meilleure couverture de code (tout peut être testé
 facilement et en isolation).
@@ -685,16 +687,16 @@ facilitant ainsi sa prévisibilité, et sa maintenabilité.
 et à utiliser du /message passing/ pour la mise à jour de celui-ci. Il comprends plusieurs élements:
 
 - /Actions/ : Envoyés par des interactions utilisateur, ce sont des messages qui contiennent les informations modifier un état.
-- /Dispatcher/ : Centralise la gestion des actions et assure que telle action est envoyé au store correspondant.
+- /Dispatcher/ : Centralise la gestion des actions et assure que telle action est envoyée au /Store/ correspondant.
 - /Stores/ : Contiennent et gèrent l'état spécifique de l'application.
-- /Views/ : Réagissent aux changements d'état des stores pour mettre à jour l'affichage.
+- /Views/ : Réagissent aux changements d'état des /Stores/ pour mettre à jour l'affichage.
 
 ~Redux~ comprends aussi des extensions comme ~Redux-toolkit~ et ~RTK-Query~ qui permettent
 une gestion plus facile de l'état et des requètes ~Ajax~.
 
 Nous utilisons cette bibliothèque, ainsi que ces deux extensions, pour la gestion de l'état globale de l'application, car
-elle permet de simplifier grandement le partage d'état entre les différents composants ~React~.
-Notamment quand un même état doit être partagés entre plusieurs parties de l'application.
+elle permet de simplifier grandement le partage d'état entre les différents composants ~React~,
+notamment quand un même état doit être partagés entre plusieurs parties de l'application.
 
 *** Navigation
 
@@ -703,8 +705,8 @@ Notamment quand un même état doit être partagés entre plusieurs parties de l
 
 ** Infrastructure
 
-Nous avons voulu suivre, dans la mesure du possible la méthodologie /12 Factors/[fn:: https://12factor.net/].
-Qui est une méthodologie conçu pour l'hébergement dans un contexte de cloud computing. Le but est
+Nous avons voulu suivre, dans la mesure du possible la méthodologie /12 Factors/[fn:: https://12factor.net/]
+qui est une méthodologie conçue pour l'hébergement dans un contexte de /cloud computing/. Le but est
 de créer une application robuste et résiliente, tout en facilitant le déploiement de futures versions.
 
 1. /Codebase/: la base de code doit posséder une un système de gestion de version. Nous utilisons ~Git~.
@@ -717,9 +719,9 @@ de créer une application robuste et résiliente, tout en facilitant le déploie
    qui s'occupe du /build/ du programme ~Android~. Ce fichier n'est pas inclu dans le système de gestion de
    version. Ainsi, les configurations spécifiques à un environnement en particulier sont isolés de la base
    de code.
-4. /Backing service/: /12 Factors/ créé la notion de /backing service/, soit un service, local
+4. /Backing service/: /12 Factors/ introduit la notion de /backing service/, soit un service, local
    ou distant, utilisé dans l'application et propose de traiter ses services comme des /ressources/
-   de l'application. Ils doivent être utilisés avec un couplage faire, et accédé via des url.
+   de l'application. Ils doivent être utilisés avec un couplage faible, et l'application doit y accéder via un /url/.
    Nous faisons cela pour ~MongoDB~ ainsi que pour ~Firebase~. Ces deux services sont couplés
    faiblement, grâce aux ~.env~ qui contiennent les adresses vers ces services, ainsi que
    la programmation /SOLID/, c'est services sont des implémentations spécifiques de certaines
@@ -727,8 +729,8 @@ de créer une application robuste et résiliente, tout en facilitant le déploie
 5. /Build, release, run/: Il faut séparer la phase de /build/ de la phase de /run/. Pour python,
    qui est un langage interprété, la question ne se pose pas. Pour la partie /frontend/, il existe
    deux builds différents, un pour ~Android~, l'autre pour le web. Ces build sont stockés
-   sur un serveur /S3/, et ne peuvent pas tourner "tel quel", sans environnement. Ainsi, les
-   deux phases sont séparées.
+   sur un serveur /S3/, et ne peuvent pas tourner "tel quel", sans environnement d'execution
+   (téléphone ou navigateur web). Ainsi, les deux phases sont séparées.
 6. /Processes/: L'application doit fonctionner en isolation dans son processus, et toutes
    les données utilisés par l'application doivent être stockés dans un /backing service/
    comme une base de donnée. Notre application étant composé d'un seul processus, et
@@ -747,19 +749,20 @@ de créer une application robuste et résiliente, tout en facilitant le déploie
    à une certaine charge. Notre deuxième choix était d'utiliser les ~Lambda~
    d'~AWS~ qui permettent également au programme d'évoluer, mais d'une
    façon encore plus automatique ("/serverless/").
+   Nous avons préféré la première approche pour des raisons de coût.
 9. /Disposability/: Une application doit être capable de s'arréter
    gracieusement[fn:: c'est à dire gérer les signaux de type ~SIGKILL~ ].
    ~uvicorn~ nous permet de faire cela. Aussi, ~Docker~ est disposable,
    car il utilise des containers immutables avec des fichiers de configuration.
    Ainsi, même dans le cas catastrophique ou un serveur brûle, nous
-   pouvons recréer l'application en relancant la configuration ~Docker~[fn:: https://forums.docker.com/t/why-a-docker-container-is-considered-disposable/39407] .
+   pouvons recréer l'application, simplement en relancant la configuration ~Docker~[fn:: https://forums.docker.com/t/why-a-docker-container-is-considered-disposable/39407] .
 10. /Dev/prod parity/: cette partie concerne la façon dont une équipe doit
     gérer les disparitées entre un environnement de production, et un environnement
     de développement. Nous pensons qu'il n'est pas pertinent de s'attarder sur
-    ce point dans un projet d'une seule personne. Car ces différentes
-    peuvent être difficile à gérer dans un projet "dynamique" avec plusieurs
-    déploiements par jours, ce qui n'est pas le cas.
-11. /Logs/: les logs doivent être traité en mode /stream/, c'est à dire
+    ce point dans un projet d'une seule personne. Ces différentes
+    peuvent être difficile à gérer dans un projet avec plusieurs
+    déploiements par jours et par personne, ce qui n'est pas le cas.
+11. /Logs/: les logs doivent être traités en mode /stream/, c'est à dire
     qu'au lieu de les stocker dans un fichier, ils doivent-être envoyé aux
     fichiers standard /stdout/ et /stderr/. Le but est de permettre aux
     logiciels fourni par les services de cloud de les gérer. Par exemple,
@@ -784,6 +787,9 @@ Voici la description de l'/API/, notons que les /endpoints/ de type *POST* retou
 de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~ :
 "/If one or more resources has been created on the origin server as a result of successfully processing a POST request, the origin server SHOULD send a 201 (Created) response containing a Location header field that provides an identifier for the primary resource created/"[fn:: https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-semantics#section-9.3.3]
 
+Notons que les informations présents dans cette sections, sont aussi présents dans un format
+~OpenAPI~ dans l'application à l'addresse ~/docs~
+
 ** Codes de retour
 
 | Code de retour | Description                                                     |
@@ -805,7 +811,7 @@ de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~ :
 |----------------+-----------------------------------------------------------------|
 |            409 | Renvoyé lorsqu'on essaye de créer une entitée qui existe        |
 |                | déjà. Dans notre application, cette valeur de retour            |
-|                | n'est renvoyée uniquement si on essaye de créer un utilisateur  |
+|                | n'est renvoyée seulement si on essaye de créer un utilisateur   |
 |                | avec une adresse email déjà existante.                          |
 |----------------+-----------------------------------------------------------------|
 |            422 | Erreur de validation, le payload entré n'est pas correct.       |
@@ -846,7 +852,7 @@ de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~ :
 | POST   | ~/food/~            | /Endpoint/ pour créer une nouvelle entitée de type /Food/.             |
 |--------+---------------------+------------------------------------------------------------------------|
 | DELETE | ~/food/{food_uuid}~ | Permet de supprimer une entitée /Food/, les utilisateurs ne peuvent    |
-|        |                     | supprimer uniquement les entitées qu'ils ont créés.                    |
+|        |                     | supprimer uniquement les entitées qu'ils ont créé eux même.            |
 |--------+---------------------+------------------------------------------------------------------------|
 | POST   | ~/food/barcode~     | Permet de créer une nourriture à partir d'un code barre.               |
 |        |                     | Nous avons vu le fonctionnement particulier de ce /endpoint/ plus haut |
@@ -942,9 +948,9 @@ de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~ :
 | API             | Signifie /Application Programming Interface/                                    |
 |                 | il s'agit d'une interface qui permet de faire                                   |
 |                 | communiquer plusieurs programmes entre eux. Les programmes                      |
-|                 | peuvent être rapproché ou distants.                                             |
+|                 | peuvent être rapprochés ou distants.                                            |
 |-----------------+---------------------------------------------------------------------------------|
-| Multi-platforme | Un logiciel est dis multi-platforme si il peux fonctionner                      |
+| Multi-platforme | Un logiciel est dit multi-platforme si il peux fonctionner                      |
 |                 | sur plusieurs plateforme, machines ou systèmes d'exploitations                  |
 |                 | différents.                                                                     |
 |-----------------+---------------------------------------------------------------------------------|
@@ -971,9 +977,8 @@ de la nouvelle ressource dans le /header/ ~HTTP~ ~Location~ :
 |-----------------+---------------------------------------------------------------------------------|
 | Environnement   | Un environnement d'execution ou /runtime/ en anglais est un                     |
 | d'execution     | programme qui fournit certaines fonctionnalités à un autre                      |
-|                 | programme pour être éxecuté. Dans le cas qui nous interesse                     |
-|                 | pendant ce document, l'environnement d'execution permet                         |
-|                 | spécifiquement de faire fonctionner du code asynchrone                          |
+|                 | programme pour être éxecuté. Par exemple un environnement d'execution           |
+|                 | spécifique est nécessaire pour faire tourner du code asynchrone                 |
 |                 | en ~Python~.                                                                    |
 |-----------------+---------------------------------------------------------------------------------|
 | Plugin          | Un plugin est un partie optionnelle d'un programme                              |
