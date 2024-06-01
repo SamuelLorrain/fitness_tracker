@@ -28,4 +28,6 @@ class FoodSavablePayload(BaseModel):
     nutrition: NutritionComposition
 
 
-SavablePayload = WaterSavablePayload | KCalSavablePayload | FoodSavablePayload | WeightSavablePayload
+SavablePayload = (
+    WaterSavablePayload | KCalSavablePayload | FoodSavablePayload | WeightSavablePayload
+)
