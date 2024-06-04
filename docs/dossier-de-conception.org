@@ -110,7 +110,7 @@ le développeur est responsable de la maintenance et de l'exploitation des donn�
       d'execution asynchrone et web pour ~Python~. Ce serveur permet donc de faire fonctionner l'application ~Python~
       en mode asynchrone.
    3. Une architecture en couche, inspirée par ~Clean Architecture~:
-      Il y a une couche ~Domaine~, qui décrit les ~Entitées~ et ~Aggregats~ du systême, une couche ~Infrastrucutre~,
+      Il y a une couche ~Domaine~, qui décrit les ~Entités~ et ~Aggregats~ du systême, une couche ~Infrastrucutre~,
       utilisée pour les implémentations comme le stockage du reste de l'application.
       Une couche de ~Presentation~ qui permet de communiquer avec l'extérieur, ainsi qu'une couche ~Application~ (ou Service)
       qui s'occupe de l'orchestration entre les autres élements de l'application. Nous détaillons cette architecture
@@ -310,7 +310,7 @@ communication entre ces couches. Cette structure permet d'isoler la logique mét
 Concrètement, /Clean Architecture/ défini 4 couches: /Domaine/, /Présentation/, /Application/, /Infrastructure/, ayant
 chacune un rôle distinct.
 
-- La couche /Domaine/ contient les /Entitées/ et /Aggregats/, soit, les objets domaine de l'application. Dans notre cas,
+- La couche /Domaine/ contient les /Entités/ et /Aggregats/, soit, les objets domaine de l'application. Dans notre cas,
   un /User/ ou encore une nourriture (/Food/) est une /Entitité/.
   Ce sont des classes "simples", sans référence à la base de donnée où à quelconque technologie ou entrée/sortie particulière.
 
@@ -318,7 +318,7 @@ chacune un rôle distinct.
   la partie de l'application qui s'occupe des /Contrats/ des requètes et réponses ~HTTP~ (leur format) ainsi que les
   règles de validation associées. C'est la seule couche de l'application qui fait directement référence à ~FastAPI~.
 
-- La couche /Application/ ou /Service/ a pour fonction de décrire des opérations concrètes sur les /Entitées/, et de
+- La couche /Application/ ou /Service/ a pour fonction de décrire des opérations concrètes sur les /Entités/, et de
   faire le lien entre plusieurs couches. Par exemple, c'est cette couche qui détermine si telle action doit utiliser
   telle méthode d'un /Repository/.
   Pour garantir une approche /SOLID/, elle ne fait pas directement référence aux implémentations, mais uniquement aux
@@ -345,7 +345,7 @@ Ce schéma représente un graphe de dépendance entre plusieurs élements du mod
 les demandes de l'applications par rapport à la creation, listage et suppression de nourriture.
 Les flèches en pointillées représentent les dépendances entre les différentes classes et modules.
 
-On peut voir que la couche /Domaine/, et l'entitée /Food/ ne dépendent de rien, on peut ainsi modifier
+On peut voir que la couche /Domaine/, et l'entité /Food/ ne dépendent de rien, on peut ainsi modifier
 notre domaine sans avoir besoin de modifier le reste de l'application.
 La couche /Application/ quant à elle, comprends le /FoodCrudService/ et le /FoodRepository/, on
 peut voir que cette couche fait office d'orchestration et dépend de la couche /Domaine/.
@@ -364,7 +364,7 @@ modifier le /Domaine/.
 Enfin, les différentes parties de l'applications peuvent être testées de façon unitaire, en isolation des uns par rapport aux autres.
 
 *** Domaine
-Voici une vue d'ensemble des entitées de l'application:
+Voici une vue d'ensemble des entités de l'application:
 
 #+CAPTION: Entités liées à la nourriture
 [[./img/nutrition_domain.png]]
@@ -809,7 +809,7 @@ Notons que les informations présents dans cette sections, sont aussi présents 
 |----------------+-----------------------------------------------------------------|
 |            404 | Retour si la ressource demandée n'existe pas.                   |
 |----------------+-----------------------------------------------------------------|
-|            409 | Renvoyé lorsqu'on essaye de créer une entitée qui existe        |
+|            409 | Renvoyé lorsqu'on essaye de créer une entité qui existe        |
 |                | déjà. Dans notre application, cette valeur de retour            |
 |                | n'est renvoyée seulement si on essaye de créer un utilisateur   |
 |                | avec une adresse email déjà existante.                          |
@@ -843,16 +843,16 @@ Notons que les informations présents dans cette sections, sont aussi présents 
 | Verbe  | URI                 | Description                                                            |
 |--------+---------------------+------------------------------------------------------------------------|
 | GET    | ~/food/~            | Liste les entités /Food/ disponibles. Un argument optionel permet de   |
-|        |                     | chercher les entitées par leur nom.                                    |
-|        |                     | Les entitées ainsi retournées sont une version tronquée de l'entitée   |
+|        |                     | chercher les entités par leur nom.                                    |
+|        |                     | Les entités ainsi retournées sont une version tronquée de l'entité   |
 |        |                     | /Food/ par soucis de performance.                                      |
 |--------+---------------------+------------------------------------------------------------------------|
-| GET    | ~/food/{food_uuid}~ | Permet d'obtenir une entitée /Food/ par sont ~UUID~.                   |
+| GET    | ~/food/{food_uuid}~ | Permet d'obtenir une entité /Food/ par sont ~UUID~.                   |
 |--------+---------------------+------------------------------------------------------------------------|
-| POST   | ~/food/~            | /Endpoint/ pour créer une nouvelle entitée de type /Food/.             |
+| POST   | ~/food/~            | /Endpoint/ pour créer une nouvelle entité de type /Food/.             |
 |--------+---------------------+------------------------------------------------------------------------|
-| DELETE | ~/food/{food_uuid}~ | Permet de supprimer une entitée /Food/, les utilisateurs ne peuvent    |
-|        |                     | supprimer uniquement les entitées qu'ils ont créé eux même.            |
+| DELETE | ~/food/{food_uuid}~ | Permet de supprimer une entité /Food/, les utilisateurs ne peuvent    |
+|        |                     | supprimer uniquement les entités qu'ils ont créé eux même.            |
 |--------+---------------------+------------------------------------------------------------------------|
 | POST   | ~/food/barcode~     | Permet de créer une nourriture à partir d'un code barre.               |
 |        |                     | Nous avons vu le fonctionnement particulier de ce /endpoint/ plus haut |
