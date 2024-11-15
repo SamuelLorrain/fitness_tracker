@@ -7,6 +7,8 @@ consistent manner.
 
 It has been done in the context of the CNAM's NSY209 project
 
+![ui-demo](docs/img/ui-presentation.png)
+
 ## Installation
 
 ### Create a .env file.
